@@ -1,0 +1,49 @@
+# superuser - use given bash docs
+function root {
+	case ${OS} in
+		Darwin)
+			sudo /opt/local/bin/bash --rcfile ${ENV_DOC}/etc/bashrc
+			;;
+		Linux)
+			sudo su -c "/bin/bash --rcfile ${ENV_DOC}/etc/bashrc"
+			;;
+	esac
+}
+
+# nano for superuser
+function rnano {
+	[ ${EUID} != 0 ] && {
+		return 1
+	}
+
+	case ${OS} in
+		Darwin)
+			export HOME=/Users/tschaefer
+			nano $@
+			export HOME=/var/root
+			;;
+		Linux)
+			export HOME=/home/tschaefer
+			nano $@
+			export HOME=/root
+			;;
+	esac
+}
+
+# vim for superuser
+function rvim {
+	[ ${EUID} != 0 ] && {
+		return 1
+	}
+
+	case ${OS} in
+		Darwin)
+			vim -u /Users/tschaefer/.vimrc $@
+			;;
+		Linux)
+			vim -u /home/tschaefer/.vimrc $@
+			;;
+	esac
+}
+
+# vim: set filetype=sh :

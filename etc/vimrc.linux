@@ -1,0 +1,82 @@
+" only vim, no vi compatibility
+set nocompatible
+
+" runtime env
+set runtimepath=~/.vim,$VIMRUNTIME
+
+" syntaxhighlighting
+syntax on
+
+" colorscheme
+set t_Co=256
+colorscheme distinguished
+
+" numbering
+set number
+
+" whitespace
+set list
+
+" whitespace characters
+set lcs=tab:»·
+set lcs+=trail:·
+set lcs+=precedes:«
+set lcs+=extends:»
+"set lcs+=eol:¶
+set lcs+=nbsp:·
+
+" tabulator
+set noexpandtab
+set tabstop=4
+set shiftwidth=4
+
+" indenting
+set autoindent
+if has("autocmd")
+	filetype plugin indent on
+endif
+
+" history
+set history=50
+
+" cursor position
+set ruler
+
+" backspace delete char
+set backspace=2
+
+" status, cmdline
+set statusline=%f\ (%{&ff})\ (%Y)\ [%{strftime(\"%d/%m/%y\ -\ %H:%M\")}]\ [%l,%v]\ [%p%%]\ %m%r%h
+set laststatus=2
+set cmdheight=2
+
+" backup
+set backup
+set backupdir=~/.vim/backup
+set directory=~/.vim/swap
+
+" session
+set sessionoptions=blank,buffers,folds,help,options,tabpages,winsize
+
+" filetype
+filetype on
+filetype plugin on
+
+" print options
+set popt=paper:A4
+
+" textwidth
+set textwidth=78
+
+" key mapping
+map <F9> :!cscope -b -q -R -s ../shared <CR> :cs reset <CR>
+map <F10> :!ctags -R --links=no . ../shared <CR>
+map <F5> :cprev <CR>
+map <F6> :cnext <CR>
+
+" bash like completion
+set wildmode=longest,list
+
+if filereadable("~/.env/etc/local/vimrc")
+	source ~/.env/etc/local/vimrc
+endif

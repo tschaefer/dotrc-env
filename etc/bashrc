@@ -1,0 +1,66 @@
+# shell is non-interactive, done
+if [ -z "$PS1" ]; then
+	return
+fi
+
+# debugging
+#set -x
+
+# get operation system for further action or just fail afterwards :P
+if [ -x $(type -p uname) ]; then
+	export OS=$(uname)
+fi
+
+# set path to environment docs
+case ${OS} in
+	Darwin)
+		export ENV_DOC=/Users/tschaefer/.env
+		;;
+	Linux)
+		export ENV_DOC=/home/tschaefer/.env
+		;;
+esac
+
+# set path to bash docs
+if [ -d ${ENV_DOC}/etc/bash.d ]; then
+	export BASH_DOC=${ENV_DOC}/etc/bash.d
+fi
+
+# set path to local bash docs
+if [ -d ${ENV_DOC}/etc/local/bash.d ]; then
+	export LOCAL_BASH_DOC=${ENV_DOC}/etc/local/bash.d
+fi
+
+# load bash docs
+if [ -d ${BASH_DOC} ]; then
+	for FILE in prompt options exports functions aliases; do
+		if [ -r ${BASH_DOC}/${FILE} ]; then
+		. ${BASH_DOC}/${FILE}
+		fi
+	done
+
+	# load special bash os environment docs
+	case ${OS} in
+		Linux)
+			if [ -r ${BASH_DOC}/linux ]; then
+				. ${BASH_DOC}/linux
+			fi
+			;;
+		Darwin)
+			if [ -r ${BASH_DOC}/darwin ]; then
+				. ${BASH_DOC}/darwin
+			fi
+			;;
+	esac
+fi
+
+# load local bash docs
+if [ -d ${LOCAL_BASH_DOC} ]; then
+	for FILE in prompt options exports functions aliases; do
+		if [ -r ${LOCAL_BASH_DOC}/${FILE} ]; then
+		. ${LOCAL_BASH_DOC}/${FILE}
+		fi
+	done
+fi
+
+# vim: set filetype=sh :

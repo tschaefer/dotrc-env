@@ -1,0 +1,2 @@
+# hash known hosts (unset Debian default)
+HashKnownHosts no

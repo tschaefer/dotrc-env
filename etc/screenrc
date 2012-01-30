@@ -1,0 +1,32 @@
+# no annoying audible bell
+vbell off
+
+# detach on hangup
+autodetach on
+
+# don't display the copyright page
+startup_message off
+
+# emulate .logout message
+pow_detach_msg "Screen session of \$LOGNAME \$:cr:\$:nl:ended."
+
+# advertise hardstatus support to $TERMCAP
+termcapinfo xterm* ti@:te@
+
+# make the shell in every window a login shell
+shell -$SHELL
+defscrollback 10000
+
+# Extend the vt100 desciption by some sequences.
+termcap vt* AF=\E[3%dm:AB=\E[4%dm
+caption always
+caption string '%{= wk}[ %{r}%H%{k} ][%= %{= wk}%?%-Lw%?%{b}(%{b}%n*%f%t%?(%u)%?%{b})%{k}%?%+Lw%?%?%= %{k}][%{k} %d/%m/%y %{k}%c %{k}]'
+
+# allow bold colors - necessary for some reason
+attrcolor b ".I"
+
+# tell screen how to set colors. AB = background, AF = foreground
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+
+# erase background with current bg color
+defbce "on"

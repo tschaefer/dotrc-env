@@ -1,0 +1,10 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =8
+let g:netrw_dirhist_1='/home/tschaefer/.env/etc/subversion/auth/svn.username'
+let g:netrw_dirhist_2='/home/tschaefer/.env/etc/subversion/auth'
+let g:netrw_dirhist_3='/home/tschaefer/.env/etc/subversion/auth/svn.ssl.server'
+let g:netrw_dirhist_4='/home/tschaefer/.env/etc/subversion/auth'
+let g:netrw_dirhist_5='/home/tschaefer/.env/etc/subversion/auth/svn.ssl.client-passphrase'
+let g:netrw_dirhist_6='/home/tschaefer/.env/etc/subversion/auth'
+let g:netrw_dirhist_7='/home/tschaefer/.env/etc/subversion/auth/svn.simple'
+let g:netrw_dirhist_8='/home/tschaefer/.env/etc/subversion/auth'

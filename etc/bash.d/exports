@@ -1,0 +1,35 @@
+# set enhance path
+case ${OS} in
+	Darwin)
+		export PATH=/Users/tschaefer/bin:/opt/local/libexec/gnubin:/opt/local/bin:/opt/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin
+		;;
+	Linux)
+		export PATH=/home/tschaefer/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/games
+		;;
+esac
+
+# set root (sudo) home on darwin
+if [ ${EUID} == 0 -a ${OS} == "Darwin" ]; then
+	export HOME=/var/root
+fi
+
+# ignore dupes and whitespaces in history
+export HISTCONTROL=ignoreboth
+
+# prefer english as language
+export LC_ALL="en_US.UTF-8"
+export LANG="en_US.UTF-8"
+export LANGUAGE="en_US.UTF-8"
+
+# use vim alternatively nano as editor
+if [ $(type -P vim 2>/dev/null) ]; then
+	export EDITOR=vim
+elif [ $(type -P nano 2>/dev/null) ]; then
+	export EDITOR=nano
+fi
+
+# compression on gzip and bzip2
+export GZIP="-9 -v --name"
+export BZIP2="-9 -v"
+
+# vim: set filetype=sh :
