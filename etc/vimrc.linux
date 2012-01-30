@@ -2,7 +2,7 @@
 set nocompatible
 
 " runtime env
-set runtimepath=~/.vim,$VIMRUNTIME
+set runtimepath=/home/tschaefer/.vim,$VIMRUNTIME
 
 " syntaxhighlighting
 syntax on
@@ -52,8 +52,8 @@ set cmdheight=2
 
 " backup
 set backup
-set backupdir=~/.vim/backup
-set directory=~/.vim/swap
+set backupdir=/home/tschaefer/.vim/backup
+set directory=/home/tschaefer/.vim/swap
 
 " session
 set sessionoptions=blank,buffers,folds,help,options,tabpages,winsize
@@ -78,5 +78,5 @@ map <F6> :cnext <CR>
 set wildmode=longest,list
 
 if filereadable("~/.env/etc/local/vimrc")
-	source ~/.env/etc/local/vimrc
+	source /home/tschaefer/.env/etc/local/vimrc
 endif

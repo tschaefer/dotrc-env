@@ -9,7 +9,7 @@ syntax on
 
 " colorscheme
 set t_Co=256
-colorscheme leo
+colorscheme distinguished
 
 " numbering
 set number
@@ -53,6 +53,7 @@ set cmdheight=2
 " backup
 set backup
 set backupdir=/Users/tschaefer/.vim/backup
+set directory=/Users/tschaefer/.vim/swap
 
 " session
 set sessionoptions=blank,buffers,folds,help,options,tabpages,winsize
