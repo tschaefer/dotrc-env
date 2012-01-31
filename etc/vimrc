@@ -1,8 +1,8 @@
-" only vim, no vi compatibility
+" -l /h	only vim, no vi compatibility
 set nocompatible
 
 " runtime env
-set runtimepath=~/.vim,$VIMRUNTIME
+set runtimepath=$HOME/.vim,$VIMRUNTIME
 
 " syntaxhighlighting
 syntax on
@@ -52,8 +52,8 @@ set cmdheight=2
 
 " backup
 set backup
-set backupdir=~/.vim/backup
-set directory=~/.vim/swap
+set backupdir=$HOME/.vim/backup
+set directory=$HOME/.vim/swap
 
 " session
 set sessionoptions=blank,buffers,folds,help,options,tabpages,winsize
@@ -77,6 +77,7 @@ map <F6> :cnext <CR>
 " bash like completion
 set wildmode=longest,list
 
-if filereadable("~/.env/etc/local/vimrc")
-	source ~/.env/etc/local/vimrc
+let b:includefile = $HOME . "/.env/etc/local/vimrc"
+if (filereadable(b:includefile))
+	exe 'source' b:includefile
 endif
