@@ -200,3 +200,5 @@ include "/usr/share/nano/sh.nanorc"
 
 ## POV-Ray
 include "/usr/share/nano/pov.nanorc"
+
+# vim: set filetype=conf :

@@ -121,3 +121,5 @@ enable-auto-props = yes
 # Makefile = svn:eol-style=native
 ### enable keywords on all files
 * = svn:keywords=Date Author Id Revision HeadURL
+
+# vim: set filetype=conf :

@@ -156,3 +156,5 @@
 # store-plaintext-passwords = no
 # store-ssl-client-cert-pp = no
 # store-ssl-client-cert-pp-plaintext = no
+#
+## vim: set filetype=conf :

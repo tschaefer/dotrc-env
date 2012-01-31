@@ -64,3 +64,5 @@ $endif
 # "\e[F": end-of-line
 
 $endif
+
+# vim: set filetype=readline :
