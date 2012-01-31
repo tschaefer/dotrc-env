@@ -38,20 +38,6 @@ if [ -d ${BASH_DOC} ]; then
 		. ${BASH_DOC}/${FILE}
 		fi
 	done
-
-	# load special bash os environment docs
-	case ${OS} in
-		Linux)
-			if [ -r ${BASH_DOC}/linux ]; then
-				. ${BASH_DOC}/linux
-			fi
-			;;
-		Darwin)
-			if [ -r ${BASH_DOC}/darwin ]; then
-				. ${BASH_DOC}/darwin
-			fi
-			;;
-	esac
 fi
 
 # load local bash docs
@@ -62,5 +48,19 @@ if [ -d ${LOCAL_BASH_DOC} ]; then
 		fi
 	done
 fi
+
+# load bash completion docs
+case ${OS} in
+	Darwin)
+		if [ -f /opt/local/etc/bash_completion ]; then
+			. /opt/local/etc/bash_completion
+		fi
+		;;
+	Linux)
+		if [ -f /etc/bash_completion ]; then
+			. /etc/bash_completion
+		fi
+		;;
+esac
 
 # vim: set filetype=sh :
