@@ -12,7 +12,7 @@ function root {
 
 # nano for superuser
 function rnano {
-	[ ${EUID} != 0 ] && {
+	[ ${EUID} -ne 0 ] && {
 		return 1
 	}
 
@@ -32,7 +32,7 @@ function rnano {
 
 # vim for superuser
 function rvim {
-	[ ${EUID} != 0 ] && {
+	[ ${EUID} -ne 0 ] && {
 		return 1
 	}
 
