@@ -38,10 +38,14 @@ function rvim {
 
 	case ${OS} in
 		Darwin)
+			export HOME=/Users/tschaefer
 			vim -u /Users/tschaefer/.vimrc $@
+			export HOME=/var/root
 			;;
 		Linux)
+			export HOME=/home/tschaefer
 			vim -u /home/tschaefer/.vimrc $@
+			export HOME=/root
 			;;
 	esac
 }
