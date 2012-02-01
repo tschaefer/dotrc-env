@@ -1,0 +1,26 @@
+dotrc-env
+=========
+
+NOTE: the `.html` file is generated output and *should not* get modified, change
+the text source instead (it uses http://www.methods.co.nz/asciidoc/[asciidoc]
+syntax) and regenerate the `.html` output from the source.
+
+Information
+-----------
+
+These are my 'common, feel comfortable, fine and happy' configuration and
+environment files. The repository contains 'everything' beside private files
+(e.g. +ssh-keys+) and any local, temporary and dynamic files (e.g.
++known_hosts+).
+
+Overview current config and environment files:
+
+	* Bash
+	* GNUPG
+	* OpenVPN
+	* SSH
+	* Subversion
+	* Git
+	* Nano
+	* Vim
+	* Screen
