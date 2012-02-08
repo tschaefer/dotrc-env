@@ -9,7 +9,7 @@ case ${OS} in
 esac
 
 # set root (sudo) home on darwin
-if [ ${EUID} == 0 -a ${OS} == "Darwin" ]; then
+if [ ${EUID} -eq 0 -a ${OS} == "Darwin" ]; then
 	export HOME=/var/root
 fi
 
