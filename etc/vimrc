@@ -1,4 +1,4 @@
-" -l /h	only vim, no vi compatibility
+" only vim, no vi compatibility
 set nocompatible
 
 " runtime env
