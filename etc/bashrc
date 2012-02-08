@@ -7,9 +7,17 @@ fi
 #set -x
 
 # get operation system for further action or just fail afterwards :P
-if [ -x $(type -p uname) ]; then
-	export OS=$(uname)
-fi
+case ${OSTYPE} in
+	darwin*)
+		export OS=Darwin
+		;;
+	linux*)
+		export OS=Linux
+		;;
+esac
+
+# get user home
+
 
 # set path to environment docs
 case ${OS} in
