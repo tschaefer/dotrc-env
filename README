@@ -5,15 +5,17 @@ NOTE: the `.html` file is generated output and *should not* get modified, change
 the text source instead (it uses http://www.methods.co.nz/asciidoc/[asciidoc]
 syntax) and regenerate the `.html` output from the source.
 
-Information
------------
+Introduction
+------------
 
-These are my 'common, feel comfortable, fine and happy' configuration and
-environment files. The repository contains 'everything' beside private files
+*dotrc-env* provides user configuration and environment files for Linux / Unix
+operating systems.
+
+The repository contains 'everything' beside private files
 (e.g. +ssh-keys+) and any local, temporary and dynamic files (e.g.
 +known_hosts+).
 
-Overview current config and environment files:
+Overview current configuration and environment files:
 
 	* Bash
 	* GNUPG
@@ -24,5 +26,22 @@ Overview current config and environment files:
 	* Nano
 	* Vim
 	* Screen
+
+Usage
+-----
+
+For usage instructions and examples see
+https://github.com/tschaefer/dotrc-env/wiki[Wiki].
+
+License
+-------
+
+License CC BY-SA 3.0: Creative Commons Attribution-ShareAlike 3.0 Unported or
+later <http://creativecommons.org/licenses/by-sa/3.0/>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+This is significant preconditioned no other license is violated.
+
 
 // vim: set filetype=asciidoc :
