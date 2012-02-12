@@ -1,10 +1,10 @@
 # set enhance path
 case ${OS} in
 	Darwin)
-		export PATH=${ENV_HOME}/bin:/opt/local/libexec/gnubin:/opt/local/bin:/opt/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin
+		export PATH=/Users/tschaefer/bin:/opt/local/libexec/gnubin:/opt/local/bin:/opt/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin
 		;;
 	Linux)
-		export PATH=${ENV_HOME}/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/games
+		export PATH=/home/tschaefer/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/games
 		;;
 esac
 
