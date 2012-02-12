@@ -2,10 +2,10 @@
 function root {
 	case ${OS} in
 		Darwin)
-			sudo /opt/local/bin/bash --rcfile ${ENV_DOC}/etc/bashrc
+			sudo /opt/local/bin/bash --rcfile /Users/${SUDO_USER}/.bashrc
 			;;
 		Linux)
-			sudo su -c "/bin/bash --rcfile ${ENV_DOC}/etc/bashrc"
+			sudo su -c '/bin/bash --rcfile /home/${SUDO_USER}/.bashrc'
 			;;
 	esac
 }
@@ -18,12 +18,12 @@ function rnano {
 
 	case ${OS} in
 		Darwin)
-			export HOME=/Users/tschaefer
+			export HOME=${ENV_HOME}
 			nano $@
 			export HOME=/var/root
 			;;
 		Linux)
-			export HOME=/home/tschaefer
+			export HOME=${ENV_HOME}
 			nano $@
 			export HOME=/root
 			;;
@@ -38,13 +38,13 @@ function rvim {
 
 	case ${OS} in
 		Darwin)
-			export HOME=/Users/tschaefer
-			vim -u /Users/tschaefer/.vimrc $@
+			export HOME=${ENV_HOME}
+			vim -u ${ENV_HOME}/.vimrc $@
 			export HOME=/var/root
 			;;
 		Linux)
-			export HOME=/home/tschaefer
-			vim -u /home/tschaefer/.vimrc $@
+			export HOME=${ENV_HOME}
+			vim -u ${ENV_HOME}/.vimrc $@
 			export HOME=/root
 			;;
 	esac

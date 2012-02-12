@@ -16,27 +16,26 @@ case ${OSTYPE} in
 		;;
 esac
 
-# get user home
-
+# set path to environment home
+if [ ${EUID} -eq 0 ]; then
+	case ${OS} in
+		Darwin)
+			export ENV_HOME=/Users/${SUDO_USER}
+			;;
+		Linux)
+			export ENV_HOME=/home/${SUDO_USER}
+			;;
+	esac
+else
+	export ENV_HOME=${HOME}
+fi
 
 # set path to environment docs
-case ${OS} in
-	Darwin)
-		export ENV_DOC=/Users/tschaefer/.env
-		;;
-	Linux)
-		export ENV_DOC=/home/tschaefer/.env
-		;;
-esac
+export ENV_DOC=${ENV_HOME}/.env
 
 # set path to bash docs
 if [ -d ${ENV_DOC}/etc/bash.d ]; then
 	export BASH_DOC=${ENV_DOC}/etc/bash.d
-fi
-
-# set path to local bash docs
-if [ -d ${ENV_DOC}/etc/local/bash.d ]; then
-	export LOCAL_BASH_DOC=${ENV_DOC}/etc/local/bash.d
 fi
 
 # load bash docs
@@ -48,11 +47,16 @@ if [ -d ${BASH_DOC} ]; then
 	done
 fi
 
+# set path to local bash docs
+if [ -d ${ENV_DOC}/etc/local/bash.d ]; then
+	export LOCAL_BASH_DOC=${ENV_DOC}/etc/local/bash.d
+fi
+
 # load local bash docs
-if [ -d ${LOCAL_BASH_DOC} ]; then
+if [ -d ${BASH_DOCi_LOCAL} ]; then
 	for FILE in prompt options exports functions aliases; do
-		if [ -r ${LOCAL_BASH_DOC}/${FILE} ]; then
-		. ${LOCAL_BASH_DOC}/${FILE}
+		if [ -r ${BASH_DOC_LOCAL}/${FILE} ]; then
+		. ${BASH_DOC_LOCAL}/${FILE}
 		fi
 	done
 fi
