@@ -53,7 +53,7 @@ if [ -d ${ENV_DOC}/etc/local/bash.d ]; then
 fi
 
 # load local bash docs
-if [ -d ${BASH_DOCi_LOCAL} ]; then
+if [ -d ${BASH_DOC_LOCAL} ]; then
 	for FILE in prompt options exports functions aliases; do
 		if [ -r ${BASH_DOC_LOCAL}/${FILE} ]; then
 		. ${BASH_DOC_LOCAL}/${FILE}
