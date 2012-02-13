@@ -1,9 +1,7 @@
 dotrc-env
 =========
 
-NOTE: the `.html` file is generated output and *should not* get modified, change
-the text source instead (it uses http://www.methods.co.nz/asciidoc/[asciidoc]
-syntax) and regenerate the `.html` output from the source.
+User environment and application dotrc files.
 
 Introduction
 ------------
