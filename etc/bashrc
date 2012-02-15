@@ -49,7 +49,7 @@ fi
 
 # set path to local bash docs
 if [ -d ${ENV_DOC}/etc/local/bash.d ]; then
-	export LOCAL_BASH_DOC=${ENV_DOC}/etc/local/bash.d
+	export BASH_DOC_LOCAL=${ENV_DOC}/etc/local/bash.d
 fi
 
 # load local bash docs
