@@ -29,7 +29,7 @@ Usage
 -----
 
 For usage instructions and examples see
-https://github.com/tschaefer/dotrc-env/wiki/Usage[Usage].
+https://github.com/tschaefer/dotrc-env/wiki/Usage[Wiki:Usage].
 
 License
 -------
