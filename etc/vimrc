@@ -8,8 +8,10 @@ set runtimepath=$HOME/.vim,$VIMRUNTIME
 syntax on
 
 " colorscheme
-set t_Co=256
-colorscheme distinguished
+if &term != 'linux'
+	set t_Co=256
+	colorscheme distinguished
+endif
 
 " numbering
 set number
