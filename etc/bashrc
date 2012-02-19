@@ -40,7 +40,7 @@ fi
 
 # load bash docs
 if [ -d ${BASH_DOC} ]; then
-	for FILE in prompt options exports functions aliases; do
+	for FILE in prompt options exports functions aliases term; do
 		if [ -r ${BASH_DOC}/${FILE} ]; then
 		. ${BASH_DOC}/${FILE}
 		fi
@@ -54,7 +54,7 @@ fi
 
 # load local bash docs
 if [ -d ${BASH_DOC_LOCAL} ]; then
-	for FILE in prompt options exports functions aliases; do
+	for FILE in prompt options exports functions aliases term; do
 		if [ -r ${BASH_DOC_LOCAL}/${FILE} ]; then
 		. ${BASH_DOC_LOCAL}/${FILE}
 		fi
