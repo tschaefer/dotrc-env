@@ -70,11 +70,15 @@ set popt=paper:A4
 " textwidth
 set textwidth=78
 
+" highlight search
+set hlsearch
+
 " key mapping
 map <F9> :!cscope -b -q -R -s ../shared <CR> :cs reset <CR>
 map <F10> :!ctags -R --links=no . ../shared <CR>
 map <F5> :cprev <CR>
 map <F6> :cnext <CR>
+noremap <F4> :set hlsearch! hlsearch?<CR>
 
 " bash like completion
 set wildmode=longest,list
