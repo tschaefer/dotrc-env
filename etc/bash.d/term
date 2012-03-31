@@ -10,5 +10,4 @@ case ${TERM} in
 		;;
 esac
 
-
 # vim: set filetype=sh :

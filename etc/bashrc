@@ -30,6 +30,22 @@ else
 	export ENV_HOME=${HOME}
 fi
 
+# set path prefix
+case ${OS} in
+	Darwin)
+		if [ -x /usr/local/bin/brew ]; then
+			export PATH_PREFIX=/usr/local
+		fi
+		if [ -x /opt/local/bin/port ]; then
+			export PATH_PREFIX=/opt/local
+		fi
+		;;
+	Linux)
+		export PATH_PREFIX=""
+		;;
+esac
+
+
 # set path to environment docs
 export ENV_DOC=${ENV_HOME}/.env
 
@@ -62,17 +78,8 @@ if [ -d ${BASH_DOC_LOCAL} ]; then
 fi
 
 # load bash completion docs
-case ${OS} in
-	Darwin)
-		if [ -f /opt/local/etc/bash_completion ]; then
-			. /opt/local/etc/bash_completion
-		fi
-		;;
-	Linux)
-		if [ -f /etc/bash_completion ]; then
-			. /etc/bash_completion
-		fi
-		;;
-esac
+if [ -f ${PATHPREFIX}/etc/bash_completion ]; then
+		. ${PATHPREFIX}/etc/bash_completion
+fi
 
 # vim: set filetype=sh :

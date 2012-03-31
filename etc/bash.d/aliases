@@ -14,26 +14,13 @@ alias lh='ls -l -h'
 alias lt='ls -l -t'
 
 # less with syntaxhighlighting and 'unzipper'
-case ${OS} in
-	Darwin)
-		for version in {0..9}; do 
-			file "/opt/local/share/vim/vim7${version}/macros/less.sh" >/dev/null 2>&1
-			if [ $? == 0 ]; then
-				alias less="/opt/local/share/vim/vim7${version}/macros/less.sh"
-				break
-			fi
-		done
-		;;
-	Linux)
-		for version in {0..9}; do 
-			file "/usr/share/vim/vim7${version}/macros/less.sh" >/dev/null 2>&1
-			if [ $? == 0 ]; then
-				alias less="/usr/share/vim/vim7${version}/macros/less.sh"
-				break
-			fi
-		done
-		;;
-esac
+for version in {0..9}; do 
+	file "/usr/share/vim/vim7${version}/macros/less.sh" >/dev/null 2>&1
+	if [ $? -eq 0 ]; then
+		alias less="/usr/share/vim/vim7${version}/macros/less.sh"
+		break
+	fi
+done
 
 # vim full color featured
 alias vim='env TERM=xterm-256color vim'
