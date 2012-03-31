@@ -15,10 +15,8 @@ alias lt='ls -l -t'
 
 # less with syntaxhighlighting and 'unzipper'
 for version in {0..9}; do 
-	file "/usr/share/vim/vim7${version}/macros/less.sh" >/dev/null 2>&1
-	if [ $? -eq 0 ]; then
-		alias less="/usr/share/vim/vim7${version}/macros/less.sh"
-		break
+	if [ -x /usr/share/vim/vim7${version}/macros/less.sh ]; then
+		alias less=/usr/share/vim/vim7${version}/macros/less.sh
 	fi
 done
 
