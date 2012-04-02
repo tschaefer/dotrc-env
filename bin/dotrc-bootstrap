@@ -28,7 +28,7 @@ SYNOPSIS
 	$ME [-D] file://URI|http[s]://URI|rsync://URI|scp://URI
 
 DESCRIPTION
-		$ME creates local directories, fetches, decrypts (mcrypt), unpacks private
+		$ME creates local directories, fetches, decrypts (openssl), unpacks private
 		data (gnupg keys, ssh keys, ovpn keys) and finally links dotrc files in user
 		home.
 
@@ -170,10 +170,10 @@ check_usage() {
 ##	check required environment
 check_env() {
 ###################################
-	# mcrypt
-	type -P mcrypt >/dev/null 2>&1
+	# openssl
+	type -P openssl >/dev/null 2>&1
 	[ $? -ne 0 ] && {
-		_perror "mcrypt not found"
+		_perror "openssl not found"
 	}
 	# ln
 	type -P ln >/dev/null 2>&1
@@ -250,31 +250,21 @@ action() {
 	ENV_ETC=$(cd ${0%/*} && echo ${PWD%/*}/etc)
 
 	# link dotrc files
-	for FILE in bash_logout bashrc gitconfig gnupg inputrc openvpn profile screenrc ssh subversion vim vimrc; do
+	for FILE in bash_logout bashrc gitconfig gnupg inputrc nanorc openvpn profile screenrc ssh subversion vim vimrc; do
 		ln -si ${ENV_ETC}/${FILE} ${HOME}/.${FILE}
 	done
-
-	# get operating system
-	case ${OSTYPE} in
-	darwin*)
-		ln -si ${ENV_ETC}/nanorc.darwin ${HOME}/.nanorc
-		;;
-	linux*)
-		ln -si ${ENV_ETC}/nanorc.linux ${HOME}/.nanorc
-		;;
-	esac
 
 	# create local files
 	mkdir -p ${ENV_ETC}/local/vim/{backup,session,swap}
 	mkdir -p ${ENV_ETC}/local/subversion/auth
 	mkdir -p ${ENV_ETC}/local/ssh
-	touch  ${ENV_ETC}/local/ssh/known_hosts
+	touch ${ENV_ETC}/local/ssh/known_hosts
 
 	# copy, encrypt, unpack private files
 	$COPYTOOL $URI ${ENV_ETC}
-	mcrypt -d -u -q ${ENV_ETC}/${DATA}
-	tar xzf ${ENV_ETC}/${DATA%.nc} -C ${ENV_ETC}
-	rm ${ENV_ETC}/${DATA%.nc}
+	openssl enc -d -aes-256-cbc -in ${ENV_ETC}/${DATA} -out ${ENV_ETC/${DATA%.*}
+	tar xzf ${ENV_ETC}/${DATA%.*} -C ${ENV_ETC}
+	rm ${ENV_ETC}/${DATA} ${ENV_ETC}/${DATA%.*}
 
 	# create .gitignore
 	echo -e 'local/\nprivate/' > ${ENV_ETC}/.gitignore
@@ -308,4 +298,3 @@ main() {
 main ${1+"$@"}
 
 # vim: set ft=sh ts=4 sw=4 :
-
