@@ -24,6 +24,6 @@ done
 alias vim='env TERM=xterm-256color vim'
 
 # public inet address infos
-alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias pubip="dig +short myip.opendns.com @resolver1.opendns.com"
 
 # vim: set filetype=sh :
