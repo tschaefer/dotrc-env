@@ -15,6 +15,11 @@ fi
 
 # ignore dupes and whitespaces in history
 export HISTCONTROL=ignoreboth
+# larger bash history (allow 32³ entries; default is 500)
+export HISTSIZE=32768
+export HISTFILESIZE=$HISTSIZE
+# make some commands not show up in history
+export HISTIGNORE="ls:ls *:cd:cd -:pwd;exit:date:* --help"
 
 # prefer english as language
 export LC_ALL="en_US.UTF-8"
