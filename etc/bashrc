@@ -78,8 +78,8 @@ if [ -d ${BASH_DOC_LOCAL} ]; then
 fi
 
 # load bash completion docs
-if [ -f ${PATHPREFIX}/etc/bash_completion ]; then
-		. ${PATHPREFIX}/etc/bash_completion
+if [ -f ${PATH_PREFIX}/etc/bash_completion ]; then
+		. ${PATH_PREFIX}/etc/bash_completion
 fi
 
 # vim: set filetype=sh :
