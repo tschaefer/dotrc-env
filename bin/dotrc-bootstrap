@@ -262,7 +262,7 @@ action() {
 
 	# copy, encrypt, unpack private files
 	$COPYTOOL $URI ${ENV_ETC}
-	openssl enc -d -aes-256-cbc -in ${ENV_ETC}/${DATA} -out ${ENV_ETC/${DATA%.*}
+	openssl enc -d -aes-256-cbc -in ${ENV_ETC}/${DATA} -out ${ENV_ETC}/${DATA%.*}
 	tar xzf ${ENV_ETC}/${DATA%.*} -C ${ENV_ETC}
 	rm ${ENV_ETC}/${DATA} ${ENV_ETC}/${DATA%.*}
 
