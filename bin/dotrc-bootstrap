@@ -25,13 +25,14 @@ NAME:
 
 SYNOPSIS
 	$ME -h|-v
-	$ME [-D] file://URI|http[s]://URI|rsync://URI|scp://URI
+	$ME [-D] [-s] file://URI|http[s]://URI|rsync://URI|scp://URI
 
 DESCRIPTION
 		$ME creates local directories, fetches, decrypts (openssl), unpacks private
-		data (gnupg keys, ssh keys, ovpn keys) and finally links dotrc files in user
-		home.
+		data (e.g. gnupg keys, ssh keys, ovpn keys) and finally links dotrc files in
+		user home.
 
+		-s:		generate ssh keys
 		-D:		debug information
 		-h:		show this message (help)
 		-v:		show version
@@ -102,11 +103,16 @@ _uerror() {
 ##	get options
 get_opts() {
 ###################################
+	opt_s=""
 	opt_D=""; opt_h=""; opt_v="";
 	opt_count=0
 
-	while getopts ":Dhv" opt; do
+	while getopts ":sDhv" opt; do
 		case "$opt" in
+			s)
+				opt_s=1
+				(( opt_count++ ))
+				;;
 			D)
 				opt_D=1
 				(( opt_count++ ))
@@ -190,6 +196,12 @@ check_env() {
 	[ $? -ne 0 ] && {
 		_perror "touch not found"
 	}
+	# ssh-keygen
+	type -P ssh-keygen > /dev/null 2>&1
+	[ $? -ne 0 ] && {
+		_pwarn "ssh-keygen not found"
+		opt_s=""
+	}
 
 }
 
@@ -268,6 +280,14 @@ action() {
 
 	# create .gitignore
 	echo -e 'local/\nprivate/' > ${ENV_ETC}/.gitignore
+
+	# generate ssh keys
+	[ -n "$opt_s" ] && {
+		echo "SSH RSA key:"
+		ssh-keygen -q -t rsa -C "$HOSTNAME RSA" -f ${ENV_ETC}/local/ssh/id_rsa
+		echo "SSH DSA key:"
+		ssh-keygen -q -t dsa -C "$HOSTNAME RSA" -f ${ENV_ETC}/local/ssh/id_dsa
+	}
 
 }
 
