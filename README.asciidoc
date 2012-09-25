@@ -17,7 +17,6 @@ Overview current configuration and environment files:
 
 	* Bash
 	* GNUPG
-	* OpenVPN
 	* SSH
 	* Subversion
 	* Git
