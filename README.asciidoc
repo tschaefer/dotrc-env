@@ -1,24 +1,62 @@
 dotrc-env
 ---------
 
-User environment and application dotrc files.
+User env and app dotrc files.
 
 Introduction
 ------------
 
+'dotrc_env' provides the *public* part of yet another *nix environment.
+It contains configuration files of following apps:
+
+	* bash
+	* vim
+	* git
+	* screen
+	* nano
+
+The *private* env and app dotrc files are included as git submodule.
+The repository provides configuration files of following apps:
+
+	* ssh
+	* openvpn
+	* gnupg
+	* irssi
+	* mccabber
+
+The whole environment is kick-started with two bootstrap scripts.
 
 Usage
 -----
+
+Base
+~~~~
 
 Clone the repository to the final destination.
 
 	$ git clone https://github.com/tschaefer/dotrc-env.git ~/.env
 
-Link all the dotrc files to your home.
+Initialize public dotrc-env and link up your home.
+Beware script removes all existing destination files!
 
 	$ bash ~/.env/public/bootstrap
 
+Advanced
+~~~~~~~~
+
+Adjust submodules and add path to your private dotrc-env repository.
+
+	$ vim ~/.env/.gitmodules
+
+Init and update submodules.
+
+	$ git submodule init
+	$ git submodule update
+
+Initialize private dotrc-env and link up your home.
 Beware script removes all existing destination files!
+
+	$ bash ~/.env/private/bootstrap
 
 License
 -------
