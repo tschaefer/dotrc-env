@@ -53,7 +53,7 @@ export ENV_DOC=${ENV_HOME}/.env
 
 # set path to public bash docs
 if [ -d ${ENV_DOC}/public/etc/bash.d ]; then
-	export BASH_DOC=${ENV_DOC}/etc/bash.d
+	export BASH_DOC=${ENV_DOC}/public/etc/bash.d
 fi
 
 # load bash docs
@@ -66,8 +66,8 @@ if [ -d ${BASH_DOC} ]; then
 fi
 
 # set path to local bash docs
-if [ -d ${ENV_DOC}i/local/etc/bash.d ]; then
-	export BASH_DOC_LOCAL=${ENV_DOC}/etc/local/bash.d
+if [ -d ${ENV_DOC}/local/etc/bash.d ]; then
+	export BASH_DOC_LOCAL=${ENV_DOC}/local/etc/bash.d
 fi
 
 # load local bash docs
