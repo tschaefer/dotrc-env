@@ -6,23 +6,6 @@ User environment and application dotrc files.
 Introduction
 ------------
 
-*dotrc-env* provides user configuration and environment files for Linux / Unix
-operating systems.
-
-The repository contains 'everything' beside private files
-(e.g. +ssh-keys+) and any local, temporary and dynamic files (e.g.
-+known_hosts+).
-
-Overview current configuration and environment files:
-
-	* Bash
-	* GNUPG
-	* SSH
-	* Subversion
-	* Git
-	* Nano
-	* Vim
-	* Screen
 
 Usage
 -----
@@ -33,35 +16,9 @@ Clone the repository to the final destination.
 
 Link all the dotrc files to your home.
 
-	$ ENV_ETC=${HOME}/.env/etc
-	$ for FILE in bash_logout bashrc gitconfig gnupg inputrc nanorc openvpn profile screenrc ssh subversion vim vimrc; do
-		ln -si ${ENV_ETC}/${FILE} ${HOME}/.${FILE}
-	done
+	$ bash ~/.env/public/bootstrap
 
-Create local directories and files.
-
-	$ mkdir -p ${ENV_ETC}/local/vim/{backup,session,swap}
-	$ mkdir -p ${ENV_ETC}/local/subversion/auth
-	$ mkdir -p ${ENV_ETC}/local/ssh
-	$ touch ${ENV_ETC}/local/ssh/known_hosts
-
-Place your private files.
-
-	$ cp secring.gpg ${ENV_ETC}/private/gnupg
-	$ ...
-
-Create a gitignore file.
-
-	$ echo -e 'local/\nprivate/' > ${ENV_ETC}/.gitignore
-
-Optional create ssh keys on a new host.
-
-	$ ssh-keygen -q -t rsa -C "${HOSTNAME} RSA" -f ${ENV_ETC}/local/ssh/id_rsa
-	$ ssh-keygen -q -t dsa -C "${HOSTNAME} RSA" -f ${ENV_ETC}/local/ssh/id_dsa
-
-All above to long, have a look ...
-
-	$ bash ~/.env/bin/dotrc-bootstrap -h
+Beware script removes all existing destination files!
 
 License
 -------
