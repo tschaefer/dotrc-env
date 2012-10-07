@@ -2,7 +2,7 @@
 set nocompatible
 
 " runtime env
-set runtimepath=$HOME/.vim.d,$VIMRUNTIME
+set runtimepath=$HOME/.vim,$VIMRUNTIME
 
 " syntaxhighlighting
 syntax on
