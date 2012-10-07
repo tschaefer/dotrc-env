@@ -1,9 +1,0 @@
-[color]
-	ui = true
-
-[alias]
-	graph = !git log --graph --date-order -C -M --pretty=format:'%C(yellow)%h%Creset %ad %Cgreen%d%Creset %s' --all --date=short
-	rstat = !git fetch && git diff --name-only ..origin
-	dlog = !git log --stat --abbrev-commit
-
-# vim: set filetype=dosini :

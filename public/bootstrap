@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# ready to initialize
+ENV_INIT=$(cd ${0%/*} && echo ${PWD%/*}/.init)
+[ -e ${ENV_INIT} ] && {
+	echo "dotrc-env initialize already done" >&2
+}
+
+# get base path
+ENV_BIN=$(cd ${0%/*} && echo ${PWD%}/bin)
+ENV_ETC=$(cd ${0%/*} && echo ${PWD%}/etc)
+
+# make bin dir
+[ ! -d ${HOME}/bin ] && {
+	mkdir ${HOME}/bin
+}
+
+# create symlinks
+for SRC in $(find ${ENV_BIN} -type f); do
+	SRC=${SRC##*/}
+	DST=${SRC}
+	ln -sf ${ENV_BIN}/${SRC} ${HOME}/bin/${DST}
+done
+for SRC in $(find ${ENV_ETC} -maxdepth 1); do
+	SRC=${SRC##*/}
+	[ ${SRC} == ${ENV_ETC##*/} ] && {
+		continue
+	}
+	DST=${SRC}
+	ln -sf ${ENV_ETC}/${SRC} ${HOME}/.${DST}
+done
+
+# lock initialize
+touch ${ENV_INIT}
+
+# vim: set ft=sh :

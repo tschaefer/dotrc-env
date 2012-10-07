@@ -1,4 +1,0 @@
-# hash known hosts (unset Debian default)
-HashKnownHosts no
-
-# vim: set filetype=conf :

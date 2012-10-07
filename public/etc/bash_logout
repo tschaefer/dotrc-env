@@ -1,0 +1,8 @@
+### dotrc-env@blackox.org
+
+# when leaving the console clear the screen to increase privacy
+if [ "$SHLVL" = 1 ]; then
+	[ -x $(type -p clear) ] && clear -q
+fi
+
+# vim: set filetype=sh :
