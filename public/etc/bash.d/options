@@ -1,5 +1,3 @@
-### dotrc-env@blackox.org
-
 # append to history
 shopt -s histappend
 

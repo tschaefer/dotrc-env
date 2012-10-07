@@ -1,5 +1,3 @@
-### dotrc-env@blackox.org
-
 # superuser - use given bash docs
 function root {
 	case ${OS} in

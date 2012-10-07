@@ -1,5 +1,3 @@
-### dotrc-env@blackox.org
-
 # ls and grep colors aliases
 if [ -x $(type -P dircolors) ]; then
 	eval "$(dircolors -b)"

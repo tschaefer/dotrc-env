@@ -1,5 +1,3 @@
-" dotrc-env@blackox.org
-
 " only vim, no vi compatibility
 set nocompatible
 
@@ -91,3 +89,5 @@ let b:includefile = $HOME . "/.env/local/etc/vimrc"
 if (filereadable(b:includefile))
 	exe 'source' b:includefile
 endif
+
+" vim: set filetype=vim :

@@ -1,5 +1,3 @@
-### dotrc-env@blackox.org
-
 # set term specified settings
 case ${TERM} in
 	linux)

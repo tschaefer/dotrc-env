@@ -1,5 +1,3 @@
-### dotrc-env@blackox.org
-
 # set enhance path
 case ${OS} in
 	Darwin)

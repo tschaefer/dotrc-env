@@ -1,5 +1,3 @@
-### dotrc-env@blackox.org
-
 # shell is non-interactive, done
 if [ -z "$PS1" ]; then
 	return
