@@ -1,9 +1,10 @@
 #!/bin/bash
 
 # ready to initialize
-ENV_INIT=$(cd ${0%/*} && echo ${PWD%/*}/.init)
+ENV_INIT=$(cd ${0%/*} && echo ${PWD%}/.init)
 [ -e ${ENV_INIT} ] && {
 	echo "dotrc-env initialize already done" >&2
+	exit 1
 }
 
 # get base path

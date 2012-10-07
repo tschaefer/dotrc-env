@@ -1,9 +1,10 @@
 #!/bin/bash
 
 # ready to initialize
-ENV_INIT=$(cd ${0%/*} && echo ${PWD%/*}/.init)
+ENV_INIT=$(cd ${0%/*} && echo ${PWD%}/.init)
 [ -e ${ENV_INIT} ] && {
 	echo "dotrc-env initialize already done" >&2
+	exit 1
 }
 
 # get base path
@@ -33,7 +34,7 @@ done
 # make ssh host dir and generate keys
 SSHD="${ENV_ETC}/ssh.d"
 SSHD_HOST="${SSHD}/hosts.d/${HOSTNAME}"
-[ ! -d  ${SSHD} ] && {
+[ ! -d  ${SSHD_HOST} ] && {
 	mkdir ${SSHD_HOST}
 	echo "SSH RSA key:"
 	ssh-keygen -q -t rsa -C "$HOSTNAME RSA" -f ${SSHD_HOST}
@@ -43,6 +44,9 @@ SSHD_HOST="${SSHD}/hosts.d/${HOSTNAME}"
 # link keys
 for SRC in $(find ${SSHD_HOST} -type f); do
 	SRC=${SRC##*/}
+	[ ${SRC} == ${SSHD_HOST##*/} ] && {
+		continue
+	}
 	DST=${SRC}
 	ln -sf ${SSHD_HOST}/${SRC} ${SSHD}/${DST}
 done
