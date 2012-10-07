@@ -50,8 +50,7 @@ Adjust submodules and add path to your private dotrc-env repository.
 
 Init and update submodules.
 
-	$ git submodule init
-	$ git submodule update
+	$ git submodule init && git submodule update
 
 Initialize private dotrc-env and link up your home.
 Beware script removes all existing destination files!
