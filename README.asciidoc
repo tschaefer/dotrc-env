@@ -38,7 +38,7 @@ Advanced
 
 Adjust submodules and add path to your private dotrc-env repository.
 
-	$ vim ~/.env/.gitmodules
+	$ vim -p ~/.env/.gitmodules ~/.env/.git/config
 
 Init and update submodules.
 
@@ -46,7 +46,7 @@ Init and update submodules.
 
 Checkout master branch and fetch remote data.
 
-	$ git checkout master && git pull
+	$ cd ~/.env/private && git checkout master && git pull
 
 Initialize private dotrc-env and link up your home.
 Beware script removes all existing destination files!
