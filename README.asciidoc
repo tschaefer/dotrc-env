@@ -9,12 +9,12 @@ Introduction
 'dotrc_env' provides the *public* part of yet another *nix environment.
 It contains configuration files of following apps:
 
-	$ bash vim git screen nano
+	bash vim git screen nano
 
 The *private* env and app dotrc files are included as git submodule.
 The repository provides configuration files of following apps:
 
-	$ ssh openvpn gnupg irssi mccabber
+	ssh openvpn gnupg irssi mccabber
 
 The whole environment is kick-started with two bootstrap scripts.
 
