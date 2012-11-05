@@ -1,5 +1,5 @@
 [core]
-	pager = less
+	pager = cat
 	editor = vim
 
 [color]
