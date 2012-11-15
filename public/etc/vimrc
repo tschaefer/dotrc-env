@@ -10,7 +10,7 @@ syntax on
 " colorscheme
 if &term != 'linux'
 	set t_Co=256
-	colorscheme distinguished
+	colorscheme jellybeans
 endif
 
 " numbering
