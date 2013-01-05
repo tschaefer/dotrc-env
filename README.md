@@ -1,28 +1,24 @@
-dotrc-env
----------
+# dotrc-env
 
 User env and app dotrc files.
 
-Introduction
-------------
+## Introduction
 
-'dotrc_env' provides the *public* part of yet another *nix environment.
+__dotrc-env__ provides the _public_ part of yet another nix environment.
 It contains configuration files of following apps:
 
 	bash vim git screen nano
 
-The *private* env and app dotrc files are included as git submodule.
+The _private_ env and app dotrc files are included as git submodule.
 The repository provides configuration files of following apps:
 
 	ssh openvpn gnupg irssi mccabber
 
 The whole environment is kick-started with two bootstrap scripts.
 
-Usage
------
+## Usage
 
-Base
-~~~~
+### Base
 
 Clone the repository to the final destination.
 
@@ -33,8 +29,7 @@ Beware script removes all existing destination files!
 
 	$ bash ~/.env/public/bootstrap
 
-Advanced
-~~~~~~~~
+### Advanced
 
 Adjust submodules and add path to your private dotrc-env repository.
 
@@ -53,15 +48,11 @@ Beware script removes all existing destination files!
 
 	$ bash ~/.env/private/bootstrap
 
-License
--------
+### License
 
 License CC BY-SA 3.0: Creative Commons Attribution-ShareAlike 3.0 Unported or
-later <http://creativecommons.org/licenses/by-sa/3.0/>
+later [http://creativecommons.org/licenses/by-sa/3.0/](http://creativecommons.org/licenses/by-sa/3.0/)
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
 
 This is significant preconditioned no other license is violated.
-
-
-// vim: set filetype=asciidoc :
