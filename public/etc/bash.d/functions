@@ -50,4 +50,16 @@ function rvim {
 	esac
 }
 
+# go back x directories
+function back {
+	str=""
+	count=0
+	while [ "$count" -lt "$1" ];
+	do
+		str=$str"../"
+		let count=count+1
+	done
+	cd $str
+}
+
 # vim: set filetype=sh :
