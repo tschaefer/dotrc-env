@@ -2,13 +2,24 @@
 case ${OS} in
 	Darwin)
 		export PATH=${ENV_HOME}/bin:${PATH_PREFIX}/libexec/gnubin:${PATH_PREFIX}/bin:${PATH_PREFIX}/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin
-		if [ -e "/usr/local/gnuman" ]; then
-			export MANPATH="/usr/local/gnuman:$MANPATH"
-		fi
 		;;
 	Linux)
 		export PATH=${ENV_HOME}/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/games
 		;;
+esac
+
+# export some pathes
+case ${OS} in
+	Darwin)
+		# gnu manpages
+		if [ -e "/usr/local/gnuman" ]; then
+			export MANPATH="/usr/local/gnuman:$MANPATH"
+		fi
+		# xml dtd files
+		export XML_CATALOG_FILES="/usr/local/etc/xml/catalog"
+	Linux)
+		# xml dtd files
+		export XML_CATALOG_FILES="/etc/xml/catalog"
 esac
 
 # set root (sudo) home on darwin
