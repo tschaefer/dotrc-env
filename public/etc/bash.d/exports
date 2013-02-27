@@ -17,9 +17,11 @@ case ${OS} in
 		fi
 		# xml dtd files
 		export XML_CATALOG_FILES="/usr/local/etc/xml/catalog"
+		;;
 	Linux)
 		# xml dtd files
 		export XML_CATALOG_FILES="/etc/xml/catalog"
+		;;
 esac
 
 # set root (sudo) home on darwin
