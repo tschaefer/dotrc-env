@@ -31,4 +31,7 @@
 [status]
 	color = auto
 
+[http]
+	postBuffer = 524288000
+
 # vim: set filetype=dosini :
