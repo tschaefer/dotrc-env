@@ -5,7 +5,7 @@ function root {
 			sudo -i '${PATH_PREFIX}/bin/bash --rcfile /Users/${SUDO_USER}/.bashrc'
 			;;
 		Linux)
-			sudo su -c '/bin/bash --rcfile /home/${SUDO_USER}/.bashrc'
+			sudo /bin/bash --rcfile ${HOME}/.bashrc
 			;;
 	esac
 }
