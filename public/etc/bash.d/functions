@@ -75,4 +75,9 @@ function repfind {
 	}
 }
 
+# colored manpages
+function manco {
+	/usr/bin/man $1 | less -c "set ft=man" -
+}
+
 # vim: set filetype=sh :
