@@ -24,6 +24,11 @@ case ${OS} in
 		;;
 esac
 
+# set term in fbterm
+if [ -n ${FBTERM} ]; then
+	export TERM=fbterm
+fi
+
 # set root (sudo) home on darwin
 if [ ${EUID} -eq 0 -a ${OS} == "Darwin" ]; then
 	export HOME=/var/root
