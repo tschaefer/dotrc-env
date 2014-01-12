@@ -25,8 +25,11 @@ case ${OS} in
 esac
 
 # set term in fbterm
-if [ -n ${FBTERM} ]; then
-	export TERM=fbterm
+if [ ${FBTERM} ]; then
+	if [ ${FBTERM} == "started" ]; then
+		export TERM=fbterm
+		FBTERM="exported"
+	fi
 fi
 
 # set root (sudo) home on darwin

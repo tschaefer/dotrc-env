@@ -27,6 +27,6 @@ alias vim='env TERM=xterm-256color vim'
 alias pubip="dig +short myip.opendns.com @resolver1.opendns.com"
 
 # fbterm with 256 colors
-alias fbterm='FBTERM=1 /usr/bin/fbterm'
+alias fbterm='FBTERM="started" /usr/bin/fbterm'
 
 # vim: set filetype=sh :
