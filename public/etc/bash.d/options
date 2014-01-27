@@ -31,4 +31,7 @@ shopt -s no_empty_cmd_completion
 # file mode creation mask (owner rwx, group rx, world rx)
 umask 022
 
+# vi command line editing mode
+set -o vi
+
 # vim: set filetype=sh :
