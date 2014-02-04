@@ -34,7 +34,7 @@ shopt -s direxpand
 # file mode creation mask (owner rwx, group rx, world rx)
 umask 022
 
-# vi command line editing mode
-set -o vi
+# emacs command line editing mode
+set -o emacs
 
 # vim: set filetype=sh :
