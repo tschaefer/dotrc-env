@@ -1,23 +1,31 @@
+## annoying stuff
 startup_message off
-hardstatus alwayslastline
-hardstatus string "%{= b}>> %{w}${USER}@%{b}%H%{w}: %L>%1`%? %?%{b}%u%? %-18=%?%{w} %{w}%-=%{w}%-w%{b}%n %t%{w}%+w %{b}${TIME}"
-term xterm-256color
+vbell off
 
+## status bar
+hardstatus alwayslastline
+hardstatus string "%{= b}>> %{r}%S%{w}@%{b}%H %{Y}%l %L>%1`%? %?%{b}%u%? %-18=%?%{w} %{w}%-=%{w}%-w%{b}%n %t%{w}%+w %{b}${TIME}"
+
+## terminal settings
+term xterm-256color
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+
+## misc
 autodetach on
-defscrollback 5000
+activity "%c activity -> %n%f %t"
+defscrollback 10000
 defnonblock on
+
+## appearance
 defbce on
 attrcolor b ".I"
-activity "%c activity -> %n%f %t"
-vbell off
-#bell "%c bell -> %n%f %t^G"
-#vbell_msg " *beep* "
-altscreen on
 
+## some key bindings
 bindkey "^[[5;2~" eval "copy" "stuff ^u"
 bindkey -m "^[[5;2~" stuff ^u
 bindkey -m "^[[6;2~" stuff ^d
 
+## start screen 1
 bind c screen 1
 bind ^c screen 1
 bind 0 select 10
