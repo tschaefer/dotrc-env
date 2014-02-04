@@ -1,34 +1,24 @@
-# no annoying audible bell
-vbell off
-
-# detach on hangup
-autodetach on
-
-# don't display the copyright page
 startup_message off
+hardstatus alwayslastline
+hardstatus string "%{= b}>> %{w}${USER}@%{b}%H%{w}: %L>%1`%? %?%{b}%u%? %-18=%?%{w} %{w}%-=%{w}%-w%{b}%n %t%{w}%+w %{b}${TIME}"
+term xterm-256color
 
-# emulate .logout message
-pow_detach_msg "Screen session of \$LOGNAME \$:cr:\$:nl:ended."
-
-# advertise hardstatus support to $TERMCAP
-termcapinfo xterm* ti@:te@
-
-# make the shell in every window a login shell
-shell -$SHELL
-defscrollback 10000
-
-# Extend the vt100 desciption by some sequences.
-termcap vt* AF=\E[3%dm:AB=\E[4%dm
-caption always
-caption string '%{= wk}[ %{r}%H%{k} ][%= %{= wk}%?%-Lw%?%{b}(%{b}%n*%f%t%?(%u)%?%{b})%{k}%?%+Lw%?%?%= %{k}][%{k} %d/%m/%y %{k}%c %{k}]'
-
-# allow bold colors - necessary for some reason
+autodetach on
+defscrollback 5000
+defnonblock on
+defbce on
 attrcolor b ".I"
+activity "%c activity -> %n%f %t"
+vbell off
+#bell "%c bell -> %n%f %t^G"
+#vbell_msg " *beep* "
+altscreen on
 
-# tell screen how to set colors. AB = background, AF = foreground
-termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+bindkey "^[[5;2~" eval "copy" "stuff ^u"
+bindkey -m "^[[5;2~" stuff ^u
+bindkey -m "^[[6;2~" stuff ^d
 
-# erase background with current bg color
-defbce "on"
-
-# vim: set filetype=screen :
+bind c screen 1
+bind ^c screen 1
+bind 0 select 10
+screen 1
