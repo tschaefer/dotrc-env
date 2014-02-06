@@ -4,7 +4,7 @@ vbell off
 
 ## status bar
 hardstatus alwayslastline
-hardstatus string "%{= b}>> %{r}%S%{w}@%{b}%H %{Y}%l %L>%1`%? %?%{b}%u%? %-18=%?%{w} %{w}%-=%{w}%-w%{b}%n %t%{w}%+w %{b}${TIME}"
+hardstatus string "%{= b}>> %{R}%H %{Y}%l %L>%1`%? %?%{b}%u%? %-18=%?%{w} %{w}%-=%{w}%-w%{b}%n %t%{w}%+w"
 
 ## terminal settings
 term xterm-256color
