@@ -29,7 +29,9 @@ shopt -s hostcomplete
 shopt -s no_empty_cmd_completion
 
 # replaces directory names with the results of word expansion
-shopt -s direxpand
+[ $BASH_VERSINFO -ge 4 ] && {
+	shopt -s direxpand
+}
 
 # file mode creation mask (owner rwx, group rx, world rx)
 umask 022
