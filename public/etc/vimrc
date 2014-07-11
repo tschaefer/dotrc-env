@@ -1,93 +1,91 @@
-" only vim, no vi compatibility
-set nocompatible
 
-" runtime env
-set runtimepath=$HOME/.vim,$VIMRUNTIME
+""" behaviour
 
-" syntaxhighlighting
-syntax on
-
-" colorscheme
-if &term != 'linux'
-	set t_Co=256
-	colorscheme jellybeans
-endif
-
-" numbering
-set number
-
-" whitespace
-set list
-
-" whitespace characters
-set lcs=tab:»·
-set lcs+=trail:·
-set lcs+=precedes:«
-set lcs+=extends:»
-"set lcs+=eol:¶
-set lcs+=nbsp:·
-
-" tabulator
-set noexpandtab
-set tabstop=4
-set shiftwidth=4
-
-" indenting
-set autoindent
-if has("autocmd")
-	filetype plugin indent on
-endif
-
-" history
-set history=50
-
-" cursor position
-set ruler
-
-" backspace delete char
+" misc
 set backspace=2
-
-" status, cmdline
-set statusline=%f\ (%{&ff})\ (%Y)\ [%{strftime(\"%d/%m/%y\ -\ %H:%M\")}]\ [%l,%v]\ [%p%%]\ %m%r%h
-set laststatus=2
-set cmdheight=2
-
-" backup
 set backup
 set backupdir=$HOME/.vim/backup
 set directory=$HOME/.vim/swap
-
-" session
-set sessionoptions=blank,buffers,folds,help,options,tabpages,winsize
-
-" filetype
-filetype on
-filetype plugin on
-
-" print options
+set encoding=utf-8 fileencoding=utf-8 termencoding=utf-8
+set history=700
+set nocompatible
 set popt=paper:A4
+set runtimepath=$HOME/.vim,$VIMRUNTIME
+set sessionoptions=blank,buffers,folds,help,options,tabpages,winsize
+set wildmenu
+set wildmode=longest,list
+set noerrorbells
+set novisualbell
+set t_vb=
+set tm=500
 
-" textwidth
-set textwidth=78
-
-" highlight search
+" cursor
+set cursorline
 set hlsearch
+set number
+set ruler
+set scrolloff=10
 
-" key mapping
+" readability
+set list
+set lcs+=extends:»
+set lcs+=nbsp:·
+set lcs+=precedes:«
+set lcs+=trail:·
+set lcs=tab:»·
+
+" code style
+set autoindent
+set smartindent
+set wrap
+set noexpandtab
+set shiftwidth=4
+set tabstop=4
+set textwidth=78
+set linebreak
+
+" status, command line
+set cmdheight=2
+set laststatus=2
+set statusline=%f\ (%{&ff})\ (%Y)\ [%{strftime(\"%d/%m/%y\ -\ %H:%M\")}]\ [%l,%v]\ [%p%%]\ %m%r%h
+
+
+""" appearance
+
+" syntax
+syntax on
+if &term != 'linux'
+	set t_Co=256
+	set background=light
+	colorscheme jellybeans
+endif
+
+" files
+filetype plugin indent on
+
+" readability
+if exists('+colorcolumn')
+	let &colorcolumn=join(range(81,81),",")
+	highlight ColorColumn ctermbg=235 guibg=#2c2d27
+else
+	autocmd BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
+endif
+
+
+""" mappings
+
+" compile errors
 map <F5> :cprev <CR>
 map <F6> :cnext <CR>
+
+" searching
 noremap <F4> :set hlsearch! hlsearch?<CR>
 
-" bash like completion
-set wildmode=longest,list
 
-" code completion
-autocmd InsertLeave * if pumvisible() == 0|pclose|endif
-set ofu=syntaxcomplete#Complete
+""" extras
 
+" local host vimrc
 let b:includefile = $HOME . "/.env/local/etc/vimrc"
 if (filereadable(b:includefile))
 	exe 'source' b:includefile
 endif
-
-" vim: set filetype=vim :
