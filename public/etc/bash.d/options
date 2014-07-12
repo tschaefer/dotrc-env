@@ -29,7 +29,7 @@ shopt -s hostcomplete
 shopt -s no_empty_cmd_completion
 
 # replaces directory names with the results of word expansion
-[ $BASH_VERSINFO -ge 4 ] && {
+[ $BASH_VERSION_MAJOR -ge 4 -a $BASH_VERSION_MINOR -ge 2 ] && {
 	shopt -s direxpand
 }
 
