@@ -16,6 +16,15 @@ case ${OSTYPE} in
 		;;
 esac
 
+# get bash version info
+OIFS=$IFS
+IFS="."
+set ${BASH_VERSION%%(*}
+IFS=$OIFS
+export BASH_VERSION_MAJOR=$1
+export BASH_VERSION_MINOR=$2
+export BASH_VERSION_REVISION=$3
+
 # set path to environment home
 if [ ${EUID} -eq 0 ]; then
 	case ${OS} in
