@@ -19,3 +19,9 @@
 [submodule "public/etc/vim.d/bundle/tagbar"]
 	path = public/etc/vim.d/bundle/tagbar
 	url = https://github.com/majutsushi/tagbar.git
+[submodule "public/etc/vim.d/bundle/airline"]
+	path = public/etc/vim.d/bundle/airline
+	url = https://github.com/bling/vim-airline.git
+[submodule "public/etc/vim.d/bundle/eunuch"]
+	path = public/etc/vim.d/bundle/eunuch
+	url = https://github.com/tpope/vim-eunuch.git
