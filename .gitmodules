@@ -13,9 +13,6 @@
 [submodule "public/etc/vim.d/bundle/nerdtree-tabs"]
 	path = public/etc/vim.d/bundle/nerdtree-tabs
 	url = https://github.com/jistr/vim-nerdtree-tabs.git
-[submodule "public/etc/vim.d/bundle/powerline"]
-	path = public/etc/vim.d/bundle/powerline
-	url = https://github.com/Lokaltog/vim-powerline.git
 [submodule "public/etc/vim.d/bundle/jedi"]
 	path = public/etc/vim.d/bundle/jedi
 	url = https://github.com/davidhalter/jedi-vim.git
