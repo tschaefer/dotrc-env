@@ -25,3 +25,6 @@
 [submodule "public/etc/vim.d/bundle/eunuch"]
 	path = public/etc/vim.d/bundle/eunuch
 	url = https://github.com/tpope/vim-eunuch.git
+[submodule "public/etc/vim.d/bundle/supertab"]
+	path = public/etc/vim.d/bundle/supertab
+	url = https://github.com/ervandew/supertab.git
