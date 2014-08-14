@@ -28,11 +28,11 @@ set scrolloff=10
 
 " readability
 set list
-set lcs+=extends:»
+set lcs=extends:»
 set lcs+=nbsp:·
 set lcs+=precedes:«
 set lcs+=trail:·
-set lcs=tab:»·
+set lcs+=tab:»·
 
 " code style
 set autoindent
@@ -80,6 +80,9 @@ map <F6> :cnext <CR>
 
 " searching
 noremap <F4> :set hlsearch! hlsearch?<CR>
+
+" tagbar
+map <F8> :Tagbar<CR>
 
 
 """ extras
