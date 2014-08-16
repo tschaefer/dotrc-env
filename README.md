@@ -29,19 +29,19 @@ Beware script removes all existing destination files!
 
 	$ bash ~/.env/public/bootstrap
 
-### Advanced
-
-Adjust submodules and add path to your private dotrc-env repository.
-
-	$ vim -p ~/.env/.gitmodules ~/.env/.git/config
-
 Init and update submodules.
 
 	$ cd ~/.env && git submodule update --init
 
-Checkout master branch and fetch remote data.
+### Advanced
 
-	$ cd ~/.env/private && git checkout master && git pull
+Adjust private submodule and add path to your private dotrc-env repository.
+
+	$ vim -p ~/.env/.gitmodules ~/.env/.git/config
+
+Init and update submodule.
+
+	$ cd ~/.env && git submodule update --init private 
 
 Initialize private dotrc-env and link up your home.
 Beware script removes all existing destination files!
