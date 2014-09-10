@@ -8,6 +8,9 @@ case ${TERM} in
 			resize
 		fi
 		;;
+	xterm*)
+		echo -ne "\033]0;${USER}@${HOSTNAME%%.*}\007"
+		;;
 esac
 
 # vim: set filetype=sh :
