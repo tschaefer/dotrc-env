@@ -9,7 +9,9 @@ case ${TERM} in
 		fi
 		;;
 	xterm*)
-		echo -ne "\033]0;${USER}@${HOSTNAME%%.*}\007"
+		if [ ${EUID} -ne 0 ]; then
+			echo -ne "\033]0;${USER}@${HOSTNAME%%.*}\007"
+		fi
 		;;
 esac
 
