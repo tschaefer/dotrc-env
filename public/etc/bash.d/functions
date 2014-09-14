@@ -80,4 +80,9 @@ function manco {
 	/usr/bin/man $1 | less -c "set ft=man" -
 }
 
+# grep history
+function ghist {
+	history | grep $@
+}
+
 # vim: set filetype=sh :
