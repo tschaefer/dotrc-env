@@ -85,4 +85,9 @@ function ghist {
 	history | grep $@
 }
 
+# grep installed packages list
+function gdpkg {
+	dpkg -l | grep $@
+}
+
 # vim: set filetype=sh :
