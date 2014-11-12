@@ -56,8 +56,8 @@ set statusline=%f\ (%{&ff})\ (%Y)\ [%{strftime(\"%d/%m/%y\ -\ %H:%M\")}]\ [%l,%v
 syntax on
 if &term != 'linux'
 	set t_Co=256
-	set background=light
-	colorscheme jellybeans
+	set background=dark
+	colorscheme solarized
 endif
 
 " files
