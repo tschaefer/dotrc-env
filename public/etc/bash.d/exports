@@ -45,10 +45,9 @@ export HISTFILESIZE=$HISTSIZE
 # make some commands not show up in history
 export HISTIGNORE="cd:cd -:pwd;exit:date:"
 
-# prefer english as language
-export LC_ALL="en_US.UTF-8"
-export LANG="en_US.UTF-8"
-export LANGUAGE="en_US.UTF-8"
+# locale settings
+export LANG="de_DE.UTF-8"
+export LC_MESSAGES="en_US.UTF-8"
 
 # use vim alternatively nano as editor
 if [ $(type -P vim 2>/dev/null) ]; then
