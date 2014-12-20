@@ -1,7 +1,7 @@
 # set enhance path
 case ${OS} in
 	Darwin)
-		export PATH=${ENV_HOME}/bin:${PATH_PREFIX}/libexec/gnubin:${PATH_PREFIX}/bin:${PATH_PREFIX}/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin
+		export PATH=${ENV_HOME}/bin:${PATH_PREFIX}/opt/coreutils/libexec/gnubin:${PATH_PREFIX}/bin:${PATH_PREFIX}/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin
 		;;
 	Linux)
 		export PATH=${ENV_HOME}/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/games
@@ -12,8 +12,8 @@ esac
 case ${OS} in
 	Darwin)
 		# gnu manpages
-		if [ -e "/usr/local/gnuman" ]; then
-			export MANPATH="/usr/local/gnuman:$MANPATH"
+		if [ -e "/usr/local/opt/coreutils/libexec/gnuman" ]; then
+			export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 		fi
 		# xml dtd files
 		export XML_CATALOG_FILES="/usr/local/etc/xml/catalog"
