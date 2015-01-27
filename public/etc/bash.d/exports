@@ -7,6 +7,9 @@ case ${OS} in
 		export PATH=${ENV_HOME}/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/games
 		;;
 esac
+if [ -e ${ENV_HOME}/.local/bin ]; then
+	export PATH=${ENV_HOME}/.local/bin:${PATH}
+fi
 
 # export some pathes
 case ${OS} in
