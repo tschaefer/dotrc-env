@@ -93,9 +93,18 @@ if [ -d ${BASH_DOC_LOCAL} ]; then
 fi
 
 # load system bash completion docs
-if [ -f ${PATH_PREFIX}/etc/bash_completion ]; then
-		. ${PATH_PREFIX}/etc/bash_completion
-fi
+case ${OS} in
+	Linux|Darwin)
+		if [ -f ${PATH_PREFIX}/etc/bash_completion ]; then
+			. ${PATH_PREFIX}/etc/bash_completion
+		fi
+		;;
+	Solaris)
+		if [ -r ${PATH_PREFIX}/share/bash-completion/bash_completion ]; then
+			. ${PATH_PREFIX}/share/bash-completion/bash_completion
+		fi
+		;;
+esac
 
 # load public bash completion docs
 if [ -d ${BASH_DOC}/completion.d ]; then
