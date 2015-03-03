@@ -6,6 +6,9 @@ case ${OS} in
 	Linux)
 		export PATH=${ENV_HOME}/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/games
 		;;
+	Solaris)
+		export PATH=${ENV_HOME}/bin:${PATH_PREFIX}/bin:${PATH_PREFIX}/sbin:/usr/bin:/bin:/usr/sbin:/sbin
+		;;
 esac
 if [ -e ${ENV_HOME}/.local/bin ]; then
 	export PATH=${ENV_HOME}/.local/bin:${PATH}

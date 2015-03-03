@@ -7,6 +7,9 @@ function root {
 		Linux)
 			sudo /bin/bash --rcfile ${HOME}/.bashrc
 			;;
+		Solaris)
+			sudo /usr/bin/bash --rcfile ${HOME}/.bashrc
+			;;
 	esac
 }
 
@@ -22,7 +25,7 @@ function rnano {
 			nano $@
 			export HOME=/var/root
 			;;
-		Linux)
+		Linux|Solaris)
 			export HOME=${ENV_HOME}
 			nano $@
 			export HOME=/root
@@ -42,7 +45,7 @@ function rvim {
 			vim -u ${ENV_HOME}/.vimrc $@
 			export HOME=/var/root
 			;;
-		Linux)
+		Linux|Solaris)
 			export HOME=${ENV_HOME}
 			vim -u ${ENV_HOME}/.vimrc $@
 			export HOME=/root

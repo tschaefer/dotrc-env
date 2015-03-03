@@ -14,6 +14,9 @@ case ${OSTYPE} in
 	linux*)
 		export OS=Linux
 		;;
+	solaris*)
+		export OS=Solaris
+		;;
 esac
 
 # get bash version info
@@ -31,7 +34,7 @@ if [ ${EUID} -eq 0 ]; then
 		Darwin)
 			export ENV_HOME=/Users/${SUDO_USER}
 			;;
-		Linux)
+		Linux|Solaris)
 			export ENV_HOME=/home/${SUDO_USER}
 			;;
 	esac
@@ -51,6 +54,9 @@ case ${OS} in
 		;;
 	Linux)
 		export PATH_PREFIX=""
+		;;
+	Solaris)
+		export PATH_PREFIX=/opt/local
 		;;
 esac
 
