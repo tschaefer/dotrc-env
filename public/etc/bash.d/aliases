@@ -29,4 +29,9 @@ alias pubip="dig +short myip.opendns.com @resolver1.opendns.com"
 # fbterm with 256 colors
 alias fbterm='FBTERM="started" /usr/bin/fbterm'
 
+# magnificent app which corrects your previous console command
+if [ -x $(type -P thefuck) ]; then
+	eval "$(thefuck --alias)"
+fi
+
 # vim: set filetype=sh :
