@@ -1,5 +1,5 @@
 # ls and grep colors aliases
-if [ -x $(type -P dircolors) ]; then
+if [ $(type -P dircolors 2>/dev/null) ]; then
 	eval "$(dircolors -b)"
 	alias ls='ls --color=auto'
 	alias grep='grep --color=auto'
@@ -30,7 +30,7 @@ alias pubip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias fbterm='FBTERM="started" /usr/bin/fbterm'
 
 # magnificent app which corrects your previous console command
-if [ -x $(type -P thefuck) ]; then
+if [ $(type -P thefuck 2>/dev/null) ]; then
 	eval "$(thefuck --alias)"
 fi
 
