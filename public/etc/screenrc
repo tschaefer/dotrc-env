@@ -9,6 +9,7 @@ hardstatus string "%{= b}>> %{R}%H %{Y}%l %L>%1`%? %?%{b}%u%? %-18=%?%{w} %{w}%-
 ## terminal settings
 term xterm-256color
 termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+termcapinfo xterm* ti@:te@
 
 ## misc
 autodetach on
