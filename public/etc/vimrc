@@ -85,7 +85,7 @@ noremap <F4> :set hlsearch! hlsearch?<CR>
 map <F8> :Tagbar<CR>
 
 " shell
-set shell=/bin/bash\ --rcfile\ ~/.vim/prompt
+set shell=/bin/bash\ --rcfile\ ~/.vim/bashrc
 
 
 """ extras

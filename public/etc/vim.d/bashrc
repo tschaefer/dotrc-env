@@ -1,0 +1,7 @@
+# source 'default' config
+source ~/.bashrc
+
+# set vim prompt
+PS1='\[\033[00;31m\][vim]: \[\033[00;37m\]\u\[\033[00m\]@\[\033[00;34m\]\h\[\033[00m\]:\W\$ ' # normal user
+
+# vim: set filetype=sh :
