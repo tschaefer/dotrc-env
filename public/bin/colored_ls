@@ -1,5 +1,7 @@
-#!/usr/bin/env perl -w
+#!/usr/bin/env perl
+
 use strict;
+use warnings;
 
 # This script is meant to be used together with "l_plain". Default "ls"
 # won't work.
