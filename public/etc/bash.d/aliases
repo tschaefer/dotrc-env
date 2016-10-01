@@ -34,4 +34,7 @@ if [ $(type -P thefuck 2>/dev/null) ]; then
 	eval "$(thefuck --alias)"
 fi
 
+# htop path to config
+alias htop="HTOPRC=${HOME}/.htoprc htop"
+
 # vim: set filetype=sh :
