@@ -93,4 +93,16 @@ function gdpkg {
 	dpkg -l | grep $@
 }
 
+# colored ls
+function cls {
+largs=(
+    -Fl
+    --color=auto
+    --group-directories-first
+    --time-style=$'+ %F\n%m-%d %H:%M'
+    -q
+)
+ls "${largs[@]}" "$@" | colored_ls
+}
+
 # vim: set filetype=sh :
