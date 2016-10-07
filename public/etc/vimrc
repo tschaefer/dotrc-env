@@ -92,6 +92,21 @@ nmap ö gT
 set shell=/bin/bash\ --rcfile\ ~/.vim/bashrc
 
 
+""" plugin configuration
+
+" syntastic
+let g:syntastic_perl_checkers = ['perl']
+let g:syntastic_enable_perl_checker = 1
+let local_perl_lib_path = $PWD . '/lib'
+let g:syntastic_perl_lib_path = [local_perl_lib_path]
+
+" pathogen
+execute pathogen#infect()
+
+" nerdtree
+let g:nerdtree_tabs_open_on_console_startup=1
+
+
 """ extras
 
 " local host vimrc
@@ -99,9 +114,3 @@ let b:includefile = $HOME . "/.env/local/etc/vimrc"
 if (filereadable(b:includefile))
 	exe 'source' b:includefile
 endif
-
-" pathogen.vim
-execute pathogen#infect()
-
-" plugins config
-let g:nerdtree_tabs_open_on_console_startup=1
