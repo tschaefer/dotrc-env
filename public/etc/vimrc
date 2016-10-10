@@ -38,7 +38,7 @@ set lcs+=tab:»·
 set autoindent
 set smartindent
 set wrap
-set noexpandtab
+set expandtab
 set shiftwidth=4
 set tabstop=4
 set textwidth=78
