@@ -2,7 +2,7 @@
 function root {
 	case ${OS} in
 		Darwin)
-			sudo -i '${PATH_PREFIX}/bin/bash --rcfile /Users/${SUDO_USER}/.bashrc'
+			sudo /bin/bash --rcfile ${HOME}/.bashrc
 			;;
 		Linux)
 			sudo /bin/bash --rcfile ${HOME}/.bashrc
