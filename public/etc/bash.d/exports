@@ -66,4 +66,16 @@ fi
 export GZIP="-9 -v --name"
 export BZIP2="-9 -v"
 
+# less is more than more
+export PAGER="less"
+export LESS="-R -M --shift 5 -x 4"
+export LESSCOLOR="always"
+if [ $(type -P lesspipe.sh 2>/dev/null) ]; then
+	export LESSOPEN="|lesspipe.sh %s"
+	export LESSCLOSE="lesspipe.sh %s %s"
+elif [ $(type -P lesspipe 2>/dev/null) ]; then
+	export LESSOPEN="|lesspipe %s"
+	export LESSCLOSE="lesspipe %s %s"
+fi
+
 # vim: set filetype=sh :
