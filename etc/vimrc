@@ -1,0 +1,11 @@
+"" environment
+set nocompatible
+set runtimepath=${ENV_HOME}/.vim,$VIMRUNTIME
+filetype plugin indent on
+
+runtime! configs/basic.vim
+runtime! configs/mappings.vim
+
+if !empty($VIMVUNDLE)
+    runtime! configs/plugins.vim
+endif

@@ -4,49 +4,26 @@ User env and app dotrc files.
 
 ## Introduction
 
-__dotrc-env__ provides the _public_ part of yet another nix environment.
+__dotrc-env__ is yet another \*nix environment.
 It contains configuration files of following apps:
 
-	bash vim git screen nano
-
-The _private_ env and app dotrc files are included as git submodule.
-The repository provides configuration files of following apps:
-
-	ssh openvpn gnupg irssi mccabber
+    bash vim git screen nano ssh
 
 The whole environment is kick-started with two bootstrap scripts.
 
 ## Usage
 
-### Base
-
 Clone the repository to the final destination.
 
-	$ git clone https://github.com/tschaefer/dotrc-env.git ~/.env
+    $ git clone https://github.com/tschaefer/dotrc-env.git ~/.env
 
-Initialize public dotrc-env and link up your home.
-Beware script removes all existing destination files!
+Initialize dotrc-env and link up your home.
+Beware the script removes all existing destination files!
 
-	$ bash ~/.env/public/bootstrap
+    $ bash ~/.env/bootstrap
 
-Init and update submodules.
-
-	$ cd ~/.env && git submodule update --init
-
-### Advanced
-
-Adjust private submodule and add path to your private dotrc-env repository.
-
-	$ vim -p ~/.env/.gitmodules ~/.env/.git/config
-
-Init and update submodule.
-
-	$ cd ~/.env && git submodule update --init private 
-
-Initialize private dotrc-env and link up your home.
-Beware script removes all existing destination files!
-
-	$ bash ~/.env/private/bootstrap
+The vim plugin manager [https://github.com/VundleVim/Vundle.vim](Vundle.vim)
+is git cloned and all configured vim plugins are installed.
 
 ### License
 

@@ -1,0 +1,18 @@
+## ssh screen
+function sshs {
+    ssh $@ -t screen -R
+}
+
+## colored ls
+function cls {
+largs=(
+    -Fl
+    --color=auto
+    --group-directories-first
+    --time-style=$'+ %F\n%m-%d %H:%M'
+    -q
+)
+ls "${largs[@]}" $@ | colored_ls
+}
+
+# vim:ft=sh

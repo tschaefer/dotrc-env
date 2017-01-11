@@ -1,0 +1,17 @@
+## special conditions
+case ${TERM} in
+    vt100)
+        if [[ $(type -P resize 2>/dev/null ) ]]; then
+            resize
+        fi
+        ;;
+    xterm*)
+        if [[ ${EUID} -ne 0 ]]; then
+            echo -ne "\033]0;${USER}@${HOSTNAME%%.*}\007"
+        fi
+        ;;
+    *)
+        ;;
+esac
+
+# vim:ft=sh

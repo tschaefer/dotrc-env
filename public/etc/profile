@@ -1,8 +1,0 @@
-# if shell is bash load config
-if [ -n "$BASH_VERSION" ]; then
-	if [ -f "$HOME/.bashrc" ]; then
-		. "$HOME/.bashrc"
-	fi
-fi
-
-# vim: set filetype=sh :

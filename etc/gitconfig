@@ -1,0 +1,47 @@
+[github]
+    user = tschaefer
+
+[core]
+    pager = cat
+    editor = vim
+
+[color]
+    ui = true
+    branch = auto
+    diff = auto
+    interactive = auto
+    status = auto
+
+[alias]
+    ls = log --stat --abbrev-commit
+    lp = log -p
+    lg = log --graph --date-order -C -M --pretty=format:'%C(yellow)%h%Creset %ad %Cgreen%d%Creset %s' --all --date=short
+    ci = commit
+    co = checkout
+    tl = tag --list
+    bl = branch --list
+    ba = branch --all
+    br = branch --remote
+    rm = reset --mixed
+    rs = reset --soft
+    rh = reset --hard
+    re = reset --merge
+    rk = reset --keep
+
+[apply]
+    whitespace = strip
+
+[diff]
+    color = auto
+    rename = copy
+
+[pager]
+    color = true
+
+[status]
+    color = auto
+
+[push]
+    default = simple
+
+# vim:ft=dosini

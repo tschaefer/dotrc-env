@@ -1,0 +1,48 @@
+## path
+case ${ENV_OS} in
+    Darwin)
+        GNULIBS=/usr/local/opt/coreutils/libexec
+        PATH=${ENV_HOME}/.bin:${GNULIBS}/gnubin:${PATH}
+        MANPATH=${GNULIBS}/gnuman:$MANPATH
+        ;;
+    *)
+        PATH=${ENV_HOME}/.bin:${PATH}
+        MANPATH=${MANPATH}
+        ;;
+esac
+export PATH MANPATH
+
+## history
+export HISTCONTROL=ignoreboth
+export HISTSIZE=32768
+export HISTFILESIZE=${HISTSIZE}
+export HISTIGNORE="pwd:exit:date:ls*"
+export HISTTIMEFORMAT="%Y%m%d %T "
+
+# locales
+export LANG=de_DE.UTF-8
+export LC_MESSAGES=en_US.UTF-8
+
+## editor
+if [[ -x $(type -p vim) ]]; then
+    EDITOR=vim
+elif [[ -x $(type -p nano) ]]; then
+    EDITOR=nano
+fi
+export EDITOR
+export VISUAL=${EDITOR}
+
+## compression
+export GZIP="-9 -v --name"
+export BZIP2="-9 -v"
+
+## pager
+export PAGER=less
+
+## vim
+VIMVUNDLE=${ENV_HOME}/.vim/bundle/Vundle.vim
+if [[ -d ${VIMVUNDLE}  ]]; then
+    export VIMVUNDLE
+fi
+
+# vim: set filetype=sh :

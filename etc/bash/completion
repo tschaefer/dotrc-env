@@ -1,0 +1,22 @@
+## system
+case ${ENV_OS} in
+    Darwin)
+        if [[ -f /usr/local/etc/bash_completion ]]; then
+            . /usr/local/etc/bash_completion
+        fi
+        ;;
+    *)
+        if [[ -f /etc/bash_completion ]]; then
+            . /etc/bash_completion
+        fi
+        ;;
+esac
+
+## user
+if [[ -d ${ENV_HOME}/.bash/completion.d ]]; then
+    for FILE in ${ENV_HOME}/.bash/completion.d/*; do
+        [ \( -f ${FILE} -o -h ${FILE} \) -a -r ${FILE} ] && . ${FILE}
+    done
+fi
+
+# vim:ft=sh

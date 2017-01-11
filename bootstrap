@@ -1,0 +1,40 @@
+#!/bin/bash
+
+ENV_DOC=$(cd ${0%/*} && echo ${PWD%})
+
+ENV_LOCK=${ENV_DOC}/.lock
+if [[ -e ${ENV_LOCK} ]]; then
+    echo "dotrc-env initialization already done" >&2
+    exit 1
+fi
+
+set -x
+ln -snf ${ENV_DOC}/bin ${HOME}/.bin
+set +x
+
+ENV_ETC=${ENV_DOC}/etc
+for SRC in ${ENV_ETC}/*; do
+    SRC=${SRC##*/}
+    if [[ ${SRC} == ${ENV_ETC##*/} ]]; then
+        continue
+    fi
+
+    LN="ln -sf"
+    if [[ -d ${ENV_ETC}/${SRC} ]]; then
+        LN="ln -snf"
+    fi
+
+    set -x
+    ${LN} ${ENV_ETC}/${SRC} ${HOME}/.${SRC}
+    set +x
+done
+
+if [[ -x $(type -p git) && -x $(type -p vim) ]]; then
+    VIMVUNDLE=${HOME}/.vim/bundle/Vundle.vim
+    git clone https://github.com/VundleVim/Vundle.vim.git ${VIMVUNDLE}
+    ENV_HOME=${HOME} VIMVUNDLE=${VIMVUNDLE} vim +PluginInstall +qall
+fi
+
+touch ${ENV_LOCK}
+
+# vim:ft=sh

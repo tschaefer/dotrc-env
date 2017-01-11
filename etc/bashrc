@@ -1,0 +1,51 @@
+## non-interactive shell
+if [[ $- != *i* ]]; then
+    return
+fi
+
+## debugging
+#set -x
+
+## OS
+case ${OSTYPE} in
+    darwin*)
+        ENV_OS=Darwin
+        ENV_USER=${SUDO_USER:-${USER}}
+        ;;
+    linux*)
+        ENV_OS=Linux
+        ENV_USER=$(stat -c %U $(readlink -f /proc/self/fd/0))
+        ;;
+     *)
+        ENV_OS=${OSTYPE}
+        ENV_USER=${SUDO_USER:-${USER}}
+        ;;
+esac
+
+## home
+ENV_HOME=${HOME}
+if [[ ${EUID} -eq 0 ]]; then
+    ENV_HOME=$(grep "^${ENV_USER}:" /etc/passwd | cut -d: -f 6)
+    if [[ -z ${ENV_HOME} ]]; then
+        ENV_HOME=$(eval echo ~${ENV_USER})
+    fi
+fi
+
+## exports
+export ENV_OS ENV_USER ENV_HOME
+
+## bash
+BASH_DIR=${ENV_HOME}/.bash
+if [ -d ${BASH_DIR} ]; then
+    for FILE in colors prompt options exports functions aliases term \
+        completion hosts; do
+        if [[ -r ${BASH_DIR}/${FILE} ]]; then
+        . ${BASH_DIR}/${FILE}
+        fi
+    done
+fi
+
+## debuging
+#set +x
+
+# vim:ft=sh
