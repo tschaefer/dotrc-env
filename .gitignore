@@ -5,5 +5,6 @@ etc/vim/bundle/*
 ## ssh
 etc/ssh/known_hosts
 etc/ssh/id_rsa*
+etc/ssh/cache/*
 ## Mac OS
 .DS_Store
