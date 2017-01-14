@@ -6,9 +6,11 @@ alias preview="open -a Preview"
 alias vlc="open -a VLC"
 
 ## exports
-PATH=${ENV_HOME}/.perl5/bin:${PATH}
-PERL5LIB=${ENV_HOME}/.perl5/lib/perl5:${PERL5LIB}
-PERL_LOCAL_LIB_ROOT=${ENV_HOME}/.perl5:${PERL_LOCAL_LIB_ROOT}
+if [[ ! $PATH == *"${ENV_HOME}/.perl5/bin"* ]]; then
+    PATH=${ENV_HOME}/.perl5/bin:${PATH}
+fi
+PERL5LIB=${ENV_HOME}/.perl5/lib/perl5
+PERL_LOCAL_LIB_ROOT=${ENV_HOME}/.perl5
 PERL_MB_OPT="--install_base \"${ENV_HOME}/.perl5\""
 PERL_MM_OPT="INSTALL_BASE=${ENV_HOME}/.perl5"
 
