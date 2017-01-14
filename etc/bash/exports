@@ -1,9 +1,18 @@
 ## path
 case ${ENV_OS} in
     Darwin)
-        GNULIBS=/usr/local/opt/coreutils/libexec
-        PATH=${ENV_HOME}/.bin:${GNULIBS}/gnubin:${PATH}
-        MANPATH=${GNULIBS}/gnuman:$MANPATH
+        _GNULIBS=/usr/local/opt/coreutils/libexec
+        _PATH=${ENV_HOME}/.bin:${_GNULIBS}/gnubin
+        if [[ ! ${PATH} == *${_PATH}* ]]; then
+            PATH=${_PATH}:${PATH}
+        fi
+        _MANPATH=${_GNULIBS}/gnuman
+        if [[ -z ${MANPATH} ]]; then
+            MANPATH=${_MANPATH}
+        elif [[ ! ${MANPATH} == *${_MANPATH}* ]]; then
+            MANPATH=${_MANPATH}:${MANPATH}
+        fi
+        MANPATH=${MANPATH}
         ;;
     *)
         PATH=${ENV_HOME}/.bin:${PATH}
