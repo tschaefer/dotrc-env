@@ -4,6 +4,7 @@ servers = (
         chatnet = "XChannelSSL";
         port = "7000";
         use_ssl = "On";
+        autoconnect = "Yes";
     }
 );
 
