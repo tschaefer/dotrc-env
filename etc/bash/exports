@@ -16,7 +16,6 @@ export PATH MANPATH
 export HISTCONTROL=ignoreboth
 export HISTSIZE=32768
 export HISTFILESIZE=${HISTSIZE}
-export HISTIGNORE="pwd:exit:date:ls*"
 export HISTTIMEFORMAT="%Y%m%d %T "
 
 # locales
