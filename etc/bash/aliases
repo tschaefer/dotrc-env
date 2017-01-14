@@ -50,7 +50,7 @@ case ${ENV_OS} in
         ;;
 esac
 if [[ -n ${LESS} ]]; then
-    alias less="${LESS} -u NONE"
+    alias less="${LESS} -u ${ENV_HOME}/.vimrc --noplugin -c \"colo solarized\" -R"
 fi
 
 # vim:ft=sh
