@@ -7,7 +7,7 @@ User env and app dotrc files.
 __dotrc-env__ is yet another \*nix environment.
 It contains configuration files of following apps:
 
-    bash vim git screen nano ssh
+    bash vim git screen nano ssh irssi
 
 The whole environment is kick-started with two bootstrap scripts.
 

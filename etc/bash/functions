@@ -15,4 +15,10 @@ largs=(
 ls "${largs[@]}" $@ | colored_ls
 }
 
+## irssi
+function irssi.xchannel {
+    IFS=':' read -s -p "Xchannel Credentials: " -r -a XCH
+    XCHUSER=${XCH[0]} XCHPW=${XCH[1]} irssi
+}
+
 # vim:ft=sh
