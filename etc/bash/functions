@@ -22,17 +22,4 @@ function irssi.xchannel {
     XCHUSER=${XCHUSER} XCHPW=${XCHPW} irssi
 }
 
-## aiccu
-function aiccu.sixxs {
-    read -p "sixxs tunnel user: " SIXXSUSER
-    read -s -p "sixxs tunnel password: " SIXXSPW
-    AICCUTMPCONF=$(mktemp)
-    cat ${ENV_HOME}/.aiccu.conf > ${AICCUTMPCONF}
-    sed -i '' "s:%USERNAME%:${SIXXSUSER}:" ${AICCUTMPCONF}
-    sed -i '' "s:%PASSWORD%:${SIXXSPW}:" ${AICCUTMPCONF}
-    sudo aiccu start ${AICCUTMPCONF}
-    sleep 2
-    rm -f ${AICCUTMPCONF}
-}
-
 # vim:ft=sh
