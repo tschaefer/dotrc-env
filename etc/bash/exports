@@ -30,12 +30,15 @@ fi
 export EDITOR
 export VISUAL=${EDITOR}
 
-## compression
-export GZIP="-9 -v --name"
-export BZIP2="-9 -v"
-
-## pager
+## less
 export PAGER=less
+export LESS="-R -M --shift 5 -x 4"
+export LESSCOLOR="always"
+if [ -x $(type -p lesspipe.sh) ]; then
+    eval $(lesspipe.sh)
+elif [ -x $(type -p lesspipe) ]; then
+    eval $(lesspipe)
+fi
 
 ## vim
 VIMVUNDLE=${ENV_HOME}/.vim/bundle/Vundle.vim

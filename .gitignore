@@ -11,3 +11,4 @@ etc/ssh/id_rsa*
 etc/ssh/cache/*
 ## Mac OS
 .DS_Store
+bin/airport

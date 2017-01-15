@@ -1,61 +1,9 @@
-## ls
-alias ll="ls -l"
-alias la="ls -A"
-alias lh="ls -l -h"
-alias lt="ls -l -t"
-
-## cd
-alias ..="cd .."
-alias ...="cd ../.."
-
-## history
-alias history="history | cut -c 8-"
-
-## vim
-alias vim="vim -u ${ENV_HOME}/.vimrc"
-alias vimdiff="vimdiff -u ${ENV_HOME}/.vimrc"
-alias vim.noplugin="vim --noplugin"
-
-## nano
-alias nano="HOME=${ENV_HOME} nano"
-
-## screen
-alias screen="screen -c ${ENV_HOME}/.screenrc"
-
-## htop
-alias htop="HTOPRC=${ENV_HOME}/.htoprc htop"
-
-## grep
-alias grep.history="history | grep"
-alias grep.dpkg="dpkg -l | grep"
-alias grep.ps="ps -ef | grep"
-
-## git
+## environment
 alias git="HOME=${ENV_HOME} git"
-
-## httpd
-alias httpd.py="python2 -m SimpleHTTPServer"
-alias httpd.py3="python3 -m http.server"
-alias httpd.busybox="busybox httpd -f -p 8000"
-
-## ip
-alias pubip="host -4 -t A myip.opendns.com resolver1.opendns.com | \
-             awk 'END { print \$NF }'"
-
-## superuser
+alias htop="HTOPRC=${ENV_HOME}/.htoprc htop"
+alias nano="HOME=${ENV_HOME} nano"
+alias screen="screen -c ${ENV_HOME}/.screenrc"
+alias vim="vim -u ${ENV_HOME}/.vimrc"
 alias root="sudo bash --rcfile ${ENV_HOME}/.bashrc"
-
-## less
-case ${ENV_OS} in
-    Darwin)
-        LESS=$(find /usr/local/share/vim/ -name "less.sh" -print -quit)
-        ;;
-    *)
-        LESS=$(find /usr/share/vim/ -name "less.sh" -print -quit)
-        ;;
-esac
-if [[ -n ${LESS} ]]; then
-    alias less="${LESS} -u ${ENV_HOME}/.vimrc --noplugin -c \"colo solarized\" -R"
-fi
 
 # vim:ft=sh
