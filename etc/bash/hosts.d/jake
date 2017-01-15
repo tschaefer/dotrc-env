@@ -1,6 +1,5 @@
 ## aliases
 alias airport='sudo /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport'
-alias brew="HOMEBREW_GITHUB_API_TOKEN=ebc334679ab9259b7887cbd63329269092d231b3 /usr/local/bin/brew"
 alias finder="open"
 alias preview="open -a Preview"
 alias vlc="open -a VLC"
