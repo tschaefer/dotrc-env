@@ -28,6 +28,7 @@ alias htop="HTOPRC=${ENV_HOME}/.htoprc htop"
 ## grep
 alias grep.history="history | grep"
 alias grep.dpkg="dpkg -l | grep"
+alias grep.ps="ps -ef | grep"
 
 ## git
 alias git="HOME=${ENV_HOME} git"
@@ -36,6 +37,10 @@ alias git="HOME=${ENV_HOME} git"
 alias httpd.py="python2 -m SimpleHTTPServer"
 alias httpd.py3="python3 -m http.server"
 alias httpd.busybox="busybox httpd -f -p 8000"
+
+## ip
+alias pubip="host -4 -t A myip.opendns.com resolver1.opendns.com | \
+             awk 'END { print \$NF }'"
 
 ## superuser
 alias root="sudo bash --rcfile ${ENV_HOME}/.bashrc"
