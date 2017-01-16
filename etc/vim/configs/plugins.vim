@@ -22,13 +22,14 @@ filetype plugin indent on
 
 "" syntastic
 let g:syntastic_check_on_open = 1
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 0
 let g:syntastic_enable_signs = 1
 let g:syntastic_stl_format = '[%E{%e Errors}%B{, }%W{%w Warnings}]'
 let g:syntastic_disabled_filetypes = ['html', 'rst']
 let g:syntastic_perl_checkers = ['perl']
 let g:syntastic_enable_perl_checker = 1
-let b:local_perl_lib_path = $PWD . '/lib'
-let g:syntastic_perl_lib_path = [b:local_perl_lib_path]
+let g:syntastic_perl_lib_path = ['./lib']
 
 "" nerdtree
 let NERDTreeHighlightCursorline = 1
