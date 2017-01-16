@@ -6,4 +6,8 @@ alias screen="screen -c ${ENV_HOME}/.screenrc"
 alias vim="vim -u ${ENV_HOME}/.vimrc"
 alias root="sudo bash --rcfile ${ENV_HOME}/.bashrc"
 
+## abbreviations
+alias e="eval ${EDITOR}"
+alias h="history | cut -c 8-"
+
 # vim:ft=sh
