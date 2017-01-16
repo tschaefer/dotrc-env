@@ -1,7 +1,7 @@
 ## special conditions
 case ${TERM} in
     vt100)
-        if [[ $(type -P resize 2>/dev/null ) ]]; then
+        if [[ -x $(type -P resize) ]]; then
             resize
         fi
         ;;

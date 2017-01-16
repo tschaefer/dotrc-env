@@ -34,9 +34,9 @@ export VISUAL=${EDITOR}
 export PAGER=less
 export LESS="-R -M --shift 5 -x 4"
 export LESSCOLOR="always"
-if [ -x $(type -p lesspipe.sh) ]; then
+if [[ -x $(type -p lesspipe.sh) ]]; then
     eval $(lesspipe.sh)
-elif [ -x $(type -p lesspipe) ]; then
+elif [[ -x $(type -p lesspipe) ]]; then
     eval $(lesspipe)
 fi
 
