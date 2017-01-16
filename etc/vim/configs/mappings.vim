@@ -12,9 +12,6 @@ command! -bang WQ wq<bang>
 "" F keys
 nnoremap <F1> :tabprev<cr>
 nnoremap <F2> :tabnext<cr>
-nnoremap <F3> :set hlsearch<cr>
-nnoremap <F4> :set nohlsearch<cr>
-nnoremap <F5> :set paste<cr>
-nnoremap <F6> :set nopaste<cr>
-nnoremap <F9> :set background=light<cr>
-nnoremap <F10> :set background=dark<cr>
+nnoremap <F3> :set hlsearch! hlsearch?<cr>
+nnoremap <F4> :set paste! nopaste?<cr>
+nnoremap <F5> :let &background = ( &background == "dark"? "light" : "dark" )<cr>
