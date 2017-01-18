@@ -45,6 +45,11 @@ if [ -d ${BASH_DIR} ]; then
     done
 fi
 
+## perlbrew
+if [[ -r ${ENV_HOME}/.perlbrew/etc/bashrc ]]; then
+    . ${ENV_HOME}/.perlbrew/etc/bashrc
+fi
+
 ## debuging
 #set +x
 
