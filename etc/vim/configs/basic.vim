@@ -61,7 +61,7 @@ set shell=/bin/bash\ --rcfile\ ${ENV_HOME}/.vim/bashrc
 set notimeout
 set ttimeout
 set ttimeoutlen=10
-let mapleader="-"
+let mapleader=","
 
 "" syntax
 set autoindent
