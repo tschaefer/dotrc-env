@@ -7,9 +7,9 @@ User env and app dotrc files.
 __dotrc-env__ is yet another \*nix environment.
 It contains configuration files of following apps:
 
-    bash vim git screen nano ssh irssi
+    bash vim git screen nano ssh
 
-The whole environment is kick-started with two bootstrap scripts.
+The whole environment is kick-started with a bootstrap scripts.
 
 ## Usage
 
@@ -23,7 +23,7 @@ Beware the script removes all existing destination files!
     $ bash ~/.env/bootstrap
 
 The vim plugin manager [https://github.com/VundleVim/Vundle.vim](Vundle.vim)
-is git cloned and all configured vim plugins are installed.
+is git cloned and all configured vim plugins - see `etc/vim/configs/plugins.vim` - are installed.
 
 ### License
 
