@@ -9,6 +9,9 @@ case ${ENV_OS} in
         MANPATH=${MANPATH}
         ;;
 esac
+if [[ -d ${ENV_HOME}/.local/bin ]]; then
+    PATH=${ENV_HOME}/.local/bin:${PATH}
+fi
 export PATH MANPATH
 
 ## history
