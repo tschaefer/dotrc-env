@@ -1,14 +1,15 @@
 _vagrantctl() {
-    cur="${COMP_WORDS[COMP_CWORD]}"
-    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local cur prev words cword
+    _get_comp_words_by_ref cur prev words cword
 
-    if [[ $COMP_CWORD == 1 ]]; then
+    local actions='config halt list resume reload ssh-config status up'
+
+    if [[ $cword == 1 ]]; then
         if [[ "$cur" == -* ]]; then
             COMPREPLY=($(compgen -W '--base-directory --help --verbose' \
                 -- "$cur"))
         else
-            COMPREPLY=($(compgen -W 'config halt list resume reload \
-                ssh-config status up' -- "$cur"))
+            COMPREPLY=($(compgen -W "${actions}" -- "$cur"))
         fi
         return 0
     fi
@@ -18,15 +19,14 @@ _vagrantctl() {
             return 0;
             ;;
         --base-directory)
-            COMPREPLY=($(compgen -f -- "$cur"))
+            _filedir
             return 0;
             ;;
         --verbose)
             if [[ "$cur" == -* ]]; then
                 COMPREPLY=($(compgen -W '--base-directory' -- "$cur"))
             else
-                COMPREPLY=($(compgen -W 'config halt list resume reload \
-                    ssh-config status up' -- "$cur"))
+                COMPREPLY=($(compgen -W "${actions}" -- "$cur"))
             fi
             return 0;
             ;;
@@ -50,12 +50,11 @@ _vagrantctl() {
             return 0;
             ;;
         *)
-            if [[ "${COMP_WORDS[COMP_CWORD-2]}" == --base-directory ]]; then
+            if [[ "${words[cword-2]}" == --base-directory ]]; then
                 if [[ "$cur" == -* ]]; then
                     COMPREPLY=($(compgen -W '--verbose' -- "$cur"))
                 else
-                    COMPREPLY=($(compgen -W 'config halt list resume reload \
-                        ssh-config status up' -- "$cur"))
+                    COMPREPLY=($(compgen -W "${actions}" -- "$cur"))
                 fi
             fi
             return 0;
