@@ -75,7 +75,7 @@ function set_bash_prompt {
     echo -ne "\033]0;${USER}@${HOSTNAME%%.*}\007"
 
     # process
-    EXEC=$(ps -a -o pid,comm | awk -v ppid=$PPID '$1 == ppid { print $2 }' | \
+    EXEC=$(ps -A -o pid,comm | awk -v ppid=$PPID '$1 == ppid { print $2 }' | \
     xargs basename)
     EXEC=":${_fg_yellow}${EXEC}${_reset_fg}"
 
