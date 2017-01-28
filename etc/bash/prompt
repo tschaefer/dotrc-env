@@ -1,8 +1,99 @@
-## user, host, pwd
-if [[ ${EUID} -eq 0 ]]; then
-    PS1="\[\033[00;31m\]\u\[\033[00m\]@\[\033[00;34m\]\h\[\033[00m\]:\W\$ "
-else
-    PS1="\[\033[00;37m\]\u\[\033[00m\]@\[\033[00;34m\]\h\[\033[00m\]:\W\$ "
+## have git
+if [[ ! -x $(type -p vim) ]]; then
+    export DISABLE_GIT_PROMT=1
 fi
+
+## is git
+function is_git_repository {
+    git branch > /dev/null 2>&1
+}
+
+## git infos
+function set_git_branch {
+    git_status="$(git status 2> /dev/null)"
+
+    # clean/staged/dirty
+    if [[ ${git_status} =~ "working tree clean" ]]; then
+        state="${_fg_green}"
+    elif [[ ${git_status} =~ "changes to be committed" ]]; then
+        state="${_fg_yellow}"
+    else
+        state="${_fg_red}"
+    fi
+
+    # status against remote
+    remote_pattern="Your branch is (.*) of"
+    if [[ ${git_status} =~ ${remote_pattern} ]]; then
+        if [[ ${BASH_REMATCH[1]} == "ahead" ]]; then
+            remote="↑"
+        else
+            remote="↓"
+        fi
+    else
+        remote="~"
+    fi
+    diverge_pattern="# Your branch and (.*) have diverged"
+    if [[ ${git_status} =~ ${diverge_pattern} ]]; then
+        remote="↕"
+    fi
+
+    # branch name
+    branch_pattern="^On branch ([^${IFS}]*)"
+    if [[ ${git_status} =~ ${branch_pattern} ]]; then
+        branch=${BASH_REMATCH[1]}
+    fi
+
+    # branch string
+    BRANCH="(${state}${branch} ${remote}${_reset_fg}) "
+}
+
+## prompt symbol to use
+function set_prompt_symbol {
+    if [[ $1 -eq 0 ]]; then
+        PROMPT_SYMBOL="»"
+    else
+        PROMPT_SYMBOL="${_fg_red}»${_reset_fg}"
+    fi
+}
+
+## full bash prompt
+function set_bash_prompt {
+    set_prompt_symbol $?
+
+    # want git
+    if [[ -z ${DISABLE_GIT_PROMT} ]]; then
+        if is_git_repository ; then
+            set_git_branch
+        else
+            BRANCH=""
+        fi
+    else
+        BRANCH=""
+    fi
+
+    # X terminal title
+    echo -ne "\033]0;${USER}@${HOSTNAME%%.*}\007"
+
+    # process
+    EXEC=$(ps -a -o pid,comm | awk -v ppid=$PPID '$1 == ppid { print $2 }' | \
+    xargs basename)
+    EXEC=":${_fg_yellow}${EXEC}${_reset_fg}"
+
+
+    # bash prompt
+    if [[ ${EUID} == 0 ]] ; then
+        PS1="${_fg_red}\u${_reset_fg}@${_fg_blue}\h${_reset_fg}${EXEC} ${BRANCH}${_fg_cyan}\w${_reset_fg}
+ ${PROMPT_SYMBOL} "
+        PS2="root %> "
+    else
+        PS1="${_fg_white}\u${_reset_fg}@${_fg_blue}\h${_reset_fg}${EXEC} ${BRANCH}${_fg_cyan}\w${_reset_fg}
+ ${PROMPT_SYMBOL} "
+        PS2="%> "
+    fi
+
+}
+
+## display prompt
+PROMPT_COMMAND=set_bash_prompt
 
 # vim:ft=sh

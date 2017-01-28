@@ -57,7 +57,6 @@ set keywordprg=:help
 set linebreak
 set scrolloff=10
 set secure
-set shell=/bin/bash\ --rcfile\ ${ENV_HOME}/.vim/bashrc
 set notimeout
 set ttimeout
 set ttimeoutlen=10

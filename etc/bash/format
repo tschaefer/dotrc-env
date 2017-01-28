@@ -1,0 +1,42 @@
+## format
+_text_bold="\033[1m"
+_text_dim="\033[2m"
+_text_underline="\033[4m"
+_text_reverse="\033[7m"
+
+## reset
+_reset_fg="\033[39m"
+_reset_bg="\033[49m"
+_reset_bold="\033[21m"
+_reset_dim="\033[22m"
+_reset_underline="\033[24m"
+_reset_inverse="\033[27m"
+
+## colors fg
+_fg_black="\033[30m"
+_fg_red="\033[31m"
+_fg_green="\033[32m"
+_fg_yellow="\033[33m"
+_fg_blue="\033[34m"
+_fg_magenta="\033[35m"
+_fg_cyan="\033[36m"
+_fg_white="\033[37m"
+_fg_orange="\033[91m"
+_fg_gray="\033[93m"
+_fg_violet="\033[95m"
+
+## colors bg
+_bg_black="\033[40m"
+_bg_red="\033[41m"
+_bg_green="\033[42m"
+_bg_yellow="\033[43m"
+_bg_blue="\033[44m"
+_bg_magenta="\033[45m"
+_bg_cyan="\033[46m"
+_bg_white="\033[47m"
+_bg_orange="\033[101m"
+_bg_gray="\033[103m"
+_bg_violet="\033[105m"
+
+
+# vim:ft=sh:
