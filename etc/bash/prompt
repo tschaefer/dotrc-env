@@ -1,6 +1,6 @@
 ## have git
 if [[ ! -x $(type -p vim) ]]; then
-    export DISABLE_GIT_PROMT=1
+    export DISABLE_GIT_PROMPT=1
 fi
 
 ## is git
@@ -61,7 +61,7 @@ function set_bash_prompt {
     set_prompt_symbol $?
 
     # want git
-    if [[ -z ${DISABLE_GIT_PROMT} ]]; then
+    if [[ -z ${DISABLE_GIT_PROMPT} ]]; then
         if is_git_repository ; then
             set_git_branch
         else
