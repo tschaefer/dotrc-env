@@ -3,51 +3,25 @@ if [[ ! -x $(type -p git) ]]; then
     export DISABLE_GIT_PROMPT=1
 fi
 
-## is git
-function is_git_repository {
-    git branch > /dev/null 2>&1
-}
-
 ## git infos
 function set_git_branch {
-    git_status="$(git status 2> /dev/null)"
 
-    # clean/staged/dirty
-    if [[ ${git_status} =~ "nothing to commit, working directory clean" ]]; then
-        state="${_fg_green}"
-    elif [[ ${git_status} =~ "Changes to be committed" ]]; then
-        state="${_fg_yellow}"
-    else
-        state="${_fg_red}"
+    if [[ ! -e ${ENV_HOME}/.bash/git ]]; then
+        return
     fi
 
-    # status against remote
-    remote_pattern="Your branch is (.*) of"
-    if [[ ${git_status} =~ ${remote_pattern} ]]; then
-        if [[ ${BASH_REMATCH[1]} == "ahead" ]]; then
-            remote="↑"
-        else
-            remote="↓"
-        fi
-    else
-        remote="~"
-    fi
-    diverge_pattern="# Your branch and (.*) have diverged"
-    if [[ ${git_status} =~ ${diverge_pattern} ]]; then
-        remote="↕"
-    fi
+    . ${ENV_HOME}/.bash/git
 
-    # branch name
-    branch_pattern="^On branch ([^${IFS}]*)"
-    if [[ ${git_status} =~ ${branch_pattern} ]]; then
-        branch=${BASH_REMATCH[1]}
-    fi
+    GIT_PS1_SHOWDIRTYSTATE=1
+    GIT_PS1_SHOWSTASHSTATE=1
+    GIT_PS1_SHOWUNTRACKEDFILES=1
+    GIT_PS1_SHOWUPSTREAM="auto legacy"
+    GIT_PS1_SHOWCOLORHINTS=1
 
-    # branch string
-    BRANCH="(${state}${branch} ${remote}${_reset_fg}) "
+    GIT=$(__git_ps1 "(%s)")
 }
 
-## prompt symbol to use
+## prompt symbol
 function set_prompt_symbol {
     if [[ $1 -eq 0 ]]; then
         PROMPT_SYMBOL="»"
@@ -56,37 +30,27 @@ function set_prompt_symbol {
     fi
 }
 
-## full bash prompt
+## build prompt
 function set_bash_prompt {
     set_prompt_symbol $?
 
-    # want git
+    GIT=""
     if [[ -z ${DISABLE_GIT_PROMPT} ]]; then
-        if is_git_repository ; then
-            set_git_branch
-        else
-            BRANCH=""
-        fi
-    else
-        BRANCH=""
+        set_git_branch
     fi
 
-    # X terminal title
     echo -ne "\033]0;${USER}@${HOSTNAME%%.*}\007"
 
-    # process
     EXEC=$(ps -A -o pid,comm | awk -v ppid=$PPID '$1 == ppid { print $2 }' | \
     xargs basename)
     EXEC=":${_fg_yellow}${EXEC}${_reset_fg}"
 
-
-    # bash prompt
     if [[ ${EUID} == 0 ]] ; then
-        PS1="${_fg_red}\u${_reset_fg}@${_fg_blue}\h${_reset_fg}${EXEC} ${BRANCH}${_fg_cyan}\w${_reset_fg}
+        PS1="${_fg_red}\u${_reset_fg}@${_fg_blue}\h${_reset_fg}${EXEC} ${GIT} ${_fg_cyan}\w${_reset_fg}
  ${PROMPT_SYMBOL} "
         PS2="root %> "
     else
-        PS1="${_fg_white}\u${_reset_fg}@${_fg_blue}\h${_reset_fg}${EXEC} ${BRANCH}${_fg_cyan}\w${_reset_fg}
+       PS1="${_fg_white}\u${_reset_fg}@${_fg_blue}\h${_reset_fg}${EXEC} ${GIT} ${_fg_cyan}\w${_reset_fg}
  ${PROMPT_SYMBOL} "
         PS2="%> "
     fi
