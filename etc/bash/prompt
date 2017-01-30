@@ -1,5 +1,5 @@
 ## have git
-if [[ ! -x $(type -p vim) ]]; then
+if [[ ! -x $(type -p git) ]]; then
     export DISABLE_GIT_PROMPT=1
 fi
 
@@ -13,9 +13,9 @@ function set_git_branch {
     git_status="$(git status 2> /dev/null)"
 
     # clean/staged/dirty
-    if [[ ${git_status} =~ "working tree clean" ]]; then
+    if [[ ${git_status} =~ "nothing to commit, working directory clean" ]]; then
         state="${_fg_green}"
-    elif [[ ${git_status} =~ "changes to be committed" ]]; then
+    elif [[ ${git_status} =~ "Changes to be committed" ]]; then
         state="${_fg_yellow}"
     else
         state="${_fg_red}"
