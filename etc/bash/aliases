@@ -10,4 +10,8 @@ alias root="sudo bash --rcfile ${ENV_HOME}/.bashrc"
 alias e="eval ${EDITOR}"
 alias h="history | cut -c 8-"
 
+
+## reword
+alias iperl="re.pl"
+
 # vim:ft=sh
