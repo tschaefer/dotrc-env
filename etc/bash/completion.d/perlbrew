@@ -5,12 +5,14 @@ _list_perls() {
 }
 
 _list_local_perls() {
+    [ ! -d $PERLBREW_ROOT/perls ] && return
     local _perls=$1
     local __perls=$(ls -1 $PERLBREW_ROOT/perls/)
     eval $_perls="'${__perls}'"
 }
 
 _list_local_libs() {
+    [ ! -d $PERLBREW_ROOT/libs ] && return
     local _libs=$1
     local __libs=$(ls -1 $PERLBREW_ROOT/libs)
     eval $_libs="'${__libs}'"
