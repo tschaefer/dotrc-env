@@ -46,8 +46,8 @@ _perlbrew() {
 
     local actions='init info install uninstall available lib alias
         upgrade-perl list use off switch switch-off exec self-install
-        self-upgrade install-patchperl install-cpanm install-multiple download
-        clean version help'
+        self-upgrade install-patchperl install-cpanm install-multiple
+        list-modules download clean version help'
 
     if [[ $cword == 1 ]]; then
         COMPREPLY=($(compgen -W "${actions}" -- "$cur"))
