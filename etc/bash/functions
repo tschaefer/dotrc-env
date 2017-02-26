@@ -9,4 +9,15 @@ function ssh.sock {
     export SSH_AUTH_SOCK
 }
 
+## pip
+function pip.up {
+    pip install --user --upgrade $(pip list --user --format=columns | \
+        awk 'FNR > 2 {print $1 }')
+}
+
+## perl
+function perl.up {
+    cpan-outdated | cpanm
+}
+
 # vim:ft=sh
