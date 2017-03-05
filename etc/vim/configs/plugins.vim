@@ -41,3 +41,6 @@ let NERDTreeDirArrows = 1
 let NERDChristmasTree = 1
 let NERDTreeChDirMode = 2
 let NERDTreeMapJumpFirstChild = 'gK'
+
+"" airline
+let g:airline_symbols_ascii = 1
