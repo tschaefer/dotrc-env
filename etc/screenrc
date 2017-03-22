@@ -5,7 +5,7 @@ vbell off
 ## status bar
 hardstatus alwayslastline
 hardstatus string "%{= b}>> %{R}%H %{Y}%l %L>%1`%? %?%{b}%u%? %-18=%?%{w} %{w}%-=%{w}%-w%{b}%n %t%{w}%+w"
-caption splitonly "%?%F%{= w}%:%{= d}%?%t"
+caption splitonly "%?%F%{w}%:%{d}%?%t"
 
 ## terminal settings
 term screen-256color-bce
