@@ -27,10 +27,6 @@ bindkey "^[[5;2~" eval "copy" "stuff ^u"
 bindkey -m "^[[5;2~" stuff ^u
 bindkey -m "^[[6;2~" stuff ^d
 
-## start screen 1
-bind c screen 1
-bind ^c screen 1
-bind 0 select 10
-screen 1
+source ~/.screen/local
 
 # vim:ft=screen

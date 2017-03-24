@@ -12,3 +12,5 @@ etc/ssh/cache/*
 ## Mac OS
 .DS_Store
 bin/airport
+## screen
+etc/screen/local
