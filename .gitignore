@@ -9,6 +9,7 @@ etc/vim/static
 etc/ssh/known_hosts
 etc/ssh/id_rsa*
 etc/ssh/cache/*
+etc/ssh/keys
 ## Mac OS
 .DS_Store
 bin/airport
