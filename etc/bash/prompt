@@ -18,7 +18,7 @@ function set_git_branch {
     GIT_PS1_SHOWUPSTREAM="auto legacy"
     GIT_PS1_SHOWCOLORHINTS=1
 
-    GIT=$(__git_ps1 "(%s)")
+    GIT=$(__git_ps1 " (%s)")
 }
 
 ## prompt symbol
@@ -46,11 +46,11 @@ function set_bash_prompt {
     EXEC=":\[${_fg_yellow}\]${EXEC}\[${_reset_fg}\]"
 
     if [[ ${EUID} == 0 ]] ; then
-       PS1="\[${_fg_red}\]\u\[${_reset_fg}\]@\[${_fg_blue}\]\h\[${_reset_fg}\]${EXEC} ${GIT} \[${_fg_cyan}\]\w\[${_reset_fg}\]
+       PS1="\[${_fg_red}\]\u\[${_reset_fg}\]@\[${_fg_blue}\]\h\[${_reset_fg}\]${EXEC}${GIT} \[${_fg_cyan}\]\w\[${_reset_fg}\]
  ${PROMPT_SYMBOL} "
         PS2="root %> "
     else
-       PS1="\[${_fg_white}\]\u\[${_reset_fg}\]@\[${_fg_blue}\]\h\[${_reset_fg}\]${EXEC} ${GIT} \[${_fg_cyan}\]\w\[${_reset_fg}\]
+       PS1="\[${_fg_white}\]\u\[${_reset_fg}\]@\[${_fg_blue}\]\h\[${_reset_fg}\]${EXEC}${GIT} \[${_fg_cyan}\]\w\[${_reset_fg}\]
  ${PROMPT_SYMBOL} "
         PS2="%> "
     fi
