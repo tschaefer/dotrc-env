@@ -4,3 +4,5 @@ screen -t mutt 2 mutt
 screen -t ranger 3 ranger
 screen -t mpc 4 ncmpcpp
 screen -t bash 5 bash
+
+# vim:ft=screen
