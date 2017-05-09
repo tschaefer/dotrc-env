@@ -1,0 +1,75 @@
+#!/usr/bin/env perl
+
+use Modern::Perl '2017';
+
+use File::Basename;
+use Getopt::Long;
+use IPC::Run;
+
+my $me = basename($0);
+
+sub switch_on {
+    system 'xrandr --output eDP1 --primary --auto --output HDMI1 --left-of eDP1 --auto >/dev/null 2>&1';
+    return $?;
+}
+
+sub switch_off {
+    system 'xrandr --output HDMI1 --off >/dev/null 2>&1';
+    return $?;
+}
+
+sub is_connected {
+    my ( $out, @cmd );
+
+    @cmd = qw(xrandr);
+    IPC::Run::run( \@cmd, ">", \$out );
+
+    if ( $out =~ m/HDMI1 connected/ ) {
+        return 0;
+    }
+
+    return 1;
+}
+
+sub usage {
+    print {*STDERR} "Usage: $me [--status | --on | --off]\n";
+    return 255;
+}
+
+sub parse_opts {
+    my %opts;
+
+    GetOptions(
+        'status|s' => \$opts{'status'},
+        'on|o'     => \$opts{'on'},
+        'off|f'    => \$opts{'off'}
+    ) or exit usage();
+
+    my $opt_cnt = 0;
+    foreach my $key ( keys %opts ) {
+        $opt_cnt++ if $opts{$key};
+    }
+    if ( $opt_cnt > 1 ) {
+        exit usage();
+    }
+
+    return %opts;
+}
+
+sub run {
+    my %opts;
+
+    %opts = parse_opts();
+
+    if ( $opts{'on'} ) {
+        return switch_on();
+    }
+    elsif ( $opts{'off'} ) {
+        return switch_off();
+    }
+    else {
+        return is_connected();
+    }
+}
+
+exit run();
