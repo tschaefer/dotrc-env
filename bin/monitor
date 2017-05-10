@@ -9,12 +9,14 @@ use IPC::Run;
 my $me = basename($0);
 
 sub switch_on {
-    system 'xrandr --output eDP1 --primary --auto --output HDMI1 --left-of eDP1 --auto >/dev/null 2>&1';
+    my @cmd = qw(xrandr --output eDP1 --primary --auto --output HDMI1 --left-of eDP1 --auto);
+    IPC::Run::run( \@cmd, undef, \$_, \$_ );
     return $?;
 }
 
 sub switch_off {
-    system 'xrandr --output HDMI1 --off >/dev/null 2>&1';
+    my @cmd = qw(xrandr --output HDMI1 --off);
+    IPC::Run::run( \@cmd, undef, \$_, \$_ );
     return $?;
 }
 
