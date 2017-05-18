@@ -10,13 +10,13 @@ my $me = basename($0);
 
 sub switch_on {
     my @cmd = qw(xrandr --output eDP1 --primary --auto --output HDMI1 --left-of eDP1 --auto);
-    IPC::Run::run( \@cmd, undef, \$_, \$_ );
+    IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
     return $?;
 }
 
 sub switch_off {
     my @cmd = qw(xrandr --output HDMI1 --off);
-    IPC::Run::run( \@cmd, undef, \$_, \$_ );
+    IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
     return $?;
 }
 
@@ -24,9 +24,9 @@ sub is_connected {
     my ( $out, @cmd );
 
     @cmd = qw(xrandr);
-    IPC::Run::run( \@cmd, ">", \$out );
+    IPC::Run::run( \@cmd, ">", \$out, '2>/dev/null' );
 
-    if ( $out =~ m/HDMI1 connected/ ) {
+    if ( $out && $out =~ m/HDMI1 connected/ ) {
         return 0;
     }
 
