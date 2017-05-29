@@ -1,0 +1,73 @@
+#!/usr/bin/env perl
+
+use Modern::Perl '2017';
+
+use File::Basename;
+use IPC::Run;
+use Readonly;
+use Time::HiRes qw( sleep );
+
+my $me = basename($0);
+Readonly my %ACTIONS => (
+    is_running => \&is_running,
+    start      => \&start,
+    stop       => \&stop,
+    reload     => \&reload,
+);
+
+sub usage {
+    print {*STDERR} "Usage: $me [is-running | start | stop | reload]\n";
+    return 255;
+}
+
+sub is_running {
+    sleep 0.5;
+    my @cmd = qw(/usr/bin/pgrep tint2);
+    my $rc = IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
+    return $rc ? 1 : 0;
+}
+
+sub start {
+    return 0 if is_running();
+
+    my @cmd = qw(/usr/bin/tint2 -c /home/tschaefer/.config/tint2/tint2rc);
+    if ( my $pid = fork ) {
+        return is_running();
+    }
+    else {
+        IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
+    }
+
+    return 0;
+}
+
+sub stop {
+    return 0 if !is_running();
+
+    my @cmd = qw(/usr/bin/pkill -15 tint2 );
+    IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
+    return !is_running();
+}
+
+sub reload {
+    return 0 if !is_running();
+
+    my @cmd = qw(/usr/bin/pkill -10 tint2 );
+    IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
+    return is_running();
+}
+
+sub run {
+    my $action = $ARGV[0];
+
+    $action =~ tr/-/_/;
+
+    if ( !$action || !grep { /^$action$/ } keys %ACTIONS ) {
+        return usage();
+    }
+
+    my $sub = $ACTIONS{$action};
+    return &$sub();
+}
+
+exit !run();
