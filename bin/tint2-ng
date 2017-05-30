@@ -13,11 +13,12 @@ Readonly my %ACTIONS => (
     start      => \&start,
     stop       => \&stop,
     reload     => \&reload,
+    restart    => \&restart,
 );
 
 sub usage {
-    print {*STDERR} "Usage: $me [is-running | start | stop | reload]\n";
-    return 255;
+    print {*STDERR} "Usage: $me [is-running | start | stop | reload | restart]\n";
+    return 0;
 }
 
 sub is_running {
@@ -54,6 +55,13 @@ sub reload {
 
     my @cmd = qw(/usr/bin/pkill -10 tint2 );
     IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
+    return is_running();
+}
+
+sub restart {
+    stop();
+    sleep 0.5;
+    start();
     return is_running();
 }
 
