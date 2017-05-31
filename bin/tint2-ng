@@ -57,6 +57,8 @@ sub reload {
 
     my @cmd = qw(/usr/bin/pkill -10 tint2 );
     IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
+
+    sleep 0.5;
     return is_running();
 }
 
