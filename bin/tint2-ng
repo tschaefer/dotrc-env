@@ -70,11 +70,10 @@ sub restart {
 sub run {
     my $action = $ARGV[0];
 
-    $action =~ tr/-/_/;
+    return usage() if (!$action);
 
-    if ( !$action || !grep { /^$action$/ } keys %ACTIONS ) {
-        return usage();
-    }
+    $action =~ tr/-/_/;
+    return usage() if (!grep { /^$action$/ } keys %ACTIONS);
 
     my $sub = $ACTIONS{$action};
     return &$sub();
