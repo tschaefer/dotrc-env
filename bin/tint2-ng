@@ -22,7 +22,6 @@ sub usage {
 }
 
 sub is_running {
-    sleep 0.5;
     my @cmd = qw(/usr/bin/pgrep tint2);
     my $rc = IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
     return $rc ? 1 : 0;
@@ -33,6 +32,7 @@ sub start {
 
     my @cmd = qw(/usr/bin/tint2 -c /home/tschaefer/.config/tint2/tint2rc);
     if ( my $pid = fork ) {
+        sleep 0.5;
         return is_running();
     }
     else {
@@ -47,6 +47,8 @@ sub stop {
 
     my @cmd = qw(/usr/bin/pkill -15 tint2 );
     IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
+
+    sleep 0.5;
     return !is_running();
 }
 
@@ -60,9 +62,7 @@ sub reload {
 
 sub restart {
     stop();
-    sleep 0.5;
-    start();
-    return is_running();
+    return start();
 }
 
 sub run {
