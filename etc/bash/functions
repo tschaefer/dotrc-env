@@ -10,9 +10,14 @@ function ssh.sock {
 }
 
 ## pip
-function pip.up {
-    pip install --user --upgrade $(pip list --user --format=columns | \
+function pip2.up {
+    pip2 install --user --upgrade $(pip2 list --user --format=columns | \
         awk 'FNR > 2 {print $1 }')
+}
+
+function pip3.up {
+    pip3 install --user --upgrade $(pip3 list --user --format=columns | \
+        awk 'FNR > 3 {print $1 }')
 }
 
 ## perl
