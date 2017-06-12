@@ -1,0 +1,53 @@
+#!/usr/bin/env python
+
+from hashlib import sha256
+from mpd import MPDClient
+from subprocess import check_call
+from time import sleep
+
+sha = None
+
+def is_playing(mpc):
+    if mpc.status()['state'] in ['pause', 'stop']:
+        return False
+    else:
+        return True
+
+def is_new_song(song):
+    global sha
+    if not sha:
+        sha = sha256(str(song))
+        return True
+
+    _sha = sha256(str(song))
+    if _sha.hexdigest() != sha.hexdigest():
+        sha = _sha
+        return True
+
+    return False
+
+def notify(song):
+    if song['file'].startswith('http'):
+        check_call(['/usr/bin/notify-send', '-u', 'low', '-t', '3000',
+                   song['title'], song['name'], '-i', 'audio-volume-high'])
+    else:
+        check_call(['/usr/bin/notify-send', '-u', 'low', '-t', '3000',
+                   song['title'], song['artist'], '-i', 'audio-volume-high'])
+
+def run():
+    mpc = MPDClient()
+    mpc.connect('localhost', 6600)
+
+    sha = None
+    while(1):
+        if not is_playing(mpc):
+            pass
+        else:
+            song = mpc.currentsong()
+            if is_new_song(song):
+                notify(song)
+
+        sleep(1)
+
+if __name__ == '__main__':
+    run()
