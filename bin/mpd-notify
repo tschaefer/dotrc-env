@@ -8,10 +8,10 @@ from time import sleep
 sha = None
 
 def is_playing(mpc):
-    if mpc.status()['state'] in ['pause', 'stop']:
-        return False
-    else:
+    if mpc.status()['state'] in ['pause', 'play']:
         return True
+    else:
+        return False
 
 def is_new_song(song):
     global sha
@@ -40,9 +40,7 @@ def run():
 
     sha = None
     while(1):
-        if not is_playing(mpc):
-            pass
-        else:
+        if is_playing(mpc):
             song = mpc.currentsong()
             if is_new_song(song):
                 notify(song)
