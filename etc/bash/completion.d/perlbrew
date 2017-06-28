@@ -82,6 +82,10 @@ _perlbrew() {
                 COMPREPLY=($(compgen -W "${perls_libs}" -- "$cur"))
                 return 0
                 ;;
+            help)
+                COMPREPLY=($(compgen -W "${actions}" -- "$cur"))
+                return 0
+                ;;
             *)
                 return 0
                 ;;
