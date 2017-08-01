@@ -3,75 +3,56 @@
 use Modern::Perl '2017';
 
 use File::Basename;
-use Getopt::Long;
 use IPC::Run;
+use Readonly;
 
 my $me = basename($0);
+Readonly my %ACTIONS => (
+    on      => \&on,
+    off     => \&off,
+    status  => \&status,
+);
 
-sub switch_on {
-    my @cmd = qw(xrandr --output eDP1 --primary --auto --output HDMI1 --left-of eDP1 --auto);
-    IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
-    return $?;
-}
-
-sub switch_off {
-    my @cmd = qw(xrandr --output HDMI1 --off);
-    IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
-    return $?;
-}
-
-sub is_connected {
+sub status {
     my ( $out, @cmd );
 
     @cmd = qw(xrandr);
     IPC::Run::run( \@cmd, ">", \$out, '2>/dev/null' );
 
-    if ( $out && $out =~ m/HDMI1 connected/ ) {
-        return 0;
+    if ( $out && $out =~ m/HDMI1 connected 1920x1080/ ) {
+        return 1;
     }
 
-    return 1;
+    return 0;
+}
+
+sub on {
+    my @cmd = qw(xrandr --output eDP1 --primary --auto --output HDMI1 --left-of eDP1 --auto);
+    IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
+    return status;
+}
+
+sub off {
+    my @cmd = qw(xrandr --output HDMI1 --off);
+    IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
+    return !status;
 }
 
 sub usage {
-    print {*STDERR} "Usage: $me [--status | --on | --off]\n";
+    print {*STDERR} "Usage: $me off | on | status\n";
     return 255;
 }
 
-sub parse_opts {
-    my %opts;
-
-    GetOptions(
-        'status|s' => \$opts{'status'},
-        'on|o'     => \$opts{'on'},
-        'off|f'    => \$opts{'off'}
-    ) or exit usage();
-
-    my $opt_cnt = 0;
-    foreach my $key ( keys %opts ) {
-        $opt_cnt++ if $opts{$key};
-    }
-    if ( $opt_cnt > 1 ) {
-        exit usage();
-    }
-
-    return %opts;
-}
-
 sub run {
-    my %opts;
+    my $action = $ARGV[0];
 
-    %opts = parse_opts();
+    return usage() if (!$action);
 
-    if ( $opts{'on'} ) {
-        return switch_on();
-    }
-    elsif ( $opts{'off'} ) {
-        return switch_off();
-    }
-    else {
-        return is_connected();
-    }
+    $action =~ tr/-/_/;
+    return usage() if (!grep { /^$action$/ } keys %ACTIONS);
+
+    my $sub = $ACTIONS{$action};
+    return &$sub();
 }
 
-exit run();
+exit !run();
