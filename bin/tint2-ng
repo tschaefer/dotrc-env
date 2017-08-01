@@ -17,7 +17,7 @@ Readonly my %ACTIONS => (
 );
 
 sub usage {
-    print {*STDERR} "Usage: $me [is-running | start | stop | reload | restart]\n";
+    print {*STDERR} "Usage: $me is-running | start | stop | reload | restart\n";
     return 0;
 }
 
