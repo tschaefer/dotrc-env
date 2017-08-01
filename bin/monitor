@@ -10,10 +10,10 @@ my $me = basename($0);
 Readonly my %ACTIONS => (
     on      => \&on,
     off     => \&off,
-    status  => \&status,
+    is_on   => \&is_on,
 );
 
-sub status {
+sub is_on {
     my ( $out, @cmd );
 
     @cmd = qw(xrandr);
@@ -29,17 +29,17 @@ sub status {
 sub on {
     my @cmd = qw(xrandr --output eDP1 --primary --auto --output HDMI1 --left-of eDP1 --auto);
     IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
-    return status;
+    return is_on;
 }
 
 sub off {
     my @cmd = qw(xrandr --output HDMI1 --off);
     IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
-    return !status;
+    return !is_on;
 }
 
 sub usage {
-    print {*STDERR} "Usage: $me off | on | status\n";
+    print {*STDERR} "Usage: $me off | on | is-on\n";
     return 255;
 }
 
