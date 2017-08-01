@@ -27,12 +27,13 @@ def is_new_song(song):
     return False
 
 def notify(song):
+    summary = song['title']
     if song['file'].startswith('http'):
-        check_call(['/usr/bin/notify-send', '-u', 'low', '-t', '3000',
-                   song['title'], song['name'], '-i', 'audio-volume-high'])
+        body = song['name']
     else:
-        check_call(['/usr/bin/notify-send', '-u', 'low', '-t', '3000',
-                   song['title'], song['artist'], '-i', 'audio-volume-high'])
+        body = song['artist']
+
+    check_call(['/usr/bin/notify-send', '-u', 'low', '-t', '3000', summary, body, '-i', 'audio-volume-high'])
 
 def run():
     mpc = MPDClient()
