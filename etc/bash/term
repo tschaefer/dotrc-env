@@ -1,3 +1,12 @@
+case ${ENV_OS} in
+    Solaris)
+        TERM=$(echo $TERM | sed 's/-bce$//g')
+        export TERM
+        ;;
+    *)
+        ;;
+esac
+
 ## special conditions
 case ${TERM} in
     vt100)

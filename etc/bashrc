@@ -16,7 +16,11 @@ case ${OSTYPE} in
         ENV_OS=Linux
         ENV_USER=$(stat -c %U $(readlink -f /proc/self/fd/0))
         ;;
-     *)
+    solaris*)
+        ENV_OS=Solaris
+        ENV_USER=${SUDO_USER:-${USER}}
+        ;;
+    *)
         ENV_OS=${OSTYPE}
         ENV_USER=${SUDO_USER:-${USER}}
         ;;

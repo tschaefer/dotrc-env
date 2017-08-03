@@ -4,6 +4,10 @@ case ${ENV_OS} in
         PATH=${ENV_HOME}/.bin:/usr/local/opt/coreutils/libexec/gnubin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
         MANPATH=/usr/local/opt/coreutils/libexec/gnuman:/usr/share/man
         ;;
+    Solaris)
+        PATH=${ENV_HOME}/.bin:/opt/local/bin:/usr/local/bin:/usr/bin:/bin:/opt/local/sbin:/usr/local/sbin:/usr/sbin:/sbin
+        MANPATH=/opt/local/man:/usr/share/man
+        ;;
     *)
         PATH=${ENV_HOME}/.bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
         MANPATH=${MANPATH}
