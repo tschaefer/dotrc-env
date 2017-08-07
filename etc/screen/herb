@@ -1,0 +1,11 @@
+screen -t htop 0 ${ENV_HOME}/.screen/bin/htop
+screen -t vim 1 vim
+screen -t mutt 2 mutt
+screen -t ranger 3 ranger
+screen -t mpc 4 ncmpcpp
+screen -t mthc 5 ssh root@10.161.200.60
+screen -t bb 6 ssh root@10.161.200.167
+screen -t gt11 7 ssh root@gentoo11.i.ecos.de
+screen -t bash 8 bash
+
+# vim:ft=screen
