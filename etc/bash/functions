@@ -39,4 +39,13 @@ function find.norev {
     }
 }
 
+## python
+function py2.http {
+    python2 -m SimpleHTTPServer ${1}
+}
+
+function py3.http {
+    python3 -m http.server ${1}
+}
+
 # vim:ft=sh
