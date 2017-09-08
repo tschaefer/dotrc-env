@@ -4,12 +4,13 @@ alias htop="HTOPRC=${ENV_HOME}/.htoprc htop"
 alias nano="HOME=${ENV_HOME} nano"
 alias screen="screen -c ${ENV_HOME}/.screenrc"
 alias vim="vim -u ${ENV_HOME}/.vimrc"
+alias vimdiff="vimdiff -u ${ENV_HOME}/.vimrc"
 alias root="sudo bash --rcfile ${ENV_HOME}/.bashrc"
 
 ## abbreviations
 alias e="eval ${EDITOR}"
 alias h="history | cut -c 8-"
-
+alias h?="h | grep"
 
 ## reword
 alias iperl="re.pl"
