@@ -15,6 +15,7 @@ case ${ENV_OS} in
 esac
 if [[ -d ${ENV_HOME}/.local/bin ]]; then
     PATH=${ENV_HOME}/.local/bin:${PATH}
+    MANPATH=${ENV_HOME}/.local/share/man:${MANPATH}
 fi
 export PATH MANPATH
 
