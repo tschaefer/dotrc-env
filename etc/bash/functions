@@ -48,4 +48,9 @@ function py3.http {
     python3 -m http.server ${1}
 }
 
+## misc
+function calc {
+    echo "$1" | bc
+}
+
 # vim:ft=sh
