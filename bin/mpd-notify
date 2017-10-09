@@ -8,18 +8,17 @@ from time import sleep
 sha = None
 
 def is_playing(mpc):
-    if mpc.status()['state'] in ['pause', 'play']:
-        return True
-    else:
-        return False
+    return mpc.status()['state'] in ['pause', 'play']
 
 def is_new_song(song):
     global sha
+
     if not sha:
         sha = sha256(str(song))
         return True
 
     _sha = sha256(str(song))
+
     if _sha.hexdigest() != sha.hexdigest():
         sha = _sha
         return True
@@ -27,10 +26,11 @@ def is_new_song(song):
     return False
 
 def notify(song):
-    summary = song['title']
     if song['file'].startswith('http'):
-        body = song['name']
+        summary = song['name']
+        body = ''
     else:
+        summary = song['title']
         body = song['artist']
 
     check_call(['/usr/bin/notify-send', '-u', 'low', '-t', '3000', summary, body, '-i', 'audio-volume-high'])
@@ -40,7 +40,7 @@ def run():
     mpc.connect('localhost', 6600)
 
     sha = None
-    while(1):
+    while True:
         if is_playing(mpc):
             song = mpc.currentsong()
             if is_new_song(song):
