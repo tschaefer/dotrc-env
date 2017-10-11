@@ -33,9 +33,9 @@ let g:syntastic_perl_lib_path = ['./lib']
 
 "" nerdtree
 let NERDTreeHighlightCursorline = 1
-let NERDTreeIgnore = ['.vim$', '\~$', '.*\.pyc$', 'pip-log\.txt$',
-                     \ 'whoosh_index', 'xapian_index', '.*.pid', 'monitor.py',
-                     \ '.*-fixtures-.*.json', '.*\.o$', 'db.db', 'tags.bak']
+let NERDTreeIgnore = [ '\~$', '.*\.pyc$', '.*\.pid$', '.*\.png$', '.*\.jpg$',
+                     \ '*.jpeg$', '.*\.o$', '.*\.bak$', '.*\.la$', '.*\.so$',
+                     \ 'cscope\..*', '^tags$' ]
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 let NERDChristmasTree = 1
