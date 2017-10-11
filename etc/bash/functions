@@ -48,9 +48,15 @@ function py3.http {
     python3 -m http.server ${1}
 }
 
+### ps
+function ps.grep {
+    ps aux | grep "$1" | grep -v grep
+}
+
 ## misc
 function calc {
     echo "$1" | bc
 }
+
 
 # vim:ft=sh
