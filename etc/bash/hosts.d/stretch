@@ -1,0 +1,4 @@
+## exports
+alias cam="mpv tv:// --tv-driver=v4l2 --vf=mirror --tv-device=/dev/video0"
+
+# vim:ft=sh
