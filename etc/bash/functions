@@ -53,6 +53,11 @@ function ps.grep {
     ps aux | grep "$1" | grep -v grep
 }
 
+### pass
+function pass.clip {
+    pass "$1" | awk -F ': ' '/Pass/ { print $2 }' | xclip -selection p
+}
+
 ## misc
 function calc {
     echo "$1" | bc
