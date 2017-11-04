@@ -1,29 +1,16 @@
 #!/usr/bin/env python
 
-from hashlib import sha256
-from mpd import MPDClient
-from subprocess import check_call
-from time import sleep
+import hashlib
+import mpd
+import socket
+import subprocess
+import sys
+import time
 
-sha = None
-
-def is_playing(mpc):
-    return mpc.status()['state'] in ['pause', 'play']
-
-def is_new_song(song):
-    global sha
-
-    if not sha:
-        sha = sha256(str(song))
-        return True
-
-    _sha = sha256(str(song))
-
-    if _sha.hexdigest() != sha.hexdigest():
-        sha = _sha
-        return True
-
-    return False
+MPD_HOST = 'localhost'
+MPD_PORT = 6600
+POLL_INTERVAL = 0.5
+SLEEP_INTERVAL = 5
 
 def notify(song):
     if song['file'].startswith('http'):
@@ -33,20 +20,29 @@ def notify(song):
         summary = song['title']
         body = song['artist']
 
-    check_call(['/usr/bin/notify-send', '-u', 'low', '-t', '3000', summary, body, '-i', 'audio-volume-high'])
+    subprocess.check_call(['/usr/bin/notify-send', '-u', 'low', '-t', '3000', summary, body, '-i', 'audio-volume-high'])
 
-def run():
-    mpc = MPDClient()
-    mpc.connect('localhost', 6600)
-
+def observe(mpc):
     sha = None
     while True:
-        if is_playing(mpc):
+        if mpc.status()['state'] in ['pause', 'play']:
             song = mpc.currentsong()
-            if is_new_song(song):
+            _sha = hashlib.sha256(str(song))
+            if not sha or sha.hexdigest() != _sha.hexdigest():
+                sha = _sha
                 notify(song)
+        time.sleep(POLL_INTERVAL)
 
-        sleep(1)
+def run():
+    while True:
+        try:
+            mpc = mpd.MPDClient()
+            mpc.connect(MPD_HOST, MPD_PORT)
+            observe(mpc)
+        except KeyboardInterrupt:
+            sys.exit()
+        except (socket.error, mpd.ConnectionError):
+            time.sleep(SLEEP_INTERVAL)
 
 if __name__ == '__main__':
     run()
