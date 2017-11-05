@@ -18,7 +18,7 @@ def notify(song):
         body = ''
     else:
         summary = song['title']
-        body = song['artist']
+        body = song['album'] + " / " + song['artist']
 
     subprocess.check_call(['/usr/bin/notify-send', '-u', 'low', '-t', '3000', summary, body, '-i', 'audio-volume-high'])
 
