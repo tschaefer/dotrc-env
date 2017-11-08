@@ -44,13 +44,8 @@ _perlbrew() {
     local cur prev words cword
     _get_comp_words_by_ref cur prev words cword
 
-    local actions='init info install uninstall available lib alias
-        upgrade-perl list use off switch switch-off exec self-install
-        self-upgrade install-patchperl install-cpanm install-multiple
-        list-modules download clean version help'
-
     if [[ $cword == 1 ]]; then
-        COMPREPLY=($(compgen -W "${actions}" -- "$cur"))
+        COMPREPLY=( $(command perlbrew compgen $COMP_CWORD ${COMP_WORDS[*]}) )
         return 0
     fi
 
@@ -69,14 +64,24 @@ _perlbrew() {
                 return 0
                 ;;
             lib)
-                COMPREPLY=($(compgen -W "create delete" -- "$cur"))
+                COMPREPLY=($(compgen -W "create delete list" -- "$cur"))
                 return 0
+                ;;
+            lib-create|lib-delete)
+                _list_local_perls perls
+                COMPREPLY=($(compgen -W "${perls}" -- "$cur"))
                 ;;
             alias)
                 COMPREPLY=($(compgen -W "create rename delete" -- "$cur"))
                 return 0
                 ;;
-            use|switch)
+            switch)
+                local perls_libs
+                _list_local_perls_libs perls_libs
+                COMPREPLY=($(compgen -W "${perls_libs} off" -- "$cur"))
+                return 0
+                ;;
+            use)
                 local perls_libs
                 _list_local_perls_libs perls_libs
                 COMPREPLY=($(compgen -W "${perls_libs}" -- "$cur"))
