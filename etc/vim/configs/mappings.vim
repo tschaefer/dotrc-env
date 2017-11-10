@@ -10,10 +10,9 @@ command! -bang Wq wq<bang>
 command! -bang WQ wq<bang>
 
 "" F keys
-nnoremap <F1>  :tabprev<cr>
-nnoremap <F2>  :tabnext<cr>
-nnoremap <F3>  :set hlsearch! hlsearch?<cr>
-nnoremap <F4>  :set paste! nopaste?<cr>
-nnoremap <F5>  :let &background = ( &background == "dark"? "light" : "dark" )<cr>
-nnoremap <F11> :NERDTreeTabsOpen<cr>
-nnoremap <F12> :NERDTreeTabsClose<cr>
+nnoremap <F1> :tabprev<cr>
+nnoremap <F2> :tabnext<cr>
+nnoremap <F3> :set hlsearch! hlsearch?<cr>
+nnoremap <F4> :set paste! nopaste?<cr>
+nnoremap <F5> :let &background = ( &background == "dark"? "light" : "dark" )<cr>
+nnoremap <F6> :NERDTreeTabsToggle<cr>
