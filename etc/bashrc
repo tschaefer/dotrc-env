@@ -52,6 +52,7 @@ fi
 ## perlbrew
 if [[ -r ${ENV_HOME}/.perlbrew/etc/bashrc ]]; then
     . ${ENV_HOME}/.perlbrew/etc/bashrc
+    export PERLBREW_HOME=${ENV_HOME}/.perlbrew
 fi
 
 ## debuging
