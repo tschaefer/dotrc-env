@@ -12,6 +12,7 @@ MPD_PORT = 6600
 POLL_INTERVAL = 0.5
 SLEEP_INTERVAL = 5
 
+
 def notify(song):
     if song['file'].startswith('http'):
         summary = song['name']
@@ -20,7 +21,9 @@ def notify(song):
         summary = song['title']
         body = song['album'] + " / " + song['artist']
 
-    subprocess.check_call(['/usr/bin/notify-send', '-u', 'low', '-t', '3000', summary, body, '-i', 'audio-volume-high'])
+    subprocess.check_call(['/usr/bin/notify-send', '-u', 'low', '-t', '3000',
+                           summary, body, '-i', 'audio-volume-high'])
+
 
 def observe(mpc):
     sha = None
@@ -33,6 +36,7 @@ def observe(mpc):
                 notify(song)
         time.sleep(POLL_INTERVAL)
 
+
 def run():
     while True:
         try:
@@ -43,6 +47,7 @@ def run():
             sys.exit()
         except (socket.error, mpd.ConnectionError):
             time.sleep(SLEEP_INTERVAL)
+
 
 if __name__ == '__main__':
     run()
