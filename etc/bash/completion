@@ -12,6 +12,13 @@ case ${ENV_OS} in
         ;;
 esac
 
+## local
+if [[ -d /usr/local/share/bash-completion/completions ]]; then
+    for FILE in /usr/local/share/bash-completion/completions/*; do
+        [ \( -f ${FILE} -o -h ${FILE} \) -a -r ${FILE} ] && . ${FILE}
+    done
+fi
+
 ## user
 if [[ -d ${ENV_HOME}/.bash/completion.d ]]; then
     for FILE in ${ENV_HOME}/.bash/completion.d/*; do
