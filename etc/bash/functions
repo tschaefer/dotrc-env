@@ -53,11 +53,6 @@ function ps.grep {
     ps aux | grep "$1" | grep -v grep
 }
 
-## pass
-function pass.clip {
-    pass "$1" | awk -F ': ' '/Pass/ { print $2 }' | xclip -selection p
-}
-
 ## apt
 apt.security() {
     local apt_security_update="sudo apt-get -s dist-upgrade | awk '/^Inst.*[S|s]ecuri/ { print $2 }' | xargs sudo apt-get install"
