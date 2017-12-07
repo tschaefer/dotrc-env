@@ -52,7 +52,7 @@ sub run {
     return usage() if (!grep { /^$action$/ } keys %ACTIONS);
 
     my $sub = $ACTIONS{$action};
-    return &$sub();
+    return !&$sub();
 }
 
-exit !run();
+exit run();
