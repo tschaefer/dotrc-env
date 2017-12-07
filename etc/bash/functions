@@ -11,17 +11,23 @@ function ssh.sock {
 
 ## pip
 function pip2.up {
+    if [[ ! -x $(type -P pip2) ]]; then return; fi
+
     pip2 install --user --upgrade $(pip2 list --user --format=columns | \
         awk 'FNR > 2 {print $1 }')
 }
 
 function pip3.up {
+    if [[ ! -x $(type -P pip3) ]]; then return; fi
+
     pip3 install --user --upgrade $(pip3 list --user --format=columns | \
         awk 'FNR > 3 {print $1 }')
 }
 
 ## perl
 function perl.up {
+    if [[ ! -x $(type -P cpanm) ]]; then return; fi
+
     cpan-outdated | cpanm
 }
 
