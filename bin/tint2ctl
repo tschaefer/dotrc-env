@@ -1,25 +1,12 @@
 #!/usr/bin/env perl
 
-use Modern::Perl '2017';
+use strict;
+use warnings;
 
 use File::Basename;
 use IPC::Run;
-use Readonly;
+use Pod::Usage;
 use Time::HiRes qw( sleep );
-
-my $me = basename($0);
-Readonly my %ACTIONS => (
-    is_running => \&is_running,
-    start      => \&start,
-    stop       => \&stop,
-    reload     => \&reload,
-    restart    => \&restart,
-);
-
-sub usage {
-    print {*STDERR} "Usage: $me is-running | start | stop | reload | restart\n";
-    return 0;
-}
 
 sub is_running {
     my @cmd = qw(/usr/bin/pgrep tint2);
@@ -67,7 +54,31 @@ sub restart {
     return start();
 }
 
+sub usage {
+    pod2usage( -exitval => 255, -verbose => 0 );
+    return;
+}
+
+sub help {
+    pod2usage( -exitval => 0, -verbose => 1 );
+    return;
+}
+
+sub man {
+    pod2usage( -exitval => 0, -verbose => 2 );
+    return;
+}
+
 sub run {
+    my %ACTIONS = (
+        is_running => \&is_running,
+        start      => \&start,
+        stop       => \&stop,
+        reload     => \&reload,
+        restart    => \&restart,
+        help       => \&help,
+        man        => \&man,
+    );
     my $action = $ARGV[0];
 
     return usage() if (!$action);
@@ -80,3 +91,44 @@ sub run {
 }
 
 exit !run();
+
+__END__
+
+=head1 NAME
+
+tint2ctl - Control tint2 ligthweigt panel/taskbar
+
+=head1 SYNOPSIS
+
+tint2ctl start | stop | restart | is-running
+
+tint2ctl help | man
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<start>
+
+Start (activate) tint2.
+
+=item B<stop>
+
+Stop (deactivate) tint2.
+
+=item B<restart>
+
+Stop and start tint2.
+
+=item B<is-running>
+
+Checks wheter tint2 is running (active).
+
+=back
+
+=head1 DESCRIPTION
+
+B<tint2ctl> may be used to introspect and control the state of C<tint2>
+lightweigt panel/taskbar.
+
+=cut
