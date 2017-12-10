@@ -1,58 +1,191 @@
 #!/usr/bin/env perl
 
-use Modern::Perl '2017';
+use strict;
+use warnings;
 
-use File::Basename;
 use IPC::Run;
-use Readonly;
+use Getopt::Long;
+use Pod::Usage;
+use Carp;
 
-my $me = basename($0);
-Readonly my %ACTIONS => (
-    on      => \&on,
-    off     => \&off,
-    is_on   => \&is_on,
-);
+my $cfgfile;
+my %cfg;
 
 sub is_on {
-    my ( $out, @cmd );
+    my ( @cmd, $out, $is_on );
 
-    @cmd = qw(xrandr);
+    @cmd = qw(xrandr --listactivemonitors);
     IPC::Run::run( \@cmd, ">", \$out, '2>/dev/null' );
 
-    if ( $out && $out =~ m/HDMI1 connected 1920x1080/ ) {
-        return 1;
+    $is_on = 1;
+    $is_on = 0 if ( $out && $out =~ /$cfg{sec}$/m );
+
+    return $is_on;
+}
+
+sub is_off {
+    my ( @cmd, $out, $is_off );
+
+    @cmd = qw(xrandr --listactivemonitors);
+    IPC::Run::run( \@cmd, ">", \$out, '2>/dev/null' );
+
+    $is_off = 1;
+    $is_off = 0 if ( $out && $out !~ /$cfg{sec}$/m );
+
+    return $is_off;
+}
+
+sub turn_on {
+    my ( @cmd, $out );
+
+    @cmd = [
+        'xrandr',  '--output', $cfg{pri}, '--primary',
+        '--auto',  '--output', $cfg{ext}, '--' . $cfg{pos},
+        $cfg{pri}, '--' . $cfg{mode}
+    ];
+    IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
+
+    return is_on();
+}
+
+sub turn_off {
+    my ( @cmd, $out );
+
+    @cmd = [ 'xrandr', '--output', $cfg{ext}, '--off' ];
+    IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
+
+    return is_off();
+}
+
+sub print_usage {
+    pod2usage( -exitval => 255, -verbose => 0 );
+    return;
+}
+
+sub print_help {
+    pod2usage( -exitval => 0, -verbose => 1 );
+    return;
+}
+
+sub print_man {
+    pod2usage( -exitval => 0, -verbose => 2 );
+    return;
+}
+
+sub parse_config {
+    croak("$!: $cfgfile") if ( !-e $cfgfile );
+
+    open my $fh, "<", $cfgfile or croak("$!: $cfgfile");
+    chomp( my @raw = <$fh> );
+    close $fh or croak("$!: $cfgfile");
+
+    foreach ( grep { /^[a-z_]+\s*=\s*.+/ } @raw ) {
+        my ( $key, $value ) = split /\s*=\s*/;
+        $cfg{$key} = $value;
     }
 
-    return 0;
-}
+    foreach (qw{ pri sec pos mode }) {
+        croak("Invalid configuration: $cfgfile") if ( !$cfg{$_} );
+    }
 
-sub on {
-    my @cmd = qw(xrandr --output eDP1 --primary --auto --output HDMI1 --left-of eDP1 --auto);
-    IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
-    return is_on;
-}
+    $cfg{mode} = "mode $cfg{mode}" if ( $cfg{mode} ne 'auto' );
 
-sub off {
-    my @cmd = qw(xrandr --output HDMI1 --off);
-    IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
-    return !is_on;
-}
-
-sub usage {
-    print {*STDERR} "Usage: $me off | on | is-on\n";
-    return 255;
+    return;
 }
 
 sub run {
+
+    $cfgfile = "$ENV{HOME}/.config/monitor/monitorrc";
+
+    GetOptions( "config|c=s" => \$cfgfile, )
+      or print_usage();
+
+    parse_config($cfgfile);
+
+    my %ACTIONS = (
+        on     => \&turn_on,
+        off    => \&turn_off,
+        is_on  => \&is_on,
+        is_off => \&is_off,
+        help   => \&print_help,
+        man    => \&print_man,
+    );
     my $action = $ARGV[0];
 
-    return usage() if (!$action);
+    return print_usage() if ( !$action );
 
-    $action =~ tr/-/_/;
-    return usage() if (!grep { /^$action$/ } keys %ACTIONS);
+    $action =~ s/-/_/g;
+    return print_usage() if ( !$ACTIONS{$action} );
 
     my $sub = $ACTIONS{$action};
-    return !&$sub();
+
+    return &$sub();
 }
 
 exit run();
+
+__END__
+
+=head1 NAME
+
+monitor - Quickly use secondary monitor.
+
+=head1 SYNOPSIS
+
+monitor [--config FILE] on | off | is-on | is-off
+
+monitor help | man
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<--config|-c> FILE
+
+Path to configuration file.
+
+=item B<on>
+
+Turn on secondary monitor.
+
+=item B<off>
+
+Turn off secondary monitor.
+
+=item B<is-on>
+
+Is secondary monitor turned on.
+
+=item B<is-off>
+
+Is secondary monitor turned off.
+
+=back
+
+=head1 DESCRIPTION
+
+monitor is a tool to quickly configure and turn on, off a secondary monitor
+(LCD, beamer, etc.).
+
+The default configuration file is placed in ~/.config/monitor/monitorrc.
+The configuration must provide the name of the primary, secondary monitor, the
+relative position and the mode of the secondary monitor. For further infos see
+B<man xrandr>.
+
+=head1 EXAMPLE
+
+    ### monitor configuration
+
+    # primary monitor
+    pri = eDP1
+
+    # secondary monitor
+    sec = HDMI1
+
+    # position secondary monitor
+    pos = left-of
+
+    # mode secondary monitor
+    mode = auto
+
+=cut
