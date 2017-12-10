@@ -17,7 +17,7 @@ sub is_running {
 sub start {
     return 0 if is_running();
 
-    my @cmd = qw(/usr/bin/tint2 -c /home/tschaefer/.config/tint2/tint2rc);
+    my @cmd = [ '/usr/bin/tint2', '-c', $ENV{HOME} . '/.config/tint2/tint2rc' ];
     if ( my $pid = fork ) {
         sleep 0.5;
         return is_running();
@@ -81,10 +81,10 @@ sub run {
     );
     my $action = $ARGV[0];
 
-    return usage() if (!$action);
+    return usage() if ( !$action );
 
     $action =~ tr/-/_/;
-    return usage() if (!grep { /^$action$/ } keys %ACTIONS);
+    return usage() if ( !grep { /^$action$/ } keys %ACTIONS );
 
     my $sub = $ACTIONS{$action};
     return &$sub();
