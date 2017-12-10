@@ -7,6 +7,7 @@ use File::Basename;
 use IPC::Run;
 use Pod::Usage;
 use Time::HiRes qw( sleep );
+use utf8;
 
 sub is_running {
     my @cmd = qw(/usr/bin/pgrep tint2);
@@ -95,9 +96,11 @@ exit !run();
 
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
-tint2ctl - Control tint2 ligthweigt panel/taskbar
+tint2ctl - Control tint2 lightweight panel/taskbar
 
 =head1 SYNOPSIS
 
@@ -130,6 +133,6 @@ Checks wheter tint2 is running (active).
 =head1 DESCRIPTION
 
 B<tint2ctl> may be used to introspect and control the state of C<tint2>
-lightweigt panel/taskbar.
+lightweight panel/taskbar.
 
 =cut

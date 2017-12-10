@@ -3,10 +3,11 @@
 use strict;
 use warnings;
 
-use IPC::Run;
-use Getopt::Long;
-use Pod::Usage;
 use Carp;
+use Getopt::Long;
+use IPC::Run;
+use Pod::Usage;
+use utf8;
 
 my $cfgfile;
 my %cfg;
@@ -125,6 +126,8 @@ sub run {
 exit run();
 
 __END__
+
+=encoding utf8
 
 =head1 NAME
 
