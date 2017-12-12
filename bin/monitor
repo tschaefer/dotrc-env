@@ -39,11 +39,11 @@ sub is_off {
 sub turn_on {
     my ( @cmd, $out );
 
-    @cmd = [
+    @cmd = (
         'xrandr',  '--output', $cfg{pri}, '--primary',
-        '--auto',  '--output', $cfg{ext}, '--' . $cfg{pos},
+        '--auto',  '--output', $cfg{sec}, '--' . $cfg{pos},
         $cfg{pri}, '--' . $cfg{mode}
-    ];
+    );
     IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
 
     return is_on();
@@ -52,7 +52,7 @@ sub turn_on {
 sub turn_off {
     my ( @cmd, $out );
 
-    @cmd = [ 'xrandr', '--output', $cfg{ext}, '--off' ];
+    @cmd = ( 'xrandr', '--output', $cfg{sec}, '--off' );
     IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
 
     return is_off();
