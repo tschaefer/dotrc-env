@@ -16,3 +16,10 @@ etc/ssh/keys
 bin/airport
 ## screen
 etc/screen/local
+## gnupg
+etc/gnupg/private-keys-v1.d
+etc/gnupg/pubring.kbx*
+etc/gnupg/random_seed
+etc/gnupg/reader_0.status
+etc/gnupg/sshcontrol
+etc/gnupg/trustdb.gpg*
