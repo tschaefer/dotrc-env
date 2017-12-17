@@ -55,6 +55,12 @@ if [[ -r ${ENV_HOME}/.perlbrew/etc/bashrc ]]; then
     export PERLBREW_HOME=${ENV_HOME}/.perlbrew
 fi
 
+## gpg ssh auth pinentry workaround
+if [[ -n $GPG_AGENT_INFO && -n "$(gpgconf --list-options gpg-agent | \
+        awk -F: '/^enable-ssh-support:/{ print $10 }')" ]]; then
+    gpg-connect-agent -q updatestartuptty /bye >/dev/null
+fi
+
 ## debuging
 #set +x
 
