@@ -11,6 +11,8 @@ etc/ssh/known_hosts*
 etc/ssh/id_rsa*
 etc/ssh/cache/*
 etc/ssh/keys
+etc/ssh/config
+etc/ssh/config.local
 ## Mac OS
 .DS_Store
 bin/airport

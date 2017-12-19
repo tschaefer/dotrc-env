@@ -9,6 +9,12 @@ function ssh.sock {
     export SSH_AUTH_SOCK
 }
 
+function ssh.config {
+    SSH_HOME=${ENV_HOME}/.ssh
+    cat ${SSH_HOME}/config.global $(ls ${SSH_HOME}/config.local \
+        2>/dev/null || echo /dev/null) | grep -v "^#" > ${SSH_HOME}/config
+}
+
 ## pip
 function pip2.up {
     if [[ ! -x $(type -P pip2) ]]; then return; fi
