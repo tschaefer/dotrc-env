@@ -10,6 +10,7 @@ alias root="sudo bash --rcfile ${ENV_HOME}/.bashrc"
 ## abbreviations
 alias e="eval ${EDITOR}"
 alias h="history | cut -c 8-"
+alias d?="dpkg -l | grep"
 alias h?="h | grep"
 alias p?="ps.grep"
 
