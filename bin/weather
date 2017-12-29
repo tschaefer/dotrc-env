@@ -1,0 +1,176 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Carp;
+use Getopt::Long;
+use JSON;
+use LWP::UserAgent;
+use Pod::Usage;
+use utf8;
+
+## no critic (ValuesAndExpressions::ProhibitConstantPragma)
+use constant API_URL => 'http://api.wunderground.com/api/%s/%s/q/%s.json';
+use constant RC_FILE => $ENV{'HOME'} . '/.weatherrc';
+## use critic
+
+sub get_weather_data {
+    my ( $opts, $key ) = @_;
+
+    my ( $feature, $place, $url );
+    $feature = $opts->{'forecast'} ? 'forecast10day' : 'conditions';
+    $place = $opts->{'location'} if ( $opts->{'location'} );
+    $place = sprintf 'pws:%s.json', $opts->{'station'}
+      if ( $opts->{'station'} );
+    $url = sprintf API_URL, $key, $feature, $place;
+
+    my $ua  = LWP::UserAgent->new();
+    my $res = $ua->get($url);
+
+    croak $res->status_line if ( !$res->is_success );
+
+    my $json = $res->decoded_content;
+    my $data = decode_json($json);
+
+    return $data;
+}
+
+sub get_api_key {
+    my $key = 0;
+
+    open my $fh, "<", RC_FILE or croak( "$!: " . RC_FILE );
+    chomp( $key = <$fh> );
+    close $fh or croak( "$!: " . RC_FILE );
+
+    return $key;
+}
+
+sub print_conditions {
+    my $data = shift;
+
+    my $info = $data->{'current_observation'};
+
+    printf "Temperature: %sC Wind: %s km/h\n",
+      $info->{'temp_c'}, $info->{'wind_kph'};
+
+    return;
+}
+
+sub print_forecast {
+    my ( $days, $data ) = @_;
+
+    my $info = $data->{'forecast'}{'txt_forecast'}{'forecastday'};
+
+    $days = ( $days * 2 ) - 1;
+    foreach ( 0 .. $days ) {
+        my $txt = $info->[$_];
+        printf "%s: %s\n", $txt->{'title'}, $txt->{'fcttext_metric'};
+    }
+
+    return;
+}
+
+sub print_weather {
+    my $opts = shift;
+
+    my $key = get_api_key();
+    my $data = get_weather_data( $opts, $key );
+
+    croak $data->{'response'}{'error'}{'description'}
+      if ( $data->{'response'}{'error'} );
+
+    print_conditions($data)
+      if ( $data->{'response'}{'features'}{'conditions'} );
+
+    print_forecast( $opts->{'forecast'}, $data )
+      if ( $data->{'response'}{'features'}{'forecast10day'} );
+
+    return;
+}
+
+sub print_usage {
+    pod2usage( -exitval => 255, -verbose => 0 );
+    return;
+}
+
+sub print_help {
+    pod2usage( -exitval => 0, -verbose => 1 );
+    return;
+}
+
+sub print_man {
+    pod2usage( -exitval => 0, -verbose => 2 );
+    return;
+}
+
+sub run {
+    my $opts;
+    GetOptions(
+        "station|s=s"  => \$opts->{'station'},
+        "location|l=s" => \$opts->{'location'},
+        "forecast|f=i" => \$opts->{'forecast'},
+        "help|h"       => \$opts->{'help'},
+        "man|m"        => \$opts->{'man'},
+    ) or print_usage();
+
+    my $count = 0;
+    foreach ( values %{$opts} ) {
+        $count += 1 if ($_);
+    }
+
+    print_usage() if ( ( $opts->{'help'} || $opts->{'man'} ) && $count > 1 );
+    print_man()   if ( $opts->{'man'} );
+    print_help()  if ( $opts->{'help'} );
+
+    print_usage() if ( !$opts->{'station'} && !$opts->{'location'} );
+    print_usage() if ( $opts->{'location'} && $opts->{'station'} );
+
+    print_weather($opts);
+
+    return 0;
+}
+
+exit run();
+
+__END__
+
+=encoding utf8
+
+=head1 NAME
+
+weather - Get your weather from the underground.
+
+=head1 SYNOPSIS
+
+weather --station ID | --location NAME [--forecast DAYS]
+
+weather --help | --man
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<--station|-s> ID
+
+Wunderground weather station id.
+
+=item B<--location|-l> NAME
+
+Village, city name.
+
+=item B<--forecast|-f> DAYS
+
+Forecast for the next n days (including today).
+
+=back
+
+=head1 DESCRIPTION
+
+weather is a tool to get current conditions or forecast for a given station or
+location.
+
+An Wunderground API key L<http://api.wunderground.com/weather/api> is needed
+and must be provided in the user home, ~/.weatherrc.
+
+=cut
