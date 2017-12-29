@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 
-use Carp;
 use Getopt::Long;
 use JSON;
 use LWP::UserAgent;
@@ -14,6 +13,14 @@ use utf8;
 use constant API_URL => 'http://api.wunderground.com/api/%s/%s/q/%s.json';
 use constant RC_FILE => $ENV{'HOME'} . '/.weatherrc';
 ## use critic
+
+sub print_error {
+    my $msg = shift;
+
+    print {*STDERR} $msg;
+
+    exit 1;
+}
 
 sub get_weather_data {
     my ( $opts, $key ) = @_;
@@ -28,7 +35,7 @@ sub get_weather_data {
     my $ua  = LWP::UserAgent->new();
     my $res = $ua->get($url);
 
-    croak $res->status_line if ( !$res->is_success );
+    print_error( $res->status_line ) if ( !$res->is_success );
 
     my $json = $res->decoded_content;
     my $data = decode_json($json);
@@ -39,9 +46,9 @@ sub get_weather_data {
 sub get_api_key {
     my $key = 0;
 
-    open my $fh, "<", RC_FILE or croak( "$!: " . RC_FILE );
+    open my $fh, "<", RC_FILE or print_error( "$!: " . RC_FILE );
     chomp( $key = <$fh> );
-    close $fh or croak( "$!: " . RC_FILE );
+    close $fh or print_error( "$!: " . RC_FILE );
 
     return $key;
 }
@@ -77,7 +84,7 @@ sub print_weather {
     my $key = get_api_key();
     my $data = get_weather_data( $opts, $key );
 
-    croak $data->{'response'}{'error'}{'description'}
+    print_error( $data->{'response'}{'error'}{'description'} )
       if ( $data->{'response'}{'error'} );
 
     print_conditions($data)
@@ -120,8 +127,8 @@ sub run {
     }
 
     print_usage() if ( ( $opts->{'help'} || $opts->{'man'} ) && $count > 1 );
-    print_man()   if ( $opts->{'man'} );
-    print_help()  if ( $opts->{'help'} );
+    print_man()  if ( $opts->{'man'} );
+    print_help() if ( $opts->{'help'} );
 
     print_usage() if ( !$opts->{'station'} && !$opts->{'location'} );
     print_usage() if ( $opts->{'location'} && $opts->{'station'} );
