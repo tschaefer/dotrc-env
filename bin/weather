@@ -25,17 +25,13 @@ sub print_error {
 sub get_weather_data {
     my ( $opts, $key ) = @_;
 
-    my ( $feature, $place, $url );
-    $feature = $opts->{'forecast'} ? 'forecast10day' : 'conditions';
-    $place = $opts->{'location'} if ( $opts->{'location'} );
-    $place = sprintf 'pws:%s.json', $opts->{'station'}
-      if ( $opts->{'station'} );
-    $url = sprintf API_URL, $key, $feature, $place;
+    my $feature = $opts->{'forecast'} ? 'forecast10day' : 'conditions';
+    my $url = sprintf API_URL, $key, $feature, $opts->{'location'};
 
     my $ua  = LWP::UserAgent->new();
     my $res = $ua->get($url);
 
-    print_error( $res->status_line ) if ( !$res->is_success );
+    print_error( $res->status_line . "\n" ) if ( !$res->is_success );
 
     my $json = $res->decoded_content;
     my $data = decode_json($json);
@@ -46,9 +42,9 @@ sub get_weather_data {
 sub get_api_key {
     my $key = 0;
 
-    open my $fh, "<", RC_FILE or print_error( "$!: " . RC_FILE );
+    open my $fh, "<", RC_FILE or print_error( "$!: " . RC_FILE . "\n" );
     chomp( $key = <$fh> );
-    close $fh or print_error( "$!: " . RC_FILE );
+    close $fh or print_error( "$!: " . RC_FILE . "\n" );
 
     return $key;
 }
@@ -58,10 +54,32 @@ sub print_conditions {
 
     my $info = $data->{'current_observation'};
 
-    printf "Temperature: %sC Wind: %s km/h\n",
-      $info->{'temp_c'}, $info->{'wind_kph'};
+    printf "Location: %s\n",
+      $info->{'display_location'}->{'full'};
+    printf "Latitude: %s\n",
+      $info->{'display_location'}->{'latitude'};
+    printf "Longitude: %s\n",
+      $info->{'display_location'}->{'longitude'};
+    printf "Elevation: %s m\n",
+      $info->{'display_location'}->{'elevation'};
+    printf "Condition: %s\n",
+      $info->{'weather'};
+    printf "Temperature: %s C\n",
+      $info->{'temp_c'};
+    printf "Relative humidity: %s\n",
+      $info->{'relative_humidity'};
+    printf "Wind: %s km/h\n",
+      $info->{'wind_kph'};
+    printf "Windchill: %s C\n",
+      $info->{'windchill_c'};
+    printf "Feels like: %s C\n",
+      $info->{'feelslike_c'};
+    printf "Visbility: %s km\n",
+      $info->{'visibility_km'};
+    printf "Pressure: %s mb\n",
+      $info->{'pressure_mb'};
 
-    return;
+    exit 0;
 }
 
 sub print_forecast {
@@ -75,7 +93,20 @@ sub print_forecast {
         printf "%s: %s\n", $txt->{'title'}, $txt->{'fcttext_metric'};
     }
 
-    return;
+    exit 0;
+}
+
+sub print_locations {
+    my $data = shift;
+
+    my $info = $data->{'response'}{'results'};
+
+    foreach (@{$info}) {
+        printf "%s, %s: ZMW: %s\n",
+          $_->{'city'}, $_->{'country_name'}, $_->{'zmw'};
+    }
+
+    exit 0;
 }
 
 sub print_weather {
@@ -84,8 +115,11 @@ sub print_weather {
     my $key = get_api_key();
     my $data = get_weather_data( $opts, $key );
 
-    print_error( $data->{'response'}{'error'}{'description'} )
+    print_error( $data->{'response'}{'error'}{'description'} . "\n" )
       if ( $data->{'response'}{'error'} );
+
+    print_locations($data)
+      if ( $data->{'response'}{'results'} );
 
     print_conditions($data)
       if ( $data->{'response'}{'features'}{'conditions'} );
@@ -114,8 +148,6 @@ sub print_man {
 sub run {
     my $opts;
     GetOptions(
-        "station|s=s"  => \$opts->{'station'},
-        "location|l=s" => \$opts->{'location'},
         "forecast|f=i" => \$opts->{'forecast'},
         "help|h"       => \$opts->{'help'},
         "man|m"        => \$opts->{'man'},
@@ -130,12 +162,12 @@ sub run {
     print_man()  if ( $opts->{'man'} );
     print_help() if ( $opts->{'help'} );
 
-    print_usage() if ( !$opts->{'station'} && !$opts->{'location'} );
-    print_usage() if ( $opts->{'location'} && $opts->{'station'} );
+    $opts->{'location'} = $ARGV[0] || undef;
+    print_usage() if ( !$opts->{'location'} );
 
     print_weather($opts);
 
-    return 0;
+    return;
 }
 
 exit run();
@@ -150,32 +182,33 @@ weather - Get your weather from the underground.
 
 =head1 SYNOPSIS
 
-weather --station ID | --location NAME [--forecast DAYS]
+weather [--forecast DAYS] LOCATION
 
 weather --help | --man
+
+=head1 ARGUMENTS
+
+=over 8
+
+=item B<LOCATION>
+
+City name, Wunderground PWS or ZMW code.
+
+=back
 
 =head1 OPTIONS
 
 =over 8
 
-=item B<--station|-s> ID
+=item B<--forecast> DAYS
 
-Wunderground weather station id.
-
-=item B<--location|-l> NAME
-
-Village, city name.
-
-=item B<--forecast|-f> DAYS
-
-Forecast for the next n days (including today).
+Forecast for the next n days (including today), max 10 days.
 
 =back
 
 =head1 DESCRIPTION
 
-weather is a tool to get current conditions or forecast for a given station or
-location.
+weather is a tool to get current conditions or forecast for a given location.
 
 An Wunderground API key L<http://api.wunderground.com/weather/api> is needed
 and must be provided in the user home, ~/.weatherrc.
