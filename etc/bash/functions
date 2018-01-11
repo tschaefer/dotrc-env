@@ -15,6 +15,10 @@ function ssh.config {
         2>/dev/null || echo /dev/null) | grep -v "^#" > ${SSH_HOME}/config
 }
 
+function ssh.nocheck {
+    ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null $@
+}
+
 ## pip
 function pip2.up {
     if [[ ! -x $(type -P pip2) ]]; then return; fi
