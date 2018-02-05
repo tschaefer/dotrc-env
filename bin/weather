@@ -54,29 +54,35 @@ sub print_conditions {
 
     my $info = $data->{'current_observation'};
 
-    printf "Location: %s\n",
+    printf "Location:    %s\n",
       $info->{'display_location'}->{'full'};
-    printf "Latitude: %s\n",
+    printf "Latitude:    %s\n",
       $info->{'display_location'}->{'latitude'};
-    printf "Longitude: %s\n",
+    printf "Longitude:   %s\n",
       $info->{'display_location'}->{'longitude'};
-    printf "Elevation: %s m\n",
+    printf "Elevation:   %s m\n",
       $info->{'display_location'}->{'elevation'};
-    printf "Condition: %s\n",
+    printf "Condition:   %s\n",
       $info->{'weather'};
-    printf "Temperature: %s C\n",
+    my $string = sprintf "Temperature: %s °C\n",
       $info->{'temp_c'};
-    printf "Relative humidity: %s\n",
+    my $bytestring = Encode::encode("utf-8", $string);
+    print $bytestring;
+    printf "Humidity:    %s\n",
       $info->{'relative_humidity'};
-    printf "Wind: %s km/h\n",
+    printf "Wind:        %s km/h\n",
       $info->{'wind_kph'};
-    printf "Windchill: %s C\n",
+    $string = sprintf "Windchill:   %s °C\n",
       $info->{'windchill_c'};
-    printf "Feels like: %s C\n",
+    $bytestring = Encode::encode("utf-8", $string);
+    print $bytestring;
+    $string = sprintf "Feels like:  %s °C\n",
       $info->{'feelslike_c'};
-    printf "Visbility: %s km\n",
+    $bytestring = Encode::encode("utf-8", $string);
+    print $bytestring;
+    printf "Visbility:   %s km\n",
       $info->{'visibility_km'};
-    printf "Pressure: %s mb\n",
+    printf "Pressure:    %s mb\n",
       $info->{'pressure_mb'};
 
     exit 0;
