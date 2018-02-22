@@ -96,6 +96,7 @@ sub print_forecast {
     $days = ( $days * 2 ) - 1;
     foreach ( 0 .. $days ) {
         my $txt = $info->[$_];
+        next if (!$txt);
         printf "%s: %s\n", $txt->{'title'}, $txt->{'fcttext_metric'};
     }
 
