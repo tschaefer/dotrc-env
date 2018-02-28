@@ -10,7 +10,7 @@ use Pod::Usage;
 use utf8;
 
 ## no critic (ValuesAndExpressions::ProhibitConstantPragma)
-use constant API_URL => 'http://api.wunderground.com/api/%s/%s/q/%s.json';
+use constant API_URL => 'https://api.wunderground.com/api/%s/%s/q/%s.json';
 use constant RC_FILE => $ENV{'HOME'} . '/.weatherrc';
 ## use critic
 
