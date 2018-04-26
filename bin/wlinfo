@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# Currently, this is just a wrapper around iw(8). Yes, yes, I am aware
+# that you should not try to parse the output of iw(8). The point is, we
+# can now use wlinfo everywhere and update only wlinfo, when/if the
+# output of iw(8) really happens to change.
+#
+# It might be worthwhile to rewrite wlinfo in C (use Netlink to ask
+# nl80211 directly).
+
+if [ -z "$1" ]
+then
+    echo "Usage: $0 <device>" >&2
+    exit 1
+fi
+
+# Be aware that there are some literal tabs in here.
+iw dev "$1" link |
+sed -n \
+    -e 's/^Connected to \([^ ]\+\) .*/bssid \1/p' \
+    -e 's/^	SSID: \(.*\)/ssid \1/p' \
+    -e 's/^	freq: \(.*\)/freq \1/p' \
+    -e 's/^	signal: \([^ ]\+\) .*/signal \1/p'
