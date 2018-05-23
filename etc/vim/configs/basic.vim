@@ -70,3 +70,8 @@ set showtabline=2
 set softtabstop=4
 set tabstop=4
 set textwidth=78
+
+"" features
+if has('terminal')
+    packadd termdebug
+endif
