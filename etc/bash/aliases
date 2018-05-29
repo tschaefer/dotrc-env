@@ -14,6 +14,9 @@ alias d?="dpkg -l | tail -n +6 | awk '{ print \$2 }' | grep"
 alias h?="h | grep"
 alias p?="ps.grep"
 
+## tools
+alias battery="acpi -b | awk '{ print \$5 }'"
+
 ## reword
 alias iperl="re.pl"
 
