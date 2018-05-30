@@ -75,12 +75,13 @@ function ps.grep {
 
 ## apt
 apt.security() {
-    local apt_security_update="sudo apt-get -s dist-upgrade | \
-        awk '/^Inst.*[S|s]ecuri/ { print $2 }' | xargs sudo apt-get install"
+    local update="sudo apt-get update; sudo apt-get -s dist-upgrade | \
+        awk '/^Inst.*[S|s]ecuri/ { print $2 }' | xargs sudo apt-get install; \
+        sudo apt-get clean; sudo apt-get autoclean"
     if [[ -n "${1}" ]]; then
-        ssh ${1} "${apt_security_update}"
+        ssh ${1} "${update}"
     else
-        eval ${apt_security_update}
+        eval ${update}
     fi
 }
 
