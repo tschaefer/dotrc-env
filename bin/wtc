@@ -1,0 +1,101 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+use JSON;
+use LWP::UserAgent;
+use Pod::Usage;
+use Readonly;
+use utf8;
+
+Readonly my $WTC_URL => 'https://whatthecommit.com/index.json';
+
+sub print_error {
+    my $msg = shift;
+
+    print {*STDERR} $msg;
+
+    exit 1;
+}
+
+sub get_wtc_msg {
+    my $ua = LWP::UserAgent->new();
+    my $res = $ua->get($WTC_URL);
+
+    print_error( $res->status_line . "\n" ) if ( !$res->is_success );
+
+    my $json = $res->decoded_content;
+    my $data = decode_json($json);
+
+    return $data->{'commit_message'};
+}
+
+sub print_usage {
+    pod2usage( -exitval => 255, -verbose => 0 );
+    return;
+}
+
+sub print_help {
+    pod2usage( -exitval => 0, -verbose => 1 );
+    return;
+}
+
+sub print_man {
+    pod2usage( -exitval => 0, -verbose => 2 );
+    return;
+}
+
+sub run {
+    my $opts;
+    GetOptions(
+        "help|h"       => \$opts->{'help'},
+        "man|m"        => \$opts->{'man'},
+    ) or print_usage();
+
+    my $count = 0;
+    foreach ( values %{$opts} ) {
+        $count += 1 if ($_);
+    }
+
+    print_usage() if ( ( $opts->{'help'} || $opts->{'man'} ) && $count > 1 );
+    print_man()  if ( $opts->{'man'} );
+    print_help() if ( $opts->{'help'} );
+
+    binmode STDOUT, "encoding(UTF-8)";
+    printf "%s\n", get_wtc_msg();
+
+    return 0;
+}
+
+exit run();
+
+__END__
+
+=encoding utf8
+
+=head1 NAME
+
+wtc - What the commit.
+
+=head1 SYNOPSIS
+
+wtc
+
+wtc --help | --man
+
+=head1 ARGUMENTS
+
+None.
+
+=head1 OPTIONS
+
+None.
+
+=head1 DESCRIPTION
+
+wtc is a perlish command line client to the L<https://whatthecommit.com>
+service, printing the message.
+
+=cut
