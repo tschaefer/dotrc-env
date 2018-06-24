@@ -90,5 +90,8 @@ function calc {
     echo "$1" | bc
 }
 
+function wttr() {
+    curl -H "Accept-Language: ${LANG%_*}" wttr.in/"${1:-Mainz}?{$2:-0}"
+}
 
 # vim:ft=sh
