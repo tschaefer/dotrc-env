@@ -1,0 +1,136 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+use Pod::Usage;
+use utf8;
+
+use Digest::SHA;
+
+sub sha {
+    my ( $msg, $alg, $fmt ) = @_;
+    my ( $sha, $dig );
+
+    $sha = Digest::SHA->new($alg);
+    if ( !$sha ) {
+        printf {*STDERR} "Bad algorithm '%d'.\n", $alg;
+        print_usage();
+    }
+    $sha->add($msg);
+
+    if ($fmt =~ /^binary$/) {
+        $dig = $sha->digest();
+    }
+    elsif ($fmt =~ /^base64$/) {
+        $dig = $sha->b64digest();
+    }
+    elsif ($fmt =~ /^hex$/) {
+        $dig = $sha->hexdigest();
+    }
+    elsif ($fmt =~ /^hexstr$/) {
+        my $_dig = $sha->hexdigest();
+        $dig = "";
+        $dig = sprintf "%s\\x%s", $dig, $_ foreach ($_dig =~ m/../g);
+    }
+    else {
+        printf {*STDERR} "Bad format '%s'.\n", $fmt;
+        print_usage();
+    }
+
+    printf "%s\n", $dig;
+
+    return 0;
+}
+
+sub print_usage {
+    pod2usage( -exitval => 255, -verbose => 0 );
+    return;
+}
+
+sub print_help {
+    pod2usage( -exitval => 0, -verbose => 1 );
+    return;
+}
+
+sub print_man {
+    pod2usage( -exitval => 0, -verbose => 2 );
+    return;
+}
+
+sub run {
+    my $alg  = "512";
+    my $fmt  = "hex";
+    my $help = 0;
+    my $man  = 0;
+    my $msg  = undef;
+
+    GetOptions(
+        "algorithm|a=i"    => \$alg,
+        "format|f=s" => \$fmt,
+        "help|h!"    => \$help,
+        "man|m!"     => \$man
+    ) or print_usage();
+
+    print_help() if ($help);
+    print_man()  if ($man);
+
+    $msg = $ARGV[0];
+    if ( !$msg ) {
+        print {*STDERR} "Missing message.\n";
+        return print_usage();
+    }
+
+    return sha( $msg, $alg, $fmt );
+}
+
+exit run();
+
+__END__
+
+=encoding utf8
+
+=head1 NAME
+
+fshasum - compute SHA message digest
+
+=head1 SYNOPSIS
+
+fshasum [--algorithm|-a ALGORITHM] [--format|-f FORMAT] MESSAGE
+
+fshasum --help|-h | --man|-m
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<--algorithm|-a> FILE
+
+Hash algorithm (1, 224, 256, 384, 512, 512224, 512256).
+
+=item B<--format|-f>
+
+Output format (binary, base64, hex, hexstr)
+
+=item B<MESSAGE>
+
+Message to compute digest.
+
+=back
+
+=head1 DESCRIPTION
+
+fshasum computes SHA message digest with the following algorithm 1, 224, 256,
+384, 512 (default), 512224, 512256 in the given output formats binary, base64,
+hex (default), hexstr.
+
+=head1 EXAMPLE
+
+    $ fshasum "Hello, World."
+    8cb2dd0629859c904065700a761cf2616a26d8d477560eed473d3489c53720461511b66f191d06537e3887f4e6f40cb9b0231285b9b5dd6995f0825b18d5f1af
+
+    $ fshasum --algorithm 224 --format hexstr "Hello, World."
+    \x8f\x6f\x10\x10\x84\x58\x8d\x8a\x6e\xd3\xe6\x25\x99\xac\x6b\xe9\xfd\x1f\x6b\x7c\xa4\x43\x18\x9a\x29\x77\x87\x81
+
+=cut
