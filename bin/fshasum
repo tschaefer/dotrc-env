@@ -11,7 +11,14 @@ use Digest::SHA;
 
 sub sha {
     my ( $msg, $alg, $fmt ) = @_;
-    my ( $sha, $dig );
+    my ( $sha, $dig, $_dig, $func );
+
+    my %digs = (
+        binary => 'digest',
+        base64 => 'b64digest',
+        hex    => 'hexdigest',
+        hexstr => 'hexdigest'
+    );
 
     $sha = Digest::SHA->new($alg);
     if ( !$sha ) {
@@ -20,23 +27,19 @@ sub sha {
     }
     $sha->add($msg);
 
-    if ($fmt =~ /^binary$/) {
-        $dig = $sha->digest();
-    }
-    elsif ($fmt =~ /^base64$/) {
-        $dig = $sha->b64digest();
-    }
-    elsif ($fmt =~ /^hex$/) {
-        $dig = $sha->hexdigest();
-    }
-    elsif ($fmt =~ /^hexstr$/) {
-        my $_dig = $sha->hexdigest();
-        $dig = "";
-        $dig = sprintf "%s\\x%s", $dig, $_ foreach ($_dig =~ m/../g);
-    }
-    else {
+    $func = $digs{$fmt};
+    if ( !$func ) {
         printf {*STDERR} "Bad format '%s'.\n", $fmt;
         print_usage();
+    }
+
+    $_dig = $sha->$func();
+
+    if ( $fmt =~ /^hexstr$/ ) {
+        $dig = sprintf "%s\\x%s", $dig, $_ foreach ( $_dig =~ m/../g );
+    }
+    else {
+        $dig = $_dig;
     }
 
     printf "%s\n", $dig;
@@ -67,10 +70,10 @@ sub run {
     my $msg  = undef;
 
     GetOptions(
-        "algorithm|a=i"    => \$alg,
-        "format|f=s" => \$fmt,
-        "help|h!"    => \$help,
-        "man|m!"     => \$man
+        "algorithm|a=i" => \$alg,
+        "format|f=s"    => \$fmt,
+        "help|h!"       => \$help,
+        "man|m!"        => \$man
     ) or print_usage();
 
     print_help() if ($help);
