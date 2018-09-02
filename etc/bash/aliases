@@ -16,6 +16,7 @@ alias p?="ps.grep"
 
 ## tools
 alias battery="acpi -b | awk '{ print \$5 }'"
+alias pubip="curl ipinfo.io/ip"
 
 ## reword
 alias iperl="re.pl"
