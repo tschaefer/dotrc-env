@@ -152,6 +152,16 @@ sub print_man {
     return;
 }
 
+sub get_location {
+    my $ua  = LWP::UserAgent->new();
+    my $url = 'https://ipinfo.io/city';
+    my $res = $ua->get($url);
+
+    print_error( $res->status_line . "\n" ) if ( !$res->is_success );
+
+    return $res->content;
+}
+
 sub run {
     my $opts;
     GetOptions(
@@ -169,12 +179,11 @@ sub run {
     print_man()  if ( $opts->{'man'} );
     print_help() if ( $opts->{'help'} );
 
-    $opts->{'location'} = $ARGV[0] || undef;
-    print_usage() if ( !$opts->{'location'} );
+    $opts->{'location'} = $ARGV[0] || get_location();
 
     print_weather($opts);
 
-    return;
+    return 0;
 }
 
 exit run();
@@ -189,7 +198,7 @@ weather - Get your weather from the underground.
 
 =head1 SYNOPSIS
 
-weather [--forecast DAYS] LOCATION
+weather [--forecast DAYS] [LOCATION]
 
 weather --help | --man
 
@@ -199,7 +208,7 @@ weather --help | --man
 
 =item B<LOCATION>
 
-City name, Wunderground PWS or ZMW code.
+City name, Wunderground PWS or ZMW code (default current location).
 
 =back
 
