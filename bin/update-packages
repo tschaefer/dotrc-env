@@ -1,0 +1,142 @@
+#!/bin/bash
+
+ME=${0##*/}
+
+usage() {
+cat <<EOF
+Usage:
+    $ME [-a] | [-psy]
+
+    $ME -h
+
+Options:
+    -h:     shows this message (help)
+    -a:     update all (perl, python, system) packages
+    -p:     update perl packages
+    -s:     update system packages
+    -y:     update python packages
+
+EOF
+}
+
+update_python() {
+    echo -e "\033[33mStarting python packages update ...\033[39m"
+
+    if [ -x $(type -P pip2) ]; then
+        pip2 install --user --upgrade $(pip2 list --user --format=columns | \
+            awk 'FNR > 2 {print $1 }')
+    fi
+
+    if [ -x $(type -P pip3) ]; then
+        pip3 install --user --upgrade $(pip3 list --user --format=columns | \
+            awk 'FNR > 3 {print $1 }')
+    fi
+
+    echo -e "\033[33mdone.\033[39m"
+}
+
+update_perl() {
+    echo -e "\033[33mStarting perl packages update ...\033[39m"
+
+    if [ ! -x $(type -P perlbrew) ]; then
+        return
+    fi
+
+    for version in $(perlbrew list | tr -d ' *'); do
+        if [[ $version =~ @ ]]; then
+            continue
+        fi
+        ${PERLBREW_ROOT}/perls/${version}/bin/cpan-outdated | \
+            ${PERLBREW_ROOT}/perls/${version}/bin/perl \
+            ${PERLBREW_ROOT}/bin/cpanm
+    done
+
+    echo -e "\033[33mdone.\033[39m"
+}
+
+update_system() {
+    echo -e "\033[33mStarting system packages update ...\033[39m"
+
+    local distri=$(awk -F '=' '/^ID/ { print $2 }' /etc/os-release)
+
+    case $distri in
+        debian)
+            sudo apt-get update ; sudo apt-get -y dist-upgrade ; \
+                sudo apt-get autoremove --purge
+                sudo apt-get clean ; sudo apt-get autoclean
+            ;;
+        *)
+            return
+            ;;
+    esac
+
+    echo -e "\033[33mdone.\033[39m"
+}
+
+get_opts() {
+    while getopts ":hapsy" opt; do
+        case $opt in
+            a)
+                opt_a=1
+                ;;
+            p)
+                opt_p=1
+                ;;
+            s)
+                opt_s=1
+                ;;
+            y)
+                opt_y=1
+                ;;
+            h)
+                opt_h=1
+                ;;
+            *)
+                echo "unknown option -$OPTARG"
+                usage
+                ;;
+        esac
+    done
+
+    local opt_count=$(( $OPTIND - 1 ))
+
+    if [ $opt_count -eq 0 ]; then
+        opt_a=1
+    fi
+
+    if [ -n "$opt_a" -o -n "$opt_h" ] && [ $opt_count -gt 1 ]; then
+        usage >&2
+        exit 2
+    fi
+}
+
+main() {
+    get_opts ${1+"$@"}
+
+    if [ -n "$opt_h" ]; then
+        usage
+        exit 0
+    fi
+
+    if [ -n "$opt_p" ]; then
+        update_perl
+    fi
+
+    if [ -n "$opt_s" ]; then
+        update_system
+    fi
+
+    if [ -n "$opt_y" ]; then
+        update_python
+    fi
+
+    if [ -n "$opt_a" ]; then
+        update_system
+        update_perl
+        update_python
+    fi
+
+    exit 0
+}
+
+main ${1+"$@"}
