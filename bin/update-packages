@@ -60,7 +60,7 @@ update_system() {
     case $distri in
         debian)
             sudo apt-get update ; sudo apt-get -y dist-upgrade ; \
-                sudo apt-get autoremove --purge
+                sudo apt-get -y autoremove --purge
                 sudo apt-get clean ; sudo apt-get autoclean
             ;;
         *)
