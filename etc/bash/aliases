@@ -1,5 +1,6 @@
 ## environment
 alias git="HOME=${ENV_HOME} git"
+alias gitdiff="git diff --no-index"
 alias htop="HTOPRC=${ENV_HOME}/.htoprc htop"
 alias nano="HOME=${ENV_HOME} nano"
 alias screen="screen -c ${ENV_HOME}/.screenrc"
