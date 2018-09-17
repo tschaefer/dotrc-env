@@ -1,0 +1,10 @@
+browser     sensible-browser
+auto-reload yes
+
+color   background          default default
+color   listnormal          default default
+color   listfocus           white   black
+color   listnormal_unread   blue    default
+color   listfocus_unread    blue    black
+color   info                white   black
+color   article             default default
