@@ -109,7 +109,7 @@ sub print_locations {
     my $info = $data->{'response'}{'results'};
 
     foreach (@{$info}) {
-        printf "%s, %s: ZMW: %s\n",
+        printf "%s, %s: ZMW:%s\n",
           $_->{'city'}, $_->{'country_name'}, $_->{'zmw'};
     }
 
