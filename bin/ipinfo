@@ -1,0 +1,121 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+use JSON;
+use LWP::UserAgent;
+use Pod::Usage;
+use utf8;
+
+use constant API_URL => 'https://ipinfo.io/%s';
+
+sub print_error {
+    my $msg = shift;
+
+    print {*STDERR} $msg;
+
+    exit 1;
+}
+
+sub get_data {
+    my $opts = shift;
+
+    my $ip = $opts->{ip};
+    my $url = sprintf API_URL, $ip ? $ip : '';
+
+    my $ua = LWP::UserAgent->new();
+    $ua->default_header( 'Accept' => "application/json" );
+    my $res = $ua->get($url);
+
+    print_error( $res->status_line . "\n" ) if ( !$res->is_success );
+
+    my $json = $res->decoded_content;
+    my $data = decode_json($json);
+
+    return $data;
+}
+
+sub print_ipinfo {
+    my $opts = shift;
+
+    my $data = get_data($opts);
+
+    foreach ( sort keys %{$data} ) {
+        my $topic = sprintf "%s:", ucfirst $_;
+        printf "%-10s%s\n", $topic, $data->{$_};
+    }
+
+    return;
+}
+
+sub print_usage {
+    pod2usage( -exitval => 255, -verbose => 0 );
+    return;
+}
+
+sub print_help {
+    pod2usage( -exitval => 0, -verbose => 1 );
+    return;
+}
+
+sub print_man {
+    pod2usage( -exitval => 0, -verbose => 2 );
+    return;
+}
+
+sub run {
+    my $opts;
+    GetOptions(
+        "help|h" => \$opts->{'help'},
+        "man|m"  => \$opts->{'man'},
+    ) or print_usage();
+
+    my $count = 0;
+    foreach ( values %{$opts} ) {
+        $count += 1 if ($_);
+    }
+
+    print_usage() if ( ( $opts->{'help'} || $opts->{'man'} ) && $count > 1 );
+    print_man()  if ( $opts->{'man'} );
+    print_help() if ( $opts->{'help'} );
+
+    $opts->{'ip'} = $ARGV[0];
+
+    print_ipinfo($opts);
+
+    return 0;
+}
+
+exit run();
+
+__END__
+
+=encoding utf8
+
+=head1 NAME
+
+ipinfo - Get your public IP geolocation info.
+
+=head1 SYNOPSIS
+
+ipinfo [IP]
+
+ipinfo --help | --man
+
+=head1 ARGUMENTS
+
+=over 8
+
+=item B<IP>
+
+IPv4 or IPv6 address.
+
+=back
+
+=head1 DESCRIPTION
+
+ipinfo is a tool to get your public IP geolocation info.
+
+=cut
