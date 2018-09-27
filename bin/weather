@@ -9,10 +9,8 @@ use LWP::UserAgent;
 use Pod::Usage;
 use utf8;
 
-## no critic (ValuesAndExpressions::ProhibitConstantPragma)
 use constant API_URL => 'https://api.wunderground.com/api/%s/%s/q/%s.json';
 use constant RC_FILE => $ENV{'HOME'} . '/.weatherrc';
-## use critic
 
 sub print_error {
     my $msg = shift;
@@ -54,36 +52,47 @@ sub print_conditions {
 
     my $info = $data->{'current_observation'};
 
-    printf "Location:    %s\n",
-      $info->{'display_location'}->{'full'};
-    printf "Latitude:    %s\n",
-      $info->{'display_location'}->{'latitude'};
-    printf "Longitude:   %s\n",
-      $info->{'display_location'}->{'longitude'};
-    printf "Elevation:   %s m\n",
-      $info->{'display_location'}->{'elevation'};
-    printf "Condition:   %s\n",
-      $info->{'weather'};
-    my $string = sprintf "Temperature: %s °C\n",
-      $info->{'temp_c'};
+    printf "%-12s %s\n",
+      'Location:', $info->{'display_location'}->{'full'};
+
+    printf "%-12s %s\n",
+      'Latitude:', $info->{'display_location'}->{'latitude'};
+
+    printf "%-12s %s\n",
+      'Longitude', $info->{'display_location'}->{'longitude'};
+
+    printf "%-12s %s m\n",
+      'Elevation:', $info->{'display_location'}->{'elevation'};
+
+    printf "%-12s %s\n",
+      'Condition:', $info->{'weather'};
+
+    my $string = sprintf "%-12s %s °C\n",
+      'Temperature:', $info->{'temp_c'};
     my $bytestring = Encode::encode("utf-8", $string);
     print $bytestring;
-    printf "Humidity:    %s\n",
-      $info->{'relative_humidity'};
-    printf "Wind:        %s km/h\n",
-      $info->{'wind_kph'};
-    $string = sprintf "Windchill:   %s °C\n",
-      $info->{'windchill_c'};
+
+    printf "%-12s %s\n",
+      'Humidity:', $info->{'relative_humidity'};
+
+    printf "%-12s %s km/h\n",
+      'Wind:', $info->{'wind_kph'};
+
+    $string = sprintf "%-12s %s °C\n",
+      'Windchill:', $info->{'windchill_c'};
     $bytestring = Encode::encode("utf-8", $string);
     print $bytestring;
-    $string = sprintf "Feels like:  %s °C\n",
-      $info->{'feelslike_c'};
+
+    $string = sprintf "%-12s %s °C\n",
+      'Feels like:', $info->{'feelslike_c'};
     $bytestring = Encode::encode("utf-8", $string);
     print $bytestring;
-    printf "Visbility:   %s km\n",
-      $info->{'visibility_km'};
-    printf "Pressure:    %s mb\n",
-      $info->{'pressure_mb'};
+
+    printf "%-12s %s km\n",
+      'Visibility:', $info->{'visibility_km'};
+
+    printf "%-12s %s mb\n",
+      'Pressure:', $info->{'pressure_mb'};
 
     exit 0;
 }
