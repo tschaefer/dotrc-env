@@ -16,3 +16,4 @@ nnoremap <F3> :set hlsearch! hlsearch?<cr>
 nnoremap <F4> :set paste! nopaste?<cr>
 nnoremap <F5> :let &background = ( &background == "dark"? "light" : "dark" )<cr>
 nnoremap <F6> :NERDTreeTabsToggle<cr>
+nnoremap <F7> :TagbarToggle<cr>
