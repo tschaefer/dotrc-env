@@ -35,7 +35,7 @@ let g:syntastic_perl_lib_path = ['./lib']
 let NERDTreeHighlightCursorline = 1
 let NERDTreeIgnore = [ '\~$', '.*\.pyc$', '.*\.pid$', '.*\.png$', '.*\.jpg$',
                      \ '*.jpeg$', '.*\.o$', '.*\.bak$', '.*\.la$', '.*\.so$',
-                     \ 'cscope\..*', '^tags$' ]
+                     \ 'cscope\..*', '^tags$', '^.git$' ]
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 let NERDChristmasTree = 1
