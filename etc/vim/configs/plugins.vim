@@ -7,7 +7,6 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'scrooloose/syntastic.git'
 Plugin 'tpope/vim-fugitive.git'
-Plugin 'davidhalter/jedi-vim.git'
 Plugin 'majutsushi/tagbar.git'
 Plugin 'vim-airline/vim-airline.git'
 Plugin 'vim-airline/vim-airline-themes.git'
