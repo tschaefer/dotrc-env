@@ -27,29 +27,29 @@ case ${OSTYPE} in
 esac
 
 ## home
-ENV_HOME=${SSHHOME}
+ENV_HOME=${SSHHOME}/.sshrc.d
 if [[ ${EUID} -eq 0 ]] && [[ -z $SSHHOME ]]; then
     SSHHOME=$(dirname ${SUDO_COMMAND##* })
     export SSHHOME
-    ENV_HOME=${SSHHOME}
+    ENV_HOME=${SSHHOME}/.sshrc.d
 fi
 
 ## exports
-export ENV_OS ENV_USER ENV_HOME
+ENV_HOME_BASH=${ENV_HOME}/bash
+export ENV_OS ENV_USER ENV_HOME ENV_HOME_BASH
 
 ## bash
-BASH_DIR=${ENV_HOME}/.sshrc.d/bash
-if [ -d ${BASH_DIR} ]; then
+if [ -d ${ENV_HOME_BASH} ]; then
     for FILE in format colors prompt options functions exports aliases term \
-        completion hosts marks; do
-        if [[ -r ${BASH_DIR}/${FILE} ]]; then
-        . ${BASH_DIR}/${FILE}
+        completion marks hosts; do
+        if [[ -r ${ENV_HOME_BASH}/${FILE} ]]; then
+        . ${ENV_HOME_BASH}/${FILE}
         fi
     done
 fi
 
 ## overload
-alias root="sudo bash --rcfile ${ENV_HOME}/.sshrc"
+alias root="sudo bash --rcfile ${SSHHOME}/.sshrc"
 
 ## debuging
 #set +x
