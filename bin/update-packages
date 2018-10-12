@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ME=${0##*/}
+readonly ME=${0##*/}
 
 usage() {
 cat <<EOF
@@ -23,11 +23,17 @@ update_python() {
     echo -e "\033[33mStarting python packages update ...\033[39m"
 
     if [[ -x $(type -P pip2) ]]; then
+        version=$(python2 --version 2>&1)
+        echo -e "\033[33m${version}\033[39m"
+
         pip2 install --user --upgrade $(pip2 list --user --format=columns | \
             awk 'FNR > 2 {print $1 }')
     fi
 
     if [[ -x $(type -P pip3) ]]; then
+        version=$(python3 --version)
+        echo -e "\033[33m${version}\033[39m"
+
         pip3 install --user --upgrade $(pip3 list --user --format=columns | \
             awk 'FNR > 3 {print $1 }')
     fi
@@ -43,6 +49,9 @@ update_perl() {
             if [[ $version =~ @ ]]; then
                 continue
             fi
+
+            echo -e "\033[33m${version}\033[39m"
+
             ${PERLBREW_ROOT}/perls/${version}/bin/cpan-outdated | \
                 ${PERLBREW_ROOT}/perls/${version}/bin/perl \
                 ${PERLBREW_ROOT}/bin/cpanm
