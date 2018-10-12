@@ -25,6 +25,7 @@ etc/gnupg/random_seed
 etc/gnupg/reader_0.status
 etc/gnupg/sshcontrol
 etc/gnupg/trustdb.gpg*
+etc/gnupg/crls.d
 ## newsbeuter
 etc/newsbeuter/cache.db*
 etc/newsbeuter/history.cmdline
