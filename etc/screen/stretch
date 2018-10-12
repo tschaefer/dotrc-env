@@ -1,8 +1,0 @@
-screen -t htop 0 ${ENV_HOME}/.screen/bin/htop
-screen -t vim 1 vim
-screen -t mutt 2 mutt
-screen -t ranger 3 ranger
-screen -t mpc 4 ncmpcpp
-screen -t bash 5 bash
-
-# vim:ft=screen

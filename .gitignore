@@ -17,7 +17,7 @@ etc/ssh/config.local
 .DS_Store
 bin/airport
 ## screen
-etc/screen/local
+etc/screen/*
 ## gnupg
 etc/gnupg/private-keys-v1.d
 etc/gnupg/pubring.kbx*
