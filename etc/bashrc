@@ -42,7 +42,7 @@ export ENV_OS ENV_USER ENV_HOME
 BASH_DIR=${ENV_HOME}/.bash
 if [ -d ${BASH_DIR} ]; then
     for FILE in format colors prompt options functions exports aliases term \
-        completion hosts; do
+        completion hosts marks; do
         if [[ -r ${BASH_DIR}/${FILE} ]]; then
         . ${BASH_DIR}/${FILE}
         fi
