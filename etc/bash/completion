@@ -20,8 +20,8 @@ if [[ -d /usr/local/share/bash-completion/completions ]]; then
 fi
 
 ## user
-if [[ -d ${ENV_HOME}/.bash/completion.d ]]; then
-    for FILE in ${ENV_HOME}/.bash/completion.d/*; do
+if [[ -d ${ENV_HOME_BASH}/completion.d ]]; then
+    for FILE in ${ENV_HOME_BASH}/completion.d/*; do
         [ \( -f ${FILE} -o -h ${FILE} \) -a -r ${FILE} ] && . ${FILE}
     done
 fi

@@ -36,15 +36,15 @@ if [[ ${EUID} -eq 0 ]]; then
 fi
 
 ## exports
-export ENV_OS ENV_USER ENV_HOME
+ENV_HOME_BASH=${ENV_HOME}/.bash
+export ENV_OS ENV_USER ENV_HOME ENV_HOME_BASH
 
 ## bash
-BASH_DIR=${ENV_HOME}/.bash
-if [ -d ${BASH_DIR} ]; then
+if [ -d ${ENV_HOME_BASH} ]; then
     for FILE in format colors prompt options functions exports aliases term \
         completion hosts marks; do
-        if [[ -r ${BASH_DIR}/${FILE} ]]; then
-        . ${BASH_DIR}/${FILE}
+        if [[ -r ${ENV_HOME_BASH}/${FILE} ]]; then
+        . ${ENV_HOME_BASH}/${FILE}
         fi
     done
 fi

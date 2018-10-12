@@ -6,11 +6,11 @@ fi
 ## git infos
 function set_git_branch {
 
-    if [[ ! -e ${ENV_HOME}/.bash/git ]]; then
+    if [[ ! -e ${ENV_HOME_BASH}/git ]]; then
         return
     fi
 
-    . ${ENV_HOME}/.bash/git
+    . ${ENV_HOME_BASH}/git
 
     GIT_PS1_SHOWDIRTYSTATE=1
     GIT_PS1_SHOWSTASHSTATE=1
