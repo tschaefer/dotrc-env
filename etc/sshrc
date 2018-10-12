@@ -1,0 +1,58 @@
+## non-interactive shell
+if [[ $- != *i* ]]; then
+    return
+fi
+
+## debugging
+#set -x
+
+## OS
+case ${OSTYPE} in
+    darwin*)
+        ENV_OS=Darwin
+        ENV_USER=${SUDO_USER:-${USER}}
+        ;;
+    linux*)
+        ENV_OS=Linux
+        ENV_USER=$(stat -c %U $(readlink -f /proc/self/fd/0))
+        ;;
+    solaris*)
+        ENV_OS=Solaris
+        ENV_USER=${SUDO_USER:-${USER}}
+        ;;
+    *)
+        ENV_OS=${OSTYPE}
+        ENV_USER=${SUDO_USER:-${USER}}
+        ;;
+esac
+
+## home
+ENV_HOME=${SSHHOME}
+if [[ ${EUID} -eq 0 ]] && [[ -z $SSHHOME ]]; then
+    SSHHOME=$(dirname ${SUDO_COMMAND##* })
+    export SSHHOME
+    ENV_HOME=${SSHHOME}
+fi
+
+## exports
+export ENV_OS ENV_USER ENV_HOME
+
+## bash
+BASH_DIR=${ENV_HOME}/.sshrc.d/bash
+if [ -d ${BASH_DIR} ]; then
+    for FILE in format colors prompt options functions exports aliases term \
+        completion hosts marks; do
+        if [[ -r ${BASH_DIR}/${FILE} ]]; then
+        . ${BASH_DIR}/${FILE}
+        fi
+    done
+fi
+
+## overload
+alias root="sudo bash --rcfile ${ENV_HOME}/.sshrc"
+
+## debuging
+#set +x
+
+
+# vim: set ft=sh :
