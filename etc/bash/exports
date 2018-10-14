@@ -57,7 +57,10 @@ export LESSCOLOR="always"
 export LESSQUIET=1
 export LESSHISTFILE=-
 if [[ -x $(type -p lesspipe.sh) ]]; then
-    eval $(lesspipe.sh)
+    export LESSOPEN="|lesspipe.sh %s"
+elif [[ -x $(type -p lesspipe) ]]; then
+    export LESSOPEN="|lesspipe %s"
+    export LESSCLOSE="lesspipe %s %s"
 fi
 
 ## vim
