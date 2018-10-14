@@ -19,7 +19,7 @@ alias p?="_ps_grep"
 alias battery="acpi -b | awk '{ print \$5 }'"
 alias calc="_calc"
 alias httpd="python2 -m SimpleHTTPServer"
-alias pubip="curl -s https://ipinfo.io/ip"
+alias pubip="curl -k -s https://ipinfo.io/ip"
 alias tinyurl="_tinyurl"
 alias wttr="_wttr"
 
