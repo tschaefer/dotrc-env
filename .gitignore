@@ -4,6 +4,7 @@
 etc/vim/bundle/*
 bin/vim
 bin/xxd
+etc/vim/cache/*
 etc/vim/static
 etc/vim/.netrwhist
 ## ssh
