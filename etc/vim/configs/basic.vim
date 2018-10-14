@@ -5,6 +5,9 @@ set cryptmethod=blowfish
 set exrc
 set fileencoding=utf-8
 
+"" history
+set viminfo=<800,'10,/50,:100,h,f0,n~/.vim/cache/viminfo
+
 "" backup
 set nobackup
 set noswapfile
