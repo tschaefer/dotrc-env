@@ -10,6 +10,9 @@ function _ssh_screen {
 }
 
 function _ssh_sock {
+    [[ $EUID -eq 0 ]] && return 0
+    ps -u $USER | grep ssh-agent | grep -q -v grep && return 0
+
     SSH_AUTH_SOCK=$(find /tmp -maxdepth 2 -type s -name "agent*" -user $USER \
         -printf '%T@ %p\n' 2>/dev/null |sort -n|tail -1|cut -d' ' -f2)
     export SSH_AUTH_SOCK
