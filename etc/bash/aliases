@@ -36,6 +36,8 @@ alias ssh.nocheck="ssh -o StrictHostKeyChecking=no \
     -o UserKnownHostsFile=/dev/null"
 alias ssh.screen="_ssh_screen"
 alias ssh.sock="_ssh_sock"
+alias sshrc.nocheck="sshrc -o StrictHostKeyChecking=no \
+    -o UserKnownHostsFile=/dev/null"
 
 # python
 alias pip2.up="_pip2_up"
