@@ -2,11 +2,11 @@
 severity = 3
 verbose  = %F (line:%l) %m, %e [%p]\n
 include  = CodeLayout Documentation InputOutput Modules::ProhibitMultiplePackages
-exclude  = CodeLayout::RequireTidyCode RegularExpressions::RequireExtendedFormatting Moose::RequireCleanNamespace
+exclude  = CodeLayout::RequireTidyCode RegularExpressions::RequireExtendedFormatting Moose::RequireCleanNamespace Documentation::RequirePodLinksIncludeText
 
 # Rules for POD
 [Documentation::RequirePodSections]
-lib_sections    = NAME | SYNOPSIS | DESCRIPTION
+lib_sections    = NAME | DESCRIPTION | METHODS
 script_sections = NAME | SYNOPSIS | OPTIONS | DESCRIPTION
 
 # Max. 4 arguments for subroutines
