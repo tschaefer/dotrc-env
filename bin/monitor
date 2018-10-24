@@ -71,7 +71,11 @@ sub print_usage {
 }
 
 sub print_help {
-    pod2usage( -exitval => 0, -verbose => 1 );
+    pod2usage(
+        -exitval  => 0,
+        -verbose  => 99,
+        -sections => 'SYNOPSIS|OPTIONS|PARAMETERS',
+    );
     return;
 }
 
@@ -153,6 +157,10 @@ monitor help | man
 =item B<--config|-c> FILE
 
 Path to configuration file.
+
+=back
+
+=head1 PARAMETERS
 
 =item B<on>
 
