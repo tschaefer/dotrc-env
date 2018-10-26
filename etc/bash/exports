@@ -70,7 +70,9 @@ if [[ -d ${VIMVUNDLE}  ]]; then
 fi
 
 ## ssh
-if [[ -S ${XDG_RUNTIME_DIR}/ssh-agent.socket ]]; then
+if [[ -S ${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh ]]; then
+    export SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh
+elif [[ -S ${XDG_RUNTIME_DIR}/ssh-agent.socket ]]; then
     export SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/ssh-agent.socket
 fi
 
