@@ -12,11 +12,20 @@ Usage:
 Options:
     -h:     shows this message (help)
     -a:     update all (perl, python, system) packages
+    -e:     update dotrc environment
     -p:     update perl packages
     -s:     update system packages
     -y:     update python packages
 
 EOF
+}
+
+update_env() {
+    echo -e "\033[33mStarting dotrc envrionment update ...\033[39m"
+
+    cd ${HOME}/.env ; git pull ; cd - >/dev/null
+
+    echo -e "\033[33mdone.\033[39m"
 }
 
 update_python() {
@@ -81,10 +90,13 @@ update_system() {
 }
 
 get_opts() {
-    while getopts ":hapsy" opt; do
+    while getopts ":haepsy" opt; do
         case $opt in
             a)
                 opt_a=1
+                ;;
+            e)
+                opt_e=1
                 ;;
             p)
                 opt_p=1
@@ -123,6 +135,10 @@ main() {
     if [[ -n "$opt_h" ]]; then
         usage
         exit 0
+    fi
+
+    if [[ -n "$opt_e" ]]; then
+        update_env
     fi
 
     if [[ -n "$opt_p" ]]; then
