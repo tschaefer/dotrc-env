@@ -31,7 +31,7 @@ alias iperl="re.pl"
 # ssh / scp
 alias scp.nocheck="scp -o StrictHostKeyChecking=no \
     -o UserKnownHostsFile=/dev/null"
-alias ssh.conf="ssh_conf"
+alias ssh.conf="_ssh_conf"
 alias ssh.nocheck="ssh -o StrictHostKeyChecking=no \
     -o UserKnownHostsFile=/dev/null"
 alias ssh.screen="_ssh_screen"
