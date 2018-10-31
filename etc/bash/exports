@@ -13,6 +13,9 @@ case ${ENV_OS} in
         MANPATH=${MANPATH}
         ;;
 esac
+if [[ -d /usr/games ]]; then
+    PATH=${PATH}:/usr/games
+fi
 if [[ -d ${ENV_HOME}/.local/bin ]]; then
     PATH=${ENV_HOME}/.local/bin:${PATH}
     MANPATH=${ENV_HOME}/.local/share/man:${MANPATH}
