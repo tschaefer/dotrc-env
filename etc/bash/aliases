@@ -9,6 +9,7 @@ alias vim="vim -u ${ENV_HOME}/.vimrc"
 alias vimdiff="vimdiff -u ${ENV_HOME}/.vimrc"
 
 ## abbreviations
+alias c?="cpan -l | awk '{ print \$1 }' | sort | uniq | grep"
 alias d?="dpkg -l | tail -n +6 | awk '{ print \$2 }' | grep"
 alias e="eval ${EDITOR}"
 alias h="history | cut -c 8-"
