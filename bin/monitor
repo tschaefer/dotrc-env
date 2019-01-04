@@ -39,16 +39,18 @@ sub turn_on {
 
     if ( $cfg{'order'} eq 'int-ext' ) {
         @cmd = (
-            'xrandr', '--output', $cfg{int}, '--primary',
-            '--auto', '--output', $cfg{ext}, '--' . $cfg{pos},
+            'xrandr',  '--output', $cfg{int}, '--primary',
+            '--auto',  '--output', $cfg{ext}, '--' . $cfg{pos},
             $cfg{int}, '--' . $cfg{mode},
         );
     }
     elsif ( $cfg{'order'} eq 'ext-int' ) {
         @cmd = (
-            'xrandr', '--output',  $cfg{ext}, '--primary',
-            '--' . $cfg{mode}, '--output', $cfg{ext},
-            '--' . $cfg{pos}, $cfg{int}, '--auto',
+            'xrandr',          '--output',
+            $cfg{ext},         '--primary',
+            '--' . $cfg{mode}, '--output',
+            $cfg{ext},         '--' . $cfg{pos},
+            $cfg{int},         '--auto',
         );
     }
     IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
@@ -91,9 +93,8 @@ sub parse_config {
     chomp( my @raw = <$fh> );
     close $fh or croak("$!: $cfgfile");
 
-    foreach ( grep { /^[a-z_]+\s*=\s*.+/ } @raw ) {
-        my ( $key, $value ) = split /\s*=\s*/;
-        $cfg{$key} = $value;
+    foreach (@raw) {
+        $cfg{$1} = $2 if (/^([\w-]+)\s*=\s*([\w-]+)\s*#?/);
     }
 
     foreach (qw{ int ext order pos mode }) {

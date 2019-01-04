@@ -3,9 +3,9 @@
 use strict;
 use warnings;
 
+use Furl;
 use Getopt::Long;
 use JSON;
-use LWP::UserAgent;
 use Pod::Usage;
 use utf8;
 
@@ -24,10 +24,10 @@ sub get_weather_data {
     my ( $opts, $key ) = @_;
 
     my $feature = $opts->{'forecast'} ? 'forecast10day' : 'conditions';
-    my $url = sprintf API_URL, $key, $feature, $opts->{'location'};
+    my $url     = sprintf API_URL, $key, $feature, $opts->{'location'};
 
-    my $ua  = LWP::UserAgent->new();
-    my $res = $ua->get($url);
+    my $furl = Furl->new();
+    my $res  = $furl->get($url);
 
     print_error( $res->status_line . "\n" ) if ( !$res->is_success );
 
@@ -52,11 +52,9 @@ sub print_conditions {
 
     my $info = $data->{'current_observation'};
 
-    printf "%-12s %s\n",
-      'Location:', $info->{'display_location'}->{'full'};
+    printf "%-12s %s\n", 'Location:', $info->{'display_location'}->{'full'};
 
-    printf "%-12s %s\n",
-      'Latitude:', $info->{'display_location'}->{'latitude'};
+    printf "%-12s %s\n", 'Latitude:', $info->{'display_location'}->{'latitude'};
 
     printf "%-12s %s\n",
       'Longitude', $info->{'display_location'}->{'longitude'};
@@ -64,35 +62,27 @@ sub print_conditions {
     printf "%-12s %s m\n",
       'Elevation:', $info->{'display_location'}->{'elevation'};
 
-    printf "%-12s %s\n",
-      'Condition:', $info->{'weather'};
+    printf "%-12s %s\n", 'Condition:', $info->{'weather'};
 
-    my $string = sprintf "%-12s %s °C\n",
-      'Temperature:', $info->{'temp_c'};
-    my $bytestring = Encode::encode("utf-8", $string);
+    my $string = sprintf "%-12s %s °C\n", 'Temperature:', $info->{'temp_c'};
+    my $bytestring = Encode::encode( "utf-8", $string );
     print $bytestring;
 
-    printf "%-12s %s\n",
-      'Humidity:', $info->{'relative_humidity'};
+    printf "%-12s %s\n", 'Humidity:', $info->{'relative_humidity'};
 
-    printf "%-12s %s km/h\n",
-      'Wind:', $info->{'wind_kph'};
+    printf "%-12s %s km/h\n", 'Wind:', $info->{'wind_kph'};
 
-    $string = sprintf "%-12s %s °C\n",
-      'Windchill:', $info->{'windchill_c'};
-    $bytestring = Encode::encode("utf-8", $string);
+    $string = sprintf "%-12s %s °C\n", 'Windchill:', $info->{'windchill_c'};
+    $bytestring = Encode::encode( "utf-8", $string );
     print $bytestring;
 
-    $string = sprintf "%-12s %s °C\n",
-      'Feels like:', $info->{'feelslike_c'};
-    $bytestring = Encode::encode("utf-8", $string);
+    $string = sprintf "%-12s %s °C\n", 'Feels like:', $info->{'feelslike_c'};
+    $bytestring = Encode::encode( "utf-8", $string );
     print $bytestring;
 
-    printf "%-12s %s km\n",
-      'Visibility:', $info->{'visibility_km'};
+    printf "%-12s %s km\n", 'Visibility:', $info->{'visibility_km'};
 
-    printf "%-12s %s mb\n",
-      'Pressure:', $info->{'pressure_mb'};
+    printf "%-12s %s mb\n", 'Pressure:', $info->{'pressure_mb'};
 
     exit 0;
 }
@@ -105,7 +95,7 @@ sub print_forecast {
     $days = ( $days * 2 ) - 1;
     foreach ( 0 .. $days ) {
         my $txt = $info->[$_];
-        next if (!$txt);
+        next if ( !$txt );
         printf "%s: %s\n", $txt->{'title'}, $txt->{'fcttext_metric'};
     }
 
@@ -117,7 +107,7 @@ sub print_locations {
 
     my $info = $data->{'response'}{'results'};
 
-    foreach (@{$info}) {
+    foreach ( @{$info} ) {
         printf "%s, %s: ZMW:%s\n",
           $_->{'city'}, $_->{'country_name'}, $_->{'zmw'};
     }
@@ -128,7 +118,7 @@ sub print_locations {
 sub print_weather {
     my $opts = shift;
 
-    my $key = get_api_key();
+    my $key  = get_api_key();
     my $data = get_weather_data( $opts, $key );
 
     print_error( $data->{'response'}{'error'}{'description'} . "\n" )
@@ -152,7 +142,11 @@ sub print_usage {
 }
 
 sub print_help {
-    pod2usage( -exitval => 0, -verbose => 1 );
+    pod2usage(
+        -exitval  => 0,
+        -verbose  => 99,
+        -sections => 'SYNOPSIS|OPTIONS|PARAMETERS',
+    );
     return;
 }
 
@@ -162,13 +156,16 @@ sub print_man {
 }
 
 sub get_location {
-    my $ua  = LWP::UserAgent->new();
-    my $url = 'https://ipinfo.io/city';
-    my $res = $ua->get($url);
+    my $furl = Furl->new();
+    my $url  = 'https://ipinfo.io/city';
+    my $res  = $furl->get($url);
 
     print_error( $res->status_line . "\n" ) if ( !$res->is_success );
 
-    return $res->content;
+    my $location = $res->content;
+    $location =~ s/^\s+|\s+$//g;
+
+    return $location;
 }
 
 sub run {
@@ -211,16 +208,6 @@ weather [--forecast DAYS] [LOCATION]
 
 weather --help | --man
 
-=head1 ARGUMENTS
-
-=over 8
-
-=item B<LOCATION>
-
-City name, Wunderground PWS or ZMW code (default current location).
-
-=back
-
 =head1 OPTIONS
 
 =over 8
@@ -228,6 +215,16 @@ City name, Wunderground PWS or ZMW code (default current location).
 =item B<--forecast> DAYS
 
 Forecast for the next n days (including today), max 10 days.
+
+=back
+
+=head1 PARAMETERS
+
+=over 8
+
+=item B<LOCATION>
+
+City name, Wunderground PWS or ZMW code (default current location).
 
 =back
 

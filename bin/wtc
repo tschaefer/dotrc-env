@@ -3,9 +3,9 @@
 use strict;
 use warnings;
 
+use Furl;
 use Getopt::Long;
 use JSON;
-use LWP::UserAgent;
 use Pod::Usage;
 use Readonly;
 use utf8;
@@ -21,8 +21,8 @@ sub print_error {
 }
 
 sub get_wtc_msg {
-    my $ua = LWP::UserAgent->new();
-    my $res = $ua->get($WTC_URL);
+    my $furl = Furl->new();
+    my $res  = $furl->get($WTC_URL);
 
     print_error( $res->status_line . "\n" ) if ( !$res->is_success );
 
@@ -50,8 +50,8 @@ sub print_man {
 sub run {
     my $opts;
     GetOptions(
-        "help|h"       => \$opts->{'help'},
-        "man|m"        => \$opts->{'man'},
+        "help|h" => \$opts->{'help'},
+        "man|m"  => \$opts->{'man'},
     ) or print_usage();
 
     my $count = 0;

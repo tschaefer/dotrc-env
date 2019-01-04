@@ -3,9 +3,9 @@
 use strict;
 use warnings;
 
+use Furl;
 use Getopt::Long;
 use JSON;
-use LWP::UserAgent;
 use Pod::Usage;
 use utf8;
 
@@ -22,12 +22,11 @@ sub print_error {
 sub get_data {
     my $opts = shift;
 
-    my $ip = $opts->{ip};
+    my $ip  = $opts->{ip};
     my $url = sprintf API_URL, $ip ? $ip : '';
 
-    my $ua = LWP::UserAgent->new();
-    $ua->default_header( 'Accept' => "application/json" );
-    my $res = $ua->get($url);
+    my $furl = Furl->new( headers => [ 'Accept' => "application/json" ], );
+    my $res  = $furl->get($url);
 
     print_error( $res->status_line . "\n" ) if ( !$res->is_success );
 
