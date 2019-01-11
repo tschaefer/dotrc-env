@@ -1,0 +1,308 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Modern::Perl '2019';
+
+use Carp;
+use Net::Proxmox::VE;
+use Getopt::Long qw(:config require_order);
+use Pod::Usage;
+
+my %cfg;
+
+sub print_usage {
+    pod2usage( -exitval => 255, -verbose => 0 );
+    return;
+}
+
+sub print_help {
+    pod2usage(
+        -exitval  => 0,
+        -verbose  => 99,
+        -sections => 'SYNOPSIS|OPTIONS|PARAMETERS',
+    );
+    return;
+}
+
+sub print_man {
+    pod2usage( -exitval => 0, -verbose => 2 );
+    return;
+}
+
+sub parse_config {
+    my $file = shift;
+
+    open my $fh, "<", $file or croak("$!: $file");
+    chomp( my @raw = <$fh> );
+    close $fh or croak("$!: $file");
+
+    foreach (@raw) {
+        $cfg{$1} = $2 if (/^([\w-]+)\s*=\s*([\w-]+)\s*#?/);
+    }
+
+    return;
+}
+
+sub _proxmox_connect {
+    my $p = Net::Proxmox::VE->new(
+        {
+            host     => $cfg{'host'},
+            username => $cfg{'username'},
+            password => $cfg{'password'},
+            port     => $cfg{'port'},
+            realm    => $cfg{'realm'},
+            timeout  => 10,
+            ssl_opts => { SSL_verify_mode => 0, verify_hostname => 0 },
+        }
+    );
+
+    return $p;
+}
+
+sub _proxmox_get_uri {
+    my $path = shift;
+
+    my $uri = sprintf "/nodes/%s/qemu/%s", $cfg{'node'}, $cfg{'vm'};
+    $uri = sprintf "%s/%s", $uri, $path if ($path);
+
+    return $uri;
+}
+
+sub _proxmox_call {
+    my ( $method, $path, $data ) = @_;
+
+    my $p   = _proxmox_connect();
+    my $uri = _proxmox_get_uri($path);
+
+    my $resp = undef;
+    if ( $method =~ /get|delete/ ) {
+        $resp = $p->$method($uri);
+    }
+    elsif ( $method =~ /post|put/ ) {
+        $data ||= '';
+        $resp = $p->$method( $uri, $data );
+    }
+    croak('Proxmox call failed.') if ( !defined $resp );
+
+    return $resp;
+}
+
+sub status {
+    my $resp = _proxmox_call( 'get', 'status/current' );
+    printf "%s\n", $resp->{'qmpstatus'};
+
+    return 0;
+}
+
+sub start {
+    _proxmox_call( 'post', 'status/start' );
+
+    return 0;
+}
+
+sub stop {
+    _proxmox_call( 'post', 'status/stop' );
+
+    return 0;
+}
+
+sub shutdown {
+    _proxmox_call( 'post', 'status/shutdown' );
+
+    return 0;
+}
+
+sub suspend {
+    _proxmox_call( 'post', 'status/suspend' );
+
+    return 0;
+}
+
+sub resume {
+    _proxmox_call( 'post', 'status/resume' );
+
+    return 0;
+}
+
+sub reset {
+    _proxmox_call( 'post', 'status/reset' );
+
+    return 0;
+}
+
+sub vnc {
+    my ( $ip, $port ) = ( '0.0.0.0', 5900 );
+    GetOptions(
+        "ip|i=s"   => \$ip,
+        "port|p=i" => \$port,
+    ) or return print_usage();
+    my $action = $ARGV[0] || '';
+
+    if ( $action eq 'status' ) {
+        my $resp =
+          _proxmox_call( 'post', '/monitor', { command => 'info vnc' } );
+
+        if ( $resp =~ /Server: (.+) \(/ ) {
+            printf "enabled: %s\n", $1;
+            return 0;
+        }
+
+        printf "disabled\n";
+        return 1;
+    }
+
+    if ( $action eq 'enable' ) {
+        my $resp =
+          _proxmox_call( 'post', '/monitor',
+            { command => sprintf "change vnc %s:%s", $ip, ( $port - 5900 ) } );
+
+        return $resp !~ /failed/i ? 0 : 1;
+    }
+
+    return print_usage();
+}
+
+sub run {
+    my $vm   = undef;
+    my $file = "$ENV{HOME}/.config/proxmoxctlrc";
+
+    GetOptions(
+        "config|c=s" => \$file,
+        "vm|v=s"     => \$vm,
+    ) or return print_usage();
+
+    parse_config($file);
+
+    my %ACTIONS = (
+        help     => \&print_help,
+        man      => \&print_man,
+        reset    => \&reset,
+        resume   => \&resume,
+        shutdown => \&shutdown,
+        start    => \&start,
+        status   => \&status,
+        stop     => \&stop,
+        suspend  => \&supsend,
+        vnc      => \&vnc,
+    );
+    my $action = $ARGV[0] || '';
+    shift @ARGV;
+
+    $action =~ s/-/_/g;
+    my $sub = $ACTIONS{$action};
+    return print_usage() if ( !$sub );
+
+    return print_usage() if ( !$vm && $action !~ /man|help/ );
+    $cfg{'vm'} = $vm;
+
+    return &$sub();
+}
+
+exit run();
+
+__END__
+
+=encoding utf8
+
+=head1 NAME
+
+proxmoxctl - Control Proxmox Qemu/KVM machines
+
+=head1 SYNOPSIS
+
+proxmoxctl [--config FILE] [--vm VMID] reset | resume | start | status | stop | suspend | vnc
+
+proxmoxctl ... vnc status
+
+proxmoxctl ... vnc [--ip ADDRESS] [--port NUMBER] enable
+
+proxmoxctl help | man
+
+=head1 OPTIONS
+
+=head2 base
+
+=over 8
+
+=item B<--config|-c> FILE
+
+Path to configuration file.
+
+=item B<--vm|-v> VMID
+
+Proxmox virtual machine id.
+
+=back
+
+=head2 vnc
+
+=over 8
+
+=item B<--ip|-i> ADDRESS
+
+Ipv6 or Ipv4 address.
+
+=item B<--port|-p> NUMBER
+
+TCP port number.
+
+=back
+
+=head1 PARAMETERS
+
+=head2 base
+
+=over 8
+
+=item B<reset>
+
+Reset VM.
+
+=item B<resume>
+
+Resume VM.
+
+=item B<start>
+
+Start VM.
+
+=item B<status>
+
+Get VM status.
+
+=item B<stop>
+
+Stop VM.
+
+=item B<suspend>
+
+Suspend VM.
+
+=item B<vnc>
+
+VNC subcommands.
+
+=back
+
+=head2 vnc
+
+=over 0
+
+=item B<status>
+
+VNC status.
+
+=item B<enable>
+
+Enable VNC and bind to given B<--ip> ADDRESS (default: 0.0.0.0) and
+B<--port> NUMBER (default: 5900),
+
+=back
+
+=head1 DESCRIPTION
+
+Simple control tool for Proxmox Qemu/KVM machines.
+
+=cut
