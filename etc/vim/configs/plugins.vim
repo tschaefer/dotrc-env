@@ -5,7 +5,7 @@ set runtimepath+=$VIMVUNDLE
 call vundle#begin()
 
 Plugin 'VundleVim/Vundle.vim'
-Plugin 'scrooloose/syntastic.git'
+Plugin 'w0rp/ale.git'
 Plugin 'tpope/vim-fugitive.git'
 Plugin 'majutsushi/tagbar.git'
 Plugin 'vim-airline/vim-airline.git'
@@ -18,17 +18,6 @@ Plugin 'vim-scripts/cscope.vim'
 call vundle#end()
 
 filetype plugin indent on
-
-"" syntastic
-let g:syntastic_check_on_open = 1
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 0
-let g:syntastic_enable_signs = 1
-let g:syntastic_stl_format = '[%E{%e Errors}%B{, }%W{%w Warnings}]'
-let g:syntastic_disabled_filetypes = ['html', 'rst']
-let g:syntastic_perl_checkers = ['perl']
-let g:syntastic_enable_perl_checker = 1
-let g:syntastic_perl_lib_path = ['./lib']
 
 "" nerdtree
 let NERDTreeHighlightCursorline = 1
@@ -45,3 +34,7 @@ let NERDTreeMapJumpFirstChild = 'gK'
 let g:airline_symbols_ascii = 1
 let g:airline_left_sep = '>'
 let g:airline_right_sep = '<'
+
+"" ale
+nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
