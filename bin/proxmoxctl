@@ -164,6 +164,16 @@ sub vnc {
     return print_usage();
 }
 
+sub config {
+    my $resp = _proxmox_call( 'get', '/config' );
+
+    foreach my $key ( sort keys %{$resp} ) {
+        printf "%10s: %s\n", $key, $resp->{$key};
+    }
+
+    return 0;
+}
+
 sub run {
     my $vm   = undef;
     my $file = "$ENV{HOME}/.config/proxmoxctlrc";
@@ -178,6 +188,7 @@ sub run {
     my %ACTIONS = (
         help     => \&print_help,
         man      => \&print_man,
+        config   => \&config,
         reset    => \&reset,
         resume   => \&resume,
         shutdown => \&shutdown,
@@ -212,7 +223,7 @@ proxmoxctl - Control Proxmox Qemu/KVM machines
 
 =head1 SYNOPSIS
 
-proxmoxctl [--config FILE] [--vm VMID] reset | resume | start | status | stop | suspend | vnc
+proxmoxctl [--config FILE] [--vm VMID] reset | resume | start | status | stop | suspend | config | vnc
 
 proxmoxctl ... vnc status
 
@@ -280,6 +291,10 @@ Stop VM.
 
 Suspend VM.
 
+=item B<config>
+
+Show VM configuration.
+
 =item B<vnc>
 
 VNC subcommands.
@@ -296,8 +311,8 @@ VNC status.
 
 =item B<enable>
 
-Enable VNC and bind to given B<--ip> ADDRESS (default: 0.0.0.0) and
-B<--port> NUMBER (default: 5900),
+Enable VNC and bind to given ip address (default: 0.0.0.0) and port number
+(default: 5900).
 
 =back
 
