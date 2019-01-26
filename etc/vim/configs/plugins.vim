@@ -8,12 +8,12 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'w0rp/ale.git'
 Plugin 'tpope/vim-fugitive.git'
 Plugin 'majutsushi/tagbar.git'
-Plugin 'vim-airline/vim-airline.git'
-Plugin 'vim-airline/vim-airline-themes.git'
 Plugin 'tpope/vim-eunuch.git'
 Plugin 'scrooloose/nerdtree.git'
 Plugin 'jistr/vim-nerdtree-tabs.git'
 Plugin 'vim-scripts/cscope.vim'
+Plugin 'airblade/vim-gitgutter.git'
+Plugin 'itchyny/lightline.vim.git'
 
 call vundle#end()
 
@@ -30,11 +30,14 @@ let NERDChristmasTree = 1
 let NERDTreeChDirMode = 2
 let NERDTreeMapJumpFirstChild = 'gK'
 
-"" airline
-let g:airline_symbols_ascii = 1
-let g:airline_left_sep = '>'
-let g:airline_right_sep = '<'
-
-"" ale
-nmap <silent> <C-k> <Plug>(ale_previous_wrap)
-nmap <silent> <C-j> <Plug>(ale_next_wrap)
+"" lightline
+let g:lightline = {
+    \ 'colorscheme': 'solarized',
+    \ 'active': {
+    \   'left': [ [ 'mode', 'paste' ],
+    \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+    \ },
+    \ 'component_function': {
+    \   'gitbranch': 'fugitive#head'
+    \ },
+    \ }
