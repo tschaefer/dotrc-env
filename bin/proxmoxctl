@@ -170,7 +170,9 @@ sub config {
     my $resp = _proxmox_call( 'get', '/config' );
 
     foreach my $key ( sort keys %{$resp} ) {
-        printf "%10s: %s\n", $key, $resp->{$key};
+        my $value = $resp->{$key};
+        $value =~ s/\n/ \/ /;
+        printf "%12s: %s\n", $key, $value;
     }
 
     return 0;
