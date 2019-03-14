@@ -5,7 +5,7 @@ readonly ME=${0##*/}
 usage() {
 cat <<EOF
 Usage:
-    $ME [-a] | [-psy]
+    $ME [-a] | -e | -psy
 
     $ME -h
 
@@ -15,6 +15,7 @@ Options:
     -e:     update dotrc environment
     -p:     update perl packages
     -s:     update system packages
+    -v:     update vim plugins
     -y:     update python packages
 
 EOF
@@ -89,8 +90,17 @@ update_system() {
     echo -e "\033[33mdone.\033[39m"
 }
 
+update_vim() {
+    echo -e "\033[33mStarting vim plugins update ...\033[39m"
+
+    vim +PluginUpdate +qall
+
+    echo -e "\033[33mdone.\033[39m"
+}
+
+
 get_opts() {
-    while getopts ":haepsy" opt; do
+    while getopts ":haepsvy" opt; do
         case $opt in
             a)
                 opt_a=1
@@ -104,6 +114,9 @@ get_opts() {
             s)
                 opt_s=1
                 ;;
+            v)
+                opt_v=1
+                ;;
             y)
                 opt_y=1
                 ;;
@@ -113,6 +126,7 @@ get_opts() {
             *)
                 echo "unknown option -$OPTARG"
                 usage
+                exit 2
                 ;;
         esac
     done
@@ -123,7 +137,8 @@ get_opts() {
         opt_a=1
     fi
 
-    if [ -n "$opt_a" -o -n "$opt_h" ] && [[ $opt_count -gt 1 ]]; then
+    if [ -n "$opt_a" -o -n "$opt_h" -o -n "$opt_e" -o -n "$opt_v" ] && \
+        [[ $opt_count -gt 1 ]]; then
         usage >&2
         exit 2
     fi
@@ -147,6 +162,10 @@ main() {
 
     if [[ -n "$opt_s" ]]; then
         update_system
+    fi
+
+    if [[ -n "$opt_v" ]]; then
+        update_vim
     fi
 
     if [[ -n "$opt_y" ]]; then
