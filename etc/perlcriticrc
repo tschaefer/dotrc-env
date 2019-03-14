@@ -2,7 +2,7 @@
 severity = 3
 verbose  = %F (line:%l) %m, %e [%p]\n
 include  = CodeLayout Documentation InputOutput Modules::ProhibitMultiplePackages
-exclude  = CodeLayout::RequireTidyCode RegularExpressions::RequireExtendedFormatting Moose::RequireCleanNamespace Documentation::RequirePodLinksIncludeText
+exclude  = CodeLayout::RequireTidyCode RegularExpressions::RequireExtendedFormatting Moose::RequireCleanNamespace Documentation::RequirePodLinksIncludeText Subroutines::ProhibitUnusedPrivateSubroutines
 
 # Rules for POD
 [Documentation::RequirePodSections]
