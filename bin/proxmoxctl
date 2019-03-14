@@ -197,7 +197,7 @@ sub run {
         start    => \&start,
         status   => \&status,
         stop     => \&stop,
-        suspend  => \&supsend,
+        suspend  => \&suspend,
         vnc      => \&vnc,
     );
     my $action = $ARGV[0] || '';
