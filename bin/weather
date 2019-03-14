@@ -7,9 +7,12 @@ use Furl;
 use Getopt::Long;
 use JSON;
 use Pod::Usage;
+use POSIX qw(strftime);
+use Term::ANSIColor;
 use utf8;
 
-use constant API_URL => 'https://api.wunderground.com/api/%s/%s/q/%s.json';
+use constant API_URL =>
+  'https://api.openweathermap.org/data/2.5/%s?q=%s&units=metric&APPID=%s';
 use constant RC_FILE => $ENV{'HOME'} . '/.weatherrc';
 
 sub print_error {
@@ -23,8 +26,7 @@ sub print_error {
 sub get_weather_data {
     my ( $opts, $key ) = @_;
 
-    my $feature = $opts->{'forecast'} ? 'forecast10day' : 'conditions';
-    my $url     = sprintf API_URL, $key, $feature, $opts->{'location'};
+    my $url = sprintf API_URL, 'weather', $opts->{'location'}, $key;
 
     my $furl = Furl->new();
     my $res  = $furl->get($url);
@@ -48,69 +50,40 @@ sub get_api_key {
 }
 
 sub print_conditions {
-    my $data = shift;
+    my $info = shift;
 
-    my $info = $data->{'current_observation'};
+    printf "%-12s %s\n", 'Location:', $info->{'name'};
 
-    printf "%-12s %s\n", 'Location:', $info->{'display_location'}->{'full'};
-
-    printf "%-12s %s\n", 'Latitude:', $info->{'display_location'}->{'latitude'};
-
-    printf "%-12s %s\n",
-      'Longitude', $info->{'display_location'}->{'longitude'};
-
-    printf "%-12s %s m\n",
-      'Elevation:', $info->{'display_location'}->{'elevation'};
-
-    printf "%-12s %s\n", 'Condition:', $info->{'weather'};
-
-    my $string = sprintf "%-12s %s °C\n", 'Temperature:', $info->{'temp_c'};
+    my $string = sprintf "%-12s %s °\n", 'Latitude:',
+      $info->{'coord'}->{'lat'};
     my $bytestring = Encode::encode( "utf-8", $string );
     print $bytestring;
 
-    printf "%-12s %s\n", 'Humidity:', $info->{'relative_humidity'};
-
-    printf "%-12s %s km/h\n", 'Wind:', $info->{'wind_kph'};
-
-    $string = sprintf "%-12s %s °C\n", 'Windchill:', $info->{'windchill_c'};
+    $string = sprintf "%-12s %s °\n", 'Longitude', $info->{'coord'}->{'lon'};
     $bytestring = Encode::encode( "utf-8", $string );
     print $bytestring;
 
-    $string = sprintf "%-12s %s °C\n", 'Feels like:', $info->{'feelslike_c'};
+    printf "%-12s %s\n", 'Sunrise',
+      strftime( "%H:%M:%S", localtime $info->{'sys'}->{'sunrise'} );
+
+    printf "%-12s %s\n", 'Sunset',
+      strftime( "%H:%M:%S", localtime $info->{'sys'}->{'sunset'} );
+
+    printf "%-12s %s\n", 'Condition:',
+      ucfirst $info->{'weather'}->[0]->{'description'};
+
+    $string = sprintf "%-12s %s °C\n", 'Temperature:',
+      $info->{'main'}->{'temp'};
     $bytestring = Encode::encode( "utf-8", $string );
     print $bytestring;
 
-    printf "%-12s %s km\n", 'Visibility:', $info->{'visibility_km'};
+    printf "%-12s %s %%\n", 'Humidity:', $info->{'main'}->{'humidity'};
 
-    printf "%-12s %s mb\n", 'Pressure:', $info->{'pressure_mb'};
+    printf "%-12s %s km/h\n", 'Wind:', $info->{'wind'}->{'speed'};
 
-    exit 0;
-}
+    printf "%-12s %s km\n", 'Visibility:', $info->{'visibility'} / 1000;
 
-sub print_forecast {
-    my ( $days, $data ) = @_;
-
-    my $info = $data->{'forecast'}{'txt_forecast'}{'forecastday'};
-
-    $days = ( $days * 2 ) - 1;
-    foreach ( 0 .. $days ) {
-        my $txt = $info->[$_];
-        next if ( !$txt );
-        printf "%s: %s\n", $txt->{'title'}, $txt->{'fcttext_metric'};
-    }
-
-    exit 0;
-}
-
-sub print_locations {
-    my $data = shift;
-
-    my $info = $data->{'response'}{'results'};
-
-    foreach ( @{$info} ) {
-        printf "%s, %s: ZMW:%s\n",
-          $_->{'city'}, $_->{'country_name'}, $_->{'zmw'};
-    }
+    printf "%-12s %s hPa\n", 'Pressure:', $info->{'main'}->{'pressure'};
 
     exit 0;
 }
@@ -121,17 +94,7 @@ sub print_weather {
     my $key  = get_api_key();
     my $data = get_weather_data( $opts, $key );
 
-    print_error( $data->{'response'}{'error'}{'description'} . "\n" )
-      if ( $data->{'response'}{'error'} );
-
-    print_locations($data)
-      if ( $data->{'response'}{'results'} );
-
-    print_conditions($data)
-      if ( $data->{'response'}{'features'}{'conditions'} );
-
-    print_forecast( $opts->{'forecast'}, $data )
-      if ( $data->{'response'}{'features'}{'forecast10day'} );
+    print_conditions($data);
 
     return;
 }
@@ -157,13 +120,15 @@ sub print_man {
 
 sub get_location {
     my $furl = Furl->new();
-    my $url  = 'https://ipinfo.io/city';
+    my $url  = 'https://ipinfo.io/geo';
     my $res  = $furl->get($url);
 
     print_error( $res->status_line . "\n" ) if ( !$res->is_success );
 
-    my $location = $res->content;
-    $location =~ s/^\s+|\s+$//g;
+    my $json = $res->decoded_content;
+    my $data = decode_json($json);
+
+    my $location = sprintf "%s,%s", $data->{'city'}, $data->{'country'};
 
     return $location;
 }
@@ -171,9 +136,8 @@ sub get_location {
 sub run {
     my $opts;
     GetOptions(
-        "forecast|f=i" => \$opts->{'forecast'},
-        "help|h"       => \$opts->{'help'},
-        "man|m"        => \$opts->{'man'},
+        "help|h" => \$opts->{'help'},
+        "man|m"  => \$opts->{'man'},
     ) or print_usage();
 
     my $count = 0;
@@ -200,11 +164,11 @@ __END__
 
 =head1 NAME
 
-weather - Get your weather from the underground.
+weather - Show your weather.
 
 =head1 SYNOPSIS
 
-weather [--forecast DAYS] [LOCATION]
+weather [LOCATION]
 
 weather --help | --man
 
@@ -212,9 +176,7 @@ weather --help | --man
 
 =over 8
 
-=item B<--forecast> DAYS
-
-Forecast for the next n days (including today), max 10 days.
+None.
 
 =back
 
@@ -224,15 +186,15 @@ Forecast for the next n days (including today), max 10 days.
 
 =item B<LOCATION>
 
-City name, Wunderground PWS or ZMW code (default current location).
+City name (comma separated country) [default current location].
 
 =back
 
 =head1 DESCRIPTION
 
-weather is a tool to get current conditions or forecast for a given location.
+weather is a tool to get current conditions for a given location.
 
-An Wunderground API key L<http://api.wunderground.com/weather/api> is needed
+An OpenWeatherMap API key L<http://openweathermap.org> is needed
 and must be provided in the user home, ~/.weatherrc.
 
 =cut
