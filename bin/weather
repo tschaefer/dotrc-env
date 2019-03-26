@@ -15,6 +15,8 @@ use constant API_URL =>
   'https://api.openweathermap.org/data/2.5/%s?q=%s&units=metric&APPID=%s';
 use constant RC_FILE => $ENV{'HOME'} . '/.weatherrc';
 
+no warnings 'uninitialized';
+
 sub print_error {
     my $msg = shift;
 
@@ -52,7 +54,8 @@ sub get_api_key {
 sub print_conditions {
     my $info = shift;
 
-    printf "%-12s %s\n", 'Location:', $info->{'name'};
+    printf "%-12s %s, %s\n", 'Location:', $info->{'name'},
+      $info->{'sys'}->{'country'};
 
     my $string = sprintf "%-12s %s °\n", 'Latitude:',
       $info->{'coord'}->{'lat'};
