@@ -34,3 +34,5 @@ etc/newsbeuter/history.cmdline
 etc/newsbeuter/history.search
 ## bash
 etc/bash/hosts.d/*
+## misc
+*.bak
