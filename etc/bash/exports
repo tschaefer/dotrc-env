@@ -9,7 +9,7 @@ case ${ENV_OS} in
         MANPATH=/opt/local/man:/usr/share/man
         ;;
     *)
-        PATH=${ENV_HOME}/.bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
+        PATH=${ENV_HOME}/.bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/games:/usr/games
         MANPATH=${MANPATH}
         ;;
 esac
