@@ -152,9 +152,6 @@ main() {
         exit 0
     fi
 
-    host=$(hostname -b)
-    echo -e "\033[35m+++ $host +++\033[39m"
-
     if [[ -n "$opt_e" ]]; then
         update_env
     fi
