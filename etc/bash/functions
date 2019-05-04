@@ -1,4 +1,4 @@
-## ssh / scp
+## ssh / scp / mosh
 function _ssh_conf {
     SSH_HOME=${ENV_HOME}/.ssh
     cat ${SSH_HOME}/config.global $(ls ${SSH_HOME}/config.local \
@@ -18,6 +18,9 @@ function _ssh_sock {
     export SSH_AUTH_SOCK
 }
 
+function _mosh_screen {
+    mosh $@ -- screen -Rd
+}
 
 ## python
 function _pip2_up {
