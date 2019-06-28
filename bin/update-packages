@@ -82,6 +82,10 @@ update_system() {
                 sudo apt-get -y autoremove --purge
                 sudo apt-get clean ; sudo apt-get autoclean
             ;;
+        gentoo)
+            sudo emerge --sync ; \
+                sudo emerge --verbose --update --newuse --deep @world
+            ;;
         *)
             return
             ;;
