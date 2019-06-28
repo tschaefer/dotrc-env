@@ -1,3 +1,3 @@
 #!/bin/bash
 
-HTOPRC=${ENV_HOME}/.htoprc htop
+HTOPRC=${ENV_HOME}/.htoprc htop -u $(whoami)
