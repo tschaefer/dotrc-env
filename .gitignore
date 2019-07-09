@@ -32,6 +32,7 @@ etc/gnupg/tofu.db
 etc/newsboat/cache.db*
 etc/newsboat/history.cmdline
 etc/newsboat/history.search
+etc/newsboat/queue
 ## bash
 etc/bash/hosts.d/*
 ## misc
