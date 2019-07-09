@@ -28,10 +28,10 @@ etc/gnupg/sshcontrol
 etc/gnupg/trustdb.gpg*
 etc/gnupg/crls.d
 etc/gnupg/tofu.db
-## newsbeuter
-etc/newsbeuter/cache.db*
-etc/newsbeuter/history.cmdline
-etc/newsbeuter/history.search
+## newsboat
+etc/newsboat/cache.db*
+etc/newsboat/history.cmdline
+etc/newsboat/history.search
 ## bash
 etc/bash/hosts.d/*
 ## misc
