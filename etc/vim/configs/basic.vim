@@ -19,7 +19,7 @@ set background=dark
 set hlsearch
 set incsearch
 set synmaxcol=800
-highlight Terminal ctermbg=black
+highlight Terminal ctermbg=none
 
 "" menu
 set cmdheight=2
