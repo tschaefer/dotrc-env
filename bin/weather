@@ -8,12 +8,15 @@ use Getopt::Long;
 use JSON;
 use Pod::Usage;
 use POSIX qw(strftime);
+use Readonly;
 use Term::ANSIColor;
 use utf8;
 
-use constant API_URL =>
+binmode STDOUT, ":encoding(UTF-8)";
+
+Readonly my $API_URL =>
   'https://api.openweathermap.org/data/2.5/%s?q=%s&units=metric&APPID=%s';
-use constant RC_FILE => $ENV{'HOME'} . '/.weatherrc';
+Readonly my $RC_FILE => $ENV{'HOME'} . '/.weatherrc';
 
 no warnings 'uninitialized';
 
@@ -28,7 +31,7 @@ sub print_error {
 sub get_weather_data {
     my ( $opts, $key ) = @_;
 
-    my $url = sprintf API_URL, 'weather', $opts->{'location'}, $key;
+    my $url = sprintf $API_URL, 'weather', $opts->{'location'}, $key;
 
     my $furl = Furl->new();
     my $res  = $furl->get($url);
@@ -44,9 +47,9 @@ sub get_weather_data {
 sub get_api_key {
     my $key = 0;
 
-    open my $fh, "<", RC_FILE or print_error( "$!: " . RC_FILE . "\n" );
+    open my $fh, "<", $RC_FILE or print_error( "$!: " . $RC_FILE . "\n" );
     chomp( $key = <$fh> );
-    close $fh or print_error( "$!: " . RC_FILE . "\n" );
+    close $fh or print_error( "$!: " . $RC_FILE . "\n" );
 
     return $key;
 }
@@ -57,14 +60,9 @@ sub print_conditions {
     printf "%-12s %s, %s\n", 'Location:', $info->{'name'},
       $info->{'sys'}->{'country'};
 
-    my $string = sprintf "%-12s %s °\n", 'Latitude:',
-      $info->{'coord'}->{'lat'};
-    my $bytestring = Encode::encode( "utf-8", $string );
-    print $bytestring;
+    printf "%-12s %s °\n", 'Latitude:', $info->{'coord'}->{'lat'};
 
-    $string = sprintf "%-12s %s °\n", 'Longitude', $info->{'coord'}->{'lon'};
-    $bytestring = Encode::encode( "utf-8", $string );
-    print $bytestring;
+    printf "%-12s %s °\n", 'Longitude', $info->{'coord'}->{'lon'};
 
     printf "%-12s %s\n", 'Sunrise',
       strftime( "%H:%M:%S", localtime $info->{'sys'}->{'sunrise'} );
@@ -75,10 +73,7 @@ sub print_conditions {
     printf "%-12s %s\n", 'Condition:',
       ucfirst $info->{'weather'}->[0]->{'description'};
 
-    $string = sprintf "%-12s %s °C\n", 'Temperature:',
-      $info->{'main'}->{'temp'};
-    $bytestring = Encode::encode( "utf-8", $string );
-    print $bytestring;
+    printf "%-12s %s °C\n", 'Temperature:', $info->{'main'}->{'temp'};
 
     printf "%-12s %s %%\n", 'Humidity:', $info->{'main'}->{'humidity'};
 
@@ -149,8 +144,8 @@ sub run {
     }
 
     print_usage() if ( ( $opts->{'help'} || $opts->{'man'} ) && $count > 1 );
-    print_man()  if ( $opts->{'man'} );
-    print_help() if ( $opts->{'help'} );
+    print_man()   if ( $opts->{'man'} );
+    print_help()  if ( $opts->{'help'} );
 
     $opts->{'location'} = $ARGV[0] || get_location();
 

@@ -7,9 +7,12 @@ use Furl;
 use Getopt::Long;
 use JSON;
 use Pod::Usage;
+use Readonly;
 use utf8;
 
-use constant API_URL => 'https://ipinfo.io/%s';
+binmode STDOUT, ":encoding(UTF-8)";
+
+Readonly my $API_URL => 'https://ipinfo.io/%s';
 
 sub print_error {
     my $msg = shift;
@@ -23,7 +26,7 @@ sub get_data {
     my $opts = shift;
 
     my $ip  = $opts->{ip};
-    my $url = sprintf API_URL, $ip ? $ip : '';
+    my $url = sprintf $API_URL, $ip ? $ip : '';
 
     my $furl = Furl->new( headers => [ 'Accept' => "application/json" ], );
     my $res  = $furl->get($url);
