@@ -28,6 +28,7 @@ etc/gnupg/sshcontrol
 etc/gnupg/trustdb.gpg*
 etc/gnupg/crls.d
 etc/gnupg/tofu.db
+etc/gnupg/reader_1.status
 ## newsboat
 etc/newsboat/cache.db*
 etc/newsboat/history.cmdline
