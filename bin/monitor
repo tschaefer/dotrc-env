@@ -163,6 +163,8 @@ Path to configuration file.
 
 =head1 PARAMETERS
 
+=over 8
+
 =item B<on>
 
 Turn on external monitor.
