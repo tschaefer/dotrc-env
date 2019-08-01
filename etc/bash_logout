@@ -1,6 +1,6 @@
 ## clear console
 if [ "$SHLVL" = 1 ]; then
-    [ -x $(type -p clear) ] && clear -q
+    [ -x $(type -p clear) ] && clear
 fi
 
 # vim:ft=sh
