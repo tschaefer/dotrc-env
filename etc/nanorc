@@ -25,7 +25,7 @@ set boldtext
 
 ## Constantly display the cursor position in the statusbar.  Note that
 ## this overrides "quickblank".
-set const
+set constantshow
 
 ## Use cut to end of line by default.
 set cut
