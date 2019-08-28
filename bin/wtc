@@ -5,7 +5,7 @@ use warnings;
 
 use Furl;
 use Getopt::Long;
-use JSON;
+use JSON::XS;
 use Pod::Usage;
 use Readonly;
 use utf8;
