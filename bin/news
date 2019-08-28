@@ -1,0 +1,263 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Web::NewsAPI;
+
+use Carp qw( croak carp );
+use Getopt::Long qw(:config require_order);
+use Pod::Usage;
+use Readonly;
+use Term::ANSIColor;
+use Term::ReadKey;
+
+$Term::ANSIColor::AUTORESET = 1;
+
+use utf8;
+
+binmode STDOUT, ":encoding(UTF-8)";
+
+Readonly my $RC_FILE => $ENV{'HOME'} . '/.config/newsrc';
+
+my ( $cfgfile, %cfg );
+
+sub print_usage {
+    pod2usage( -exitval => 255, -verbose => 0 );
+    return;
+}
+
+sub print_help {
+    pod2usage(
+        -exitval  => 0,
+        -verbose  => 99,
+        -sections => 'SYNOPSIS|OPTIONS|PARAMETERS',
+    );
+    return;
+}
+
+sub print_man {
+    pod2usage( -exitval => 0, -verbose => 2 );
+    return;
+}
+
+sub parse_config {
+    croak("$!: $cfgfile") if ( !-e $cfgfile );
+
+    open my $fh, "<", $cfgfile or croak("$!: $cfgfile");
+    chomp( my @raw = <$fh> );
+    close $fh or croak("$!: $cfgfile");
+
+    foreach (@raw) {
+        $cfg{$1} = $2 if (/^([\w-]+)\s*=\s*([\w-]+)\s*#?/);
+    }
+
+    croak('invalid configuration, missing API key') if ( !$cfg{'api_key'} );
+
+    return;
+}
+
+sub list_sources {
+    my %filter = @_;
+
+    my $api     = Web::NewsAPI->new( api_key => $cfg{'api_key'} );
+    my @sources = $api->sources(%filter);
+    foreach my $source (@sources) {
+        printf "%s\n",     $source->name;
+        printf "\t%s\n",   colored( $source->id, "white" );
+        printf "\t%s\n\n", colored( $source->url, "cyan" );
+    }
+
+    return;
+}
+
+sub list_sources_by_category {
+    my $category = $ARGV[0];
+    return print_usage() if ( !$category );
+
+    list_sources( category => $category );
+
+    return;
+}
+
+sub list_sources_by_country {
+    my $country = $ARGV[0];
+    return print_usage() if ( !$country );
+
+    list_sources( country => $country );
+
+    return;
+}
+
+sub _get_datetime_locale_str {
+    my $dt = shift;
+
+    my $locale = $ENV{LC_TIME} || $ENV{LANGUAGE} || $ENV{LANG} || 'en_US';
+    $dt->set_locale($locale);
+
+    my $tz = DateTime::TimeZone->new( name => 'local' )->name();
+    $dt->set_time_zone($tz);
+
+    return $dt->strftime('%x %X');
+}
+
+sub list_headlines {
+    my $opts;
+    GetOptions(
+        "description|d" => \$opts->{'description'},
+        "limit|l=i"     => \$opts->{'limit'},
+    ) or print_usage();
+
+    my $id = $ARGV[0];
+
+    return print_usage() if ( !$id );
+    return print_usage() if ( $opts->{'limit'} <= 0 );
+
+    my $api       = Web::NewsAPI->new( api_key => $cfg{'api_key'} );
+    my $headlines = $api->top_headlines( sources => ($id) );
+
+    my ($wchar) = GetTerminalSize();
+
+    my $i = 0;
+    print "\n";
+    for my $article ( $headlines->articles ) {
+        last if ( $opts->{'limit'} && $i++ >= $opts->{'limit'} );
+
+        printf "%s", colored( $article->title, "bold white" );
+        printf "\n\n%s", $article->description if ( $opts->{'description'} );
+        printf " %s\n\n",
+          colored( _get_datetime_locale_str( $article->publishedAt ),
+            "grey10" );
+        printf "%s\n\n", colored( $article->url, "cyan" );
+        printf "%s\n\n", colored( "-" x $wchar,  "grey15" );
+    }
+
+    return;
+}
+
+sub parse_opts {
+    $cfgfile = $RC_FILE;
+
+    my $opts;
+    GetOptions(
+        "config|c=s" => \$cfgfile,
+        "help|h"     => \$opts->{'help'},
+        "man|m"      => \$opts->{'man'},
+    ) or print_usage();
+
+    my $count = 0;
+    foreach ( values %{$opts} ) {
+        $count += 1 if ($_);
+    }
+
+    print_usage() if ( ( $opts->{'help'} || $opts->{'man'} ) && $count > 1 );
+    print_man()   if ( $opts->{'man'} );
+    print_help()  if ( $opts->{'help'} );
+
+    return;
+}
+
+sub do_actions {
+    my %ACTIONS = (
+        category  => \&list_sources_by_category,
+        country   => \&list_sources_by_country,
+        headlines => \&list_headlines,
+    );
+
+    my $action = $ARGV[0];
+    shift @ARGV;
+
+    $action =~ s/-/_/g;
+    my $sub = $ACTIONS{$action};
+    return print_usage() if ( !$sub );
+
+    parse_config($cfgfile);
+
+    &$sub();
+
+    return;
+}
+
+sub run {
+    parse_opts();
+    do_actions();
+
+    return 0;
+}
+
+exit run();
+
+__END__
+
+=encoding utf8
+
+=head1 NAME
+
+news - Search worldwide news.
+
+=head1 SYNOPSIS
+
+news category NAME | country CODE
+
+news [--description|-d --limit|-l] headlines ID
+
+news --help | --man
+
+=head1 OPTIONS
+
+=head2 sources
+
+=over 8
+
+None.
+
+=back
+
+=head2 headlines
+
+=over 8
+
+=item B<--description|-d>
+
+Show article description.
+
+=item B<--limit|-l>
+
+Limit number of articles.
+
+=back
+
+=head1 PARAMETERS
+
+=head2 sources
+
+=over 8
+
+=item B<category> NAME
+
+List news sources by category name.
+
+=item B<country> CODE
+
+List news sources by country code.
+
+=back
+
+=head2 headlines
+
+=over 8
+
+=item B<headlines> ID
+
+Get top headlines by news id.
+
+=back
+
+=head1 DESCRIPTION
+
+news is a tool to get iup to date headlines.
+
+An News API key L<http://newsapi.org> is needed
+and must be provided in the user home configuraion folder, ~/.config/newsrc.
+
+=cut
