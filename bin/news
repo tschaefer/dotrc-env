@@ -108,7 +108,7 @@ sub list_headlines {
         "limit|l=i"     => \$opts->{'limit'},
     ) or print_usage();
 
-    my $id = $ARGV[0];
+    my $id = $ARGV[0] || '';
 
     return print_usage() if ( !$id );
     return print_usage() if ( $opts->{'limit'} && $opts->{'limit'} <= 0 );
@@ -119,10 +119,10 @@ sub list_headlines {
     my ($wchar) = GetTerminalSize();
 
     my $i = 0;
-    print "\n";
     for my $article ( $headlines->articles ) {
         last if ( $opts->{'limit'} && $i++ >= $opts->{'limit'} );
 
+        print "\n" if ($i == 1);
         printf "%s", colored( $article->title, "bold white" );
         printf "\n\n%s", $article->description if ( $opts->{'description'} );
         printf " %s\n\n",
@@ -164,7 +164,7 @@ sub do_actions {
         headlines => \&list_headlines,
     );
 
-    my $action = $ARGV[0];
+    my $action = $ARGV[0] || '';
     shift @ARGV;
 
     $action =~ s/-/_/g;
