@@ -111,7 +111,7 @@ sub list_headlines {
     my $id = $ARGV[0];
 
     return print_usage() if ( !$id );
-    return print_usage() if ( $opts->{'limit'} <= 0 );
+    return print_usage() if ( $opts->{'limit'} && $opts->{'limit'} <= 0 );
 
     my $api       = Web::NewsAPI->new( api_key => $cfg{'api_key'} );
     my $headlines = $api->top_headlines( sources => ($id) );
