@@ -22,6 +22,17 @@ if [[ -d ${ENV_HOME}/.local/bin ]]; then
 fi
 export PATH MANPATH
 
+if [[ -n ${XDG_RUNTIME_DIR} ]]; then
+    ENV_TMP=${XDG_RUNTIME_DIR}/tmp
+else
+    ENV_TMP=/tmp/${USER}.tmp
+fi
+if [[ ! -d ${ENV_TMP} ]]; then
+    mkdir ${ENV_TMP}
+    chmod 700 ${ENV_TMP}
+fi
+export ENV_TMP
+
 ## history
 export HISTCONTROL=ignoreboth
 export HISTSIZE=32768
