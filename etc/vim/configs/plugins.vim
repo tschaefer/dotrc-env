@@ -14,6 +14,7 @@ Plugin 'jistr/vim-nerdtree-tabs.git'
 Plugin 'vim-scripts/cscope.vim'
 Plugin 'airblade/vim-gitgutter.git'
 Plugin 'itchyny/lightline.vim.git'
+Plugin 'tpope/vim-surround.git'
 
 call vundle#end()
 
