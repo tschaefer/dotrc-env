@@ -12,7 +12,7 @@ Plugin 'tpope/vim-eunuch.git'
 Plugin 'scrooloose/nerdtree.git'
 Plugin 'jistr/vim-nerdtree-tabs.git'
 Plugin 'vim-scripts/cscope.vim'
-Plugin 'airblade/vim-gitgutter.git'
+Plugin 'juneedahamed/vc.vim.git'
 Plugin 'itchyny/lightline.vim.git'
 Plugin 'tpope/vim-surround.git'
 
