@@ -6,7 +6,6 @@ call vundle#begin()
 
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'w0rp/ale.git'
-Plugin 'tpope/vim-fugitive.git'
 Plugin 'majutsushi/tagbar.git'
 Plugin 'tpope/vim-eunuch.git'
 Plugin 'scrooloose/nerdtree.git'
@@ -15,6 +14,7 @@ Plugin 'vim-scripts/cscope.vim'
 Plugin 'juneedahamed/vc.vim.git'
 Plugin 'itchyny/lightline.vim.git'
 Plugin 'tpope/vim-surround.git'
+Plugin 'airblade/vim-gitgutter.git'
 
 call vundle#end()
 
