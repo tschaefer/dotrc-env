@@ -24,7 +24,9 @@ EOF
 update_env() {
     echo -e "\033[33mStarting dotrc envrionment update ...\033[39m"
 
-    cd ${HOME}/.env ; git pull ; cd - >/dev/null
+    if [[ -d ${HOME}/.env ]]; then
+        cd ${HOME}/.env ; git pull ; cd - >/dev/null
+    fi
 
     echo -e "\033[33mdone.\033[39m"
 }
