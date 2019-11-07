@@ -50,7 +50,11 @@ fi
 
 ## overload
 alias root="sudo bash --rcfile ${SSHHOME}/.sshrc"
-export PATH=${PATH}:${ENV_HOME}/bin
+PATH=${PATH}:${ENV_HOME}/bin
+if [[ -d ${HOME}/.bin ]]; then
+    PATH=${PATH}:${HOME}/.bin
+fi
+export PATH
 
 ## debuging
 #set +x
