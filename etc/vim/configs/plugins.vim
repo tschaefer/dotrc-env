@@ -15,6 +15,7 @@ Plugin 'juneedahamed/vc.vim.git'
 Plugin 'itchyny/lightline.vim.git'
 Plugin 'tpope/vim-surround.git'
 Plugin 'airblade/vim-gitgutter.git'
+Plugin 'hesselbom/vim-hsftp.git'
 
 call vundle#end()
 
