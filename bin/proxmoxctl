@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Modern::Perl '2019';
+use Modern::Perl '2020';
 
 use Carp;
 use Net::Proxmox::VE;
@@ -167,15 +167,30 @@ sub vnc {
 }
 
 sub config {
-    my $resp = _proxmox_call( 'get', '/config' );
+    my $action = shift @ARGV || return print_usage();
 
-    foreach my $key ( sort keys %{$resp} ) {
-        my $value = $resp->{$key};
-        $value =~ s/\n/ \/ /;
-        printf "%12s: %s\n", $key, $value;
+    if ( $action eq 'show' ) {
+        my $resp = _proxmox_call( 'get', '/config' );
+
+        foreach my $key ( sort keys %{$resp} ) {
+            my $value = $resp->{$key};
+            $value =~ s/\n/ \/ /;
+            printf "%12s: %s\n", $key, $value;
+        }
+
+        return 0;
     }
 
-    return 0;
+    if ( $action eq 'set' ) {
+        my $set = shift @ARGV || return print_usage();
+        my ($key, $value ) = split /=/, $set;
+
+        my $resp = _proxmox_call( 'post', '/config', { $key => $value });
+
+        return $resp !~ /failed/i ? 0 : 1;
+    }
+
+    return print_usage();
 }
 
 sub run {
@@ -210,7 +225,11 @@ sub run {
     return print_usage() if ( !$vm && $action !~ /man|help/ );
 
     parse_config($file);
-    $cfg{'vm'} = $vm;
+
+    if ($action !~ /(help|man)/) {
+        $cfg{'vm'} = $vm if ($vm);
+        return print_usage if (!$cfg{'vm'});
+    }
 
     return &$sub();
 }
@@ -227,7 +246,13 @@ proxmoxctl - Control Proxmox Qemu/KVM machines
 
 =head1 SYNOPSIS
 
-proxmoxctl [--config FILE] [--vm VMID] reset | resume | start | status | stop | suspend | config | vnc
+proxmoxctl [--config FILE] [--vm VMID] ACTION
+
+proxmoxctl ... reset | resume | start | status | stop | suspend | shutdown
+
+proxmoxtcl ... config show
+
+proxmoxctl ... config set KEY=VALUE
 
 proxmoxctl ... vnc status
 
@@ -243,7 +268,7 @@ proxmoxctl help | man
 
 =item B<--config|-c> FILE
 
-Path to configuration file.
+Path to configuration file, see L<DESCRIPTION>.
 
 =item B<--vm|-v> VMID
 
@@ -279,6 +304,10 @@ Reset VM.
 
 Resume VM.
 
+=item B<shutdown>
+
+Shutdown (ACPI) VM.
+
 =item B<start>
 
 Start VM.
@@ -305,6 +334,20 @@ VNC subcommands.
 
 =back
 
+=head2 config
+
+=over 8
+
+=item B<show>
+
+Show VM configuration.
+
+=item B<set> KEY=VALUE
+
+Set VM configuration by key value pair.
+
+=back
+
 =head2 vnc
 
 =over 8
@@ -323,5 +366,30 @@ Enable VNC and bind to given ip address (default: 0.0.0.0) and port number
 =head1 DESCRIPTION
 
 Simple control tool for Proxmox Qemu/KVM machines.
+
+The default configuration file is placed in ~/.config/proxmoxctlrc.
+
+=head2 Example
+
+    # Proxmox host instance to interact with.
+    host = proxmox.acme.org
+
+    # TCP port number used to by the Proxmox host instance.
+    port = 8006
+
+    # Proxmox node name (uri path) serving virtual machine to control.
+    node = proxmox_node_0
+
+    # Authentication realm to request against.
+    realm = pve
+
+    # User name used for authentication.
+    username = bofh
+
+    # Pass word user for authentication.
+    password = qwe123
+
+    # Virtual machine id to control.
+    vm = 4711
 
 =cut
