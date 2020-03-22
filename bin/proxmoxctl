@@ -58,7 +58,7 @@ sub _proxmox_connect {
         }
     );
 
-    $p->login() or croak(sprintf "Can not log into %s", $cfg{'host'});
+    $p->login() or croak( sprintf "Can not log into %s", $cfg{'host'} );
 
     return $p;
 }
@@ -66,7 +66,22 @@ sub _proxmox_connect {
 sub _proxmox_get_uri {
     my $path = shift;
 
-    my $uri = sprintf "/nodes/%s/qemu/%s", $cfg{'node'}, $cfg{'vm'};
+    my $p    = _proxmox_connect();
+    my $resp = $p->get('/cluster/resources?type=vm');
+
+    my $vm = $cfg{'vm'};
+
+    my $node;
+    foreach ( @{$resp} ) {
+        if ( $_->{'vmid'} =~ /$vm/ ) {
+            $node = $_->{'node'};
+            last;
+        }
+    }
+
+    croak( sprintf "No such VM %s", $vm ) if ( !$node );
+
+    my $uri = sprintf "/nodes/%s/qemu/%s", $node, $cfg{'vm'};
     $uri = sprintf "%s/%s", $uri, $path if ($path);
 
     return $uri;
@@ -183,9 +198,9 @@ sub config {
 
     if ( $action eq 'set' ) {
         my $set = shift @ARGV || return print_usage();
-        my ($key, $value ) = split /=/, $set;
+        my ( $key, $value ) = split /=/, $set;
 
-        my $resp = _proxmox_call( 'post', '/config', { $key => $value });
+        my $resp = _proxmox_call( 'post', '/config', { $key => $value } );
 
         return $resp !~ /failed/i ? 0 : 1;
     }
@@ -226,9 +241,9 @@ sub run {
 
     parse_config($file);
 
-    if ($action !~ /(help|man)/) {
+    if ( $action !~ /(help|man)/ ) {
         $cfg{'vm'} = $vm if ($vm);
-        return print_usage if (!$cfg{'vm'});
+        return print_usage if ( !$cfg{'vm'} );
     }
 
     return &$sub();
@@ -376,9 +391,6 @@ The default configuration file is placed in ~/.config/proxmoxctlrc.
 
     # TCP port number used to by the Proxmox host instance.
     port = 8006
-
-    # Proxmox node name (uri path) serving virtual machine to control.
-    node = proxmox_node_0
 
     # Authentication realm to request against.
     realm = pve
