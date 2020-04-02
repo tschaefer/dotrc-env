@@ -9,6 +9,7 @@ use Carp;
 use Net::Proxmox::VE;
 use Getopt::Long qw(:config require_order);
 use Pod::Usage;
+use URI::Escape;
 
 my %cfg;
 
@@ -222,6 +223,36 @@ sub config {
     return print_usage();
 }
 
+sub device {
+    my ( $driver, $id );
+    GetOptions(
+        "driver|d=s" => \$driver,
+        "id|i=s"     => \$id,
+    ) or return print_usage();
+    my $action = $ARGV[0] || '';
+
+    if ( $action eq 'add' ) {
+        return print_usage() if (!$driver || !$id);
+
+        my $cmd =
+          uri_escape_utf8( sprintf "device_add %s,id=%s", $driver, $id );
+        my $resp = _proxmox_call( 'post', '/monitor', { command => $cmd } );
+
+        return ( !$resp ) ? 0 : 1;
+    }
+
+    if ( $action eq 'delete' ) {
+        return print_usage() if (!$id);
+
+        my $cmd  = uri_escape_utf8( sprintf "device_del %s", $id );
+        my $resp = _proxmox_call( 'post', '/monitor', { command => $cmd } );
+
+        return ( !$resp ) ? 0 : 1;
+    }
+
+    return print_usage();
+}
+
 sub run {
     my $vm   = undef;
     my $file = "$ENV{HOME}/.config/proxmoxctlrc";
@@ -244,6 +275,7 @@ sub run {
         suspend  => \&suspend,
         vnc      => \&vnc,
         node     => \&node,
+        device   => \&device,
     );
     my $action = $ARGV[0] || '';
     shift @ARGV;
@@ -288,6 +320,10 @@ proxmoxctl ... vnc status
 
 proxmoxctl ... vnc [--ip ADDRESS] [--port NUMBER] enable
 
+proxmoxctl ... device --driver DRIVER --id ID add
+
+proxmoxctl ... device --id ID delete
+
 proxmoxctl help | man
 
 =head1 OPTIONS
@@ -317,6 +353,20 @@ Ipv6 or Ipv4 address.
 =item B<--port|-p> NUMBER
 
 TCP port number.
+
+=back
+
+=head2 device
+
+=over 8
+
+=item B<--driver|-d> DRIVER
+
+Device driver.
+
+=item B<--id|-i> ID
+
+Device identifier.
 
 =back
 
@@ -390,6 +440,20 @@ VNC status.
 
 Enable VNC and bind to given ip address (default: 0.0.0.0) and port number
 (default: 5900).
+
+=back
+
+=head2 device
+
+=over 8
+
+=item B<add>
+
+Attach new device.
+
+=item B<delete>
+
+Remove device.
 
 =back
 
