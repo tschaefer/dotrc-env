@@ -63,9 +63,7 @@ sub _proxmox_connect {
     return $p;
 }
 
-sub _proxmox_get_uri {
-    my $path = shift;
-
+sub _proxmox_get_node {
     my $p    = _proxmox_connect();
     my $resp = $p->get('/cluster/resources?type=vm');
 
@@ -80,6 +78,14 @@ sub _proxmox_get_uri {
     }
 
     croak( sprintf "No such VM %s", $vm ) if ( !$node );
+
+    return $node;
+}
+
+sub _proxmox_get_uri {
+    my $path = shift;
+
+    my $node = _proxmox_get_node();
 
     my $uri = sprintf "/nodes/%s/qemu/%s", $node, $cfg{'vm'};
     $uri = sprintf "%s/%s", $uri, $path if ($path);
@@ -149,6 +155,14 @@ sub reset {
     return 0;
 }
 
+sub node {
+    my $node = _proxmox_get_node();
+
+    printf "%s\n", $node;
+
+    return 0;
+}
+
 sub vnc {
     my ( $ip, $port ) = ( '0.0.0.0', 5900 );
     GetOptions(
@@ -161,7 +175,7 @@ sub vnc {
         my $resp =
           _proxmox_call( 'post', '/monitor', { command => 'info vnc' } );
 
-        if ( $resp =~ /Server: (.+) \(/ ) {
+        if ( $resp =~ /Server: ((?:[0-9]{1,3}\.){3}[0-9]{1,3}:[0-9]{1,5}) / ) {
             printf "enabled: %s\n", $1;
             return 0;
         }
@@ -229,6 +243,7 @@ sub run {
         stop     => \&stop,
         suspend  => \&suspend,
         vnc      => \&vnc,
+        node     => \&node,
     );
     my $action = $ARGV[0] || '';
     shift @ARGV;
