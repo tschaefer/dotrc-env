@@ -38,3 +38,6 @@ etc/newsboat/queue
 etc/bash/hosts.d/*
 ## misc
 *.bak
+## Visual Code
+.vscode/
+*.code-workspace
