@@ -9,6 +9,8 @@ use utf8;
 
 use Digest::SHA;
 
+no warnings qw{ uninitialized };
+
 sub sha {
     my ( $msg, $alg, $fmt ) = @_;
     my ( $sha, $dig, $_dig, $func );
