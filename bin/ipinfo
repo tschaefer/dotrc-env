@@ -45,6 +45,7 @@ sub print_ipinfo {
     my $data = get_data($opts);
 
     foreach ( sort keys %{$data} ) {
+        next if ($_ =~ /Readme/i);
         my $topic = sprintf "%s:", ucfirst $_;
         printf "%-10s%s\n", $topic, $data->{$_};
     }
