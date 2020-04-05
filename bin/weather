@@ -28,10 +28,8 @@ sub print_error {
     exit 1;
 }
 
-sub get_weather_data {
-    my ( $opts, $key ) = @_;
-
-    my $url = sprintf $API_URL, 'weather', $opts->{'location'}, $key;
+sub get_data {
+    my $url = shift;
 
     my $furl = Furl->new();
     my $res  = $furl->get($url);
@@ -40,6 +38,15 @@ sub get_weather_data {
 
     my $json = $res->decoded_content;
     my $data = decode_json($json);
+
+    return $data;
+}
+
+sub get_weather {
+    my ( $opts, $key ) = @_;
+
+    my $url = sprintf $API_URL, 'weather', $opts->{'location'}, $key;
+    my $data = get_data($url);
 
     return $data;
 }
@@ -90,7 +97,7 @@ sub print_weather {
     my $opts = shift;
 
     my $key  = get_api_key();
-    my $data = get_weather_data( $opts, $key );
+    my $data = get_weather( $opts, $key );
 
     print_conditions($data);
 
@@ -117,14 +124,8 @@ sub print_man {
 }
 
 sub get_location {
-    my $furl = Furl->new();
     my $url  = 'https://ipinfo.io/geo';
-    my $res  = $furl->get($url);
-
-    print_error( $res->status_line . "\n" ) if ( !$res->is_success );
-
-    my $json = $res->decoded_content;
-    my $data = decode_json($json);
+    my $data = get_data($url);
 
     my $location = sprintf "%s,%s", $data->{'city'}, $data->{'country'};
 
