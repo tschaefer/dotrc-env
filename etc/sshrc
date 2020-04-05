@@ -48,6 +48,12 @@ if [ -d ${ENV_HOME_BASH} ]; then
     done
 fi
 
+## perlbrew
+if [[ -r ${HOME}/.perlbrew/etc/bashrc ]]; then
+    . ${HOME}/.perlbrew/etc/bashrc
+    export PERLBREW_HOME=${HOME}/.perlbrew
+fi
+
 ## overload
 alias root="sudo bash --rcfile ${SSHHOME}/.sshrc"
 PATH=${PATH}:${ENV_HOME}/bin
