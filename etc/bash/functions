@@ -52,12 +52,14 @@ function _calc {
 function _find_norev {
     [ $# -eq 1 ] && {
         find . -type d -a -name ".svn" -prune -o -type d -a -name ".git" -prune \
+            -o -type d -a -name ".vscode" -prune \
             -o -name "$1" -print
     }
     [ $# -gt 1 ] && {
         name=$1
         shift
         find . -type d -a -name ".svn" -prune -o -type d -a -name ".git" -prune \
+            -o -type d -a -name ".vscode" -prune \
             -o -name "$name" $@
     }
 }
@@ -71,7 +73,7 @@ function _tinyurl {
 }
 
 function _wttr() {
-    curl -H "Accept-Language: ${LANG%_*}" wttr.in/"${1:-Mainz}?{$2:-0}"
+    curl -H "Accept-Language: ${LANG%_*}" wttr.in/"${1:-Frankfurt}?{$2:-0}"
 }
 
 # vim:ft=sh
