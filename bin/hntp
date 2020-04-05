@@ -1,0 +1,188 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Readonly;
+
+use Carp qw(croak);
+use Furl;
+use Getopt::Long;
+use Pod::Usage;
+
+use utf8;
+
+Readonly::Array my @month =>
+  qw(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec);
+Readonly::Array my @weekday => qw(Sun Mon Tue Wed Thu Fri Sat);
+
+sub format_date {
+    my ($timestamp) = @_;
+
+    # RFC 822/1123 format
+    my ( $S, $M, $H, $mday, $mon, $year, $wday, $yday, undef ) =
+      gmtime $timestamp;
+
+    return sprintf "%s, %02d %s %04d %02d:%02d:%02d GMT",
+      $weekday[$wday], $mday, $month[$mon], $year + 1900,
+      $H, $M, $S;
+
+    return;
+}
+
+sub parse_date {
+    my ($date) = @_;
+
+    my ( $d, $m, $y, $H, $M, $S );
+
+    # Sun, 06 Nov 1994 08:49:37 GMT
+    Readonly my $RFC_822_1123 => qr{
+        ^[A-Z][a-z][a-z]+,\s
+        ([0-9][0-9]?)[\- ]
+        ([A-Z][a-z][a-z])[\- ]
+        ([0-9][0-9][0-9][0-9])\s
+        ([0-9][0-9]?):([0-9][0-9]?):([0-9][0-9]?)\s
+        GMT$}sx;
+
+    # Sunday, 06-Nov-94 08:49:37 GMT
+    Readonly my $RFC_850 => qr{
+        ^[A-Z][a-z][a-z]+,\s
+        ([0-9][0-9]?)-([A-Z][a-z][a-z])-([0-9][0-9])\s
+        ([0-9][0-9]?):([0-9][0-9]?):([0-9][0-9]?)\s
+        GMT$}sx;
+
+    # Sun Nov  6 08:49:37 1994
+    Readonly my $ISO_C => qr{
+        ^[A-Z][a-z][a-z]+\s
+        ([A-Z][a-z][a-z])\s
+        ([0-9 ]?[0-9])\s
+        ([0-9][0-9]?):([0-9][0-9]?):([0-9][0-9]?)\s
+        ([0-9][0-9][0-9][0-9])$}sx;
+
+    if ( $date =~ $RFC_822_1123 ) {
+        ( $d, $m, $y, $H, $M, $S ) = ( $1, $2, $3, $4, $5, $6 );
+    }
+    elsif ( $date =~ $RFC_850 ) {
+        ( $d, $m, $y, $H, $M, $S ) =
+          ( $1, $2, $3 < 69 ? $3 + 2000 : $3 + 1900, $4, $5, $6 );
+    }
+    elsif ( $date =~ $ISO_C ) {
+        ( $d, $m, $y, $H, $M, $S ) = ( $2, $1, $6, $3, $4, $5 );
+    }
+    else {
+        croak('Unknown date format.');
+    }
+
+    for ( 0 .. 11 ) {
+        if ( $m eq $month[$_] ) {
+            require Time::Local;
+            return eval { Time::Local::timegm( $S, $M, $H, $d, $_, $y ) };
+        }
+    }
+
+    return;
+}
+
+sub get_date {
+    my ($opts) = @_;
+
+    my $furl = Furl->new();
+    my $resp = $furl->get( $opts->{'url'} );
+
+    return $resp->header('date');
+}
+
+sub print_usage {
+    pod2usage( -exitval => 255, -verbose => 0 );
+    return;
+}
+
+sub print_help {
+    pod2usage(
+        -exitval  => 0,
+        -verbose  => 99,
+        -sections => 'SYNOPSIS|OPTIONS|PARAMETERS',
+    );
+    return;
+}
+
+sub print_man {
+    pod2usage( -exitval => 0, -verbose => 2 );
+    return;
+}
+
+sub parse_opts {
+    my $opts;
+    GetOptions(
+        "help|h"      => \$opts->{'help'},
+        "man|m"       => \$opts->{'man'},
+        "formatted|f" => \$opts->{'formatted'},
+    ) or print_usage();
+
+    my $count = 0;
+    foreach ( values %{$opts} ) {
+        $count += 1 if ($_);
+    }
+
+    print_usage() if ( ( $opts->{'help'} || $opts->{'man'} ) && $count > 1 );
+    print_man()   if ( $opts->{'man'} );
+    print_help()  if ( $opts->{'help'} );
+
+    $opts->{'url'} = $ARGV[0] || print_usage();
+
+    return $opts;
+}
+
+sub run {
+    my $opts = parse_opts();
+
+    my $date      = get_date($opts);
+    my $timestamp = parse_date($date);
+
+    printf "%s\n", $opts->{'formatted'} ? format_date($timestamp) : $timestamp;
+
+    return 0;
+}
+
+exit run();
+
+__END__
+
+=encoding utf8
+
+=head1 NAME
+
+hntp - HTTP Time client program.
+
+=head1 SYNOPSIS
+
+hntp [--formated] URL
+
+hntp --help | --man
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<formatted>
+
+Print date and time RFC 822/1123 conform.
+
+=back
+
+=head1 PARAMETERS
+
+=over 8
+
+=item B<URL>
+
+HTTP/S host URL.
+
+=back
+
+=head1 DESCRIPTION
+
+hntp is a tool to retrieve date and time as an unix timestamp from a given
+host via HTTP/S.
+
+=cut
