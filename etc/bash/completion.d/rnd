@@ -29,6 +29,14 @@ _rnd() {
             return 0;
             ;;
         get-random)
+            if [[ "$prev" == --device ]]; then
+                COMPREPLY=($(compgen -W 'random urandom' -- "$cur"))
+                return 0;
+            fi
+            if [[ "$prev" == --format ]]; then
+                COMPREPLY=($(compgen -W 'binary base64' -- "$cur"))
+                return 0;
+            fi
             if [[ "$cur" == -* ]]; then
                 COMPREPLY=($(compgen -W '--device --bytes --format' -- "$cur"))
             fi
