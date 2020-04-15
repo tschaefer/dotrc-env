@@ -310,7 +310,7 @@ proxmoxctl - Control Proxmox Qemu/KVM machines
 
 proxmoxctl [--config FILE] [--vm VMID] ACTION
 
-proxmoxctl ... reset | resume | start | status | stop | suspend | shutdown
+proxmoxctl ... reset | resume | start | status | stop | suspend | shutdown | node
 
 proxmoxtcl ... config show
 
@@ -404,13 +404,9 @@ Stop VM.
 
 Suspend VM.
 
-=item B<config>
+=item B<node>
 
-Show VM configuration.
-
-=item B<vnc>
-
-VNC subcommands.
+Get Proxmox node of VM.
 
 =back
 
