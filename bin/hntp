@@ -156,7 +156,7 @@ hntp - HTTP Time client program.
 
 =head1 SYNOPSIS
 
-hntp [--formated] URL
+hntp [--formatted] URL
 
 hntp --help | --man
 
