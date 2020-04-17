@@ -20,6 +20,9 @@ if [[ -d ${ENV_HOME}/.local/bin ]]; then
     PATH=${ENV_HOME}/.local/bin:${PATH}
     MANPATH=${ENV_HOME}/.local/share/man:${MANPATH}
 fi
+if [[ -d ${ENV_HOME}/.gem/ruby/2.5.0/bin ]]; then
+    PATH=${PATH}:${ENV_HOME}/.gem/ruby/2.5.0/bin
+fi
 export PATH MANPATH
 
 if [[ -n ${XDG_RUNTIME_DIR} ]]; then
