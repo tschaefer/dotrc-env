@@ -196,6 +196,19 @@ sub vnc {
     return print_usage();
 }
 
+sub sendkey {
+    my $key = shift @ARGV || return print_usage();
+
+    my $resp =
+      _proxmox_call( 'post', '/monitor',
+        { command => sprintf "sendkey %s", $key } );
+
+        return $resp !~ /failed/i ? 0 : 1;
+
+
+    return print_usage();
+}
+
 sub config {
     my $action = shift @ARGV || return print_usage();
 
@@ -276,6 +289,7 @@ sub run {
         vnc      => \&vnc,
         node     => \&node,
         device   => \&device,
+        sendkey  => \&sendkey,
     );
     my $action = $ARGV[0] || '';
     shift @ARGV;
@@ -323,6 +337,8 @@ proxmoxctl ... vnc [--ip ADDRESS] [--port NUMBER] enable
 proxmoxctl ... device --driver DRIVER --id ID add
 
 proxmoxctl ... device --id ID delete
+
+proxmoxctl ... sendkey KEY
 
 proxmoxctl help | man
 
@@ -452,6 +468,10 @@ Attach new device.
 Remove device.
 
 =back
+
+=head2 sendkey
+
+Send KEY (combination).
 
 =head1 DESCRIPTION
 
