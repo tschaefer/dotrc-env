@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Modern::Perl '2019';
+use English qw(-no_match_vars);
 
 use Getopt::Long qw(:config require_order);
 use Pod::Usage;
@@ -89,7 +90,7 @@ sub copyfile {
 
         my ( $out, $err );
         IPC::Run::run( \@exec, '>', \$out, '2>', \$err );
-        printf {*STDERR} "%s", $err if ($?);
+        printf {*STDERR} "%s", $err if ($CHILD_ERROR);
         print $out if ( $opts{'verbose'} );
     }
 
