@@ -38,6 +38,8 @@ update_python() {
         version=$(python2 --version 2>&1)
         echo -e "\033[33m${version}\033[39m"
 
+        sudo python2 -m pip install --upgrade pip
+
         pip2 install --user --upgrade $(pip2 list --user --format=columns | \
             awk 'FNR > 2 {print $1 }')
     fi
@@ -45,6 +47,8 @@ update_python() {
     if [[ -x $(type -P pip3) ]]; then
         version=$(python3 --version)
         echo -e "\033[33m${version}\033[39m"
+
+        sudo python3 -m pip install --upgrade pip
 
         pip3 install --user --upgrade $(pip3 list --user --format=columns | \
             awk 'FNR > 3 {print $1 }')
