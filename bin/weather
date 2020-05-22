@@ -14,9 +14,10 @@ use utf8;
 
 binmode STDOUT, ":encoding(UTF-8)";
 
-Readonly my $API_URL =>
+Readonly::Scalar my $API_URL =>
   'https://api.openweathermap.org/data/2.5/%s?q=%s&units=metric&APPID=%s';
-Readonly my $RC_FILE => $ENV{'HOME'} . '/.weatherrc';
+Readonly::Scalar my $RC_FILE      => $ENV{'HOME'} . '/.weatherrc';
+Readonly::Scalar my $MAX_FORECAST => 5;
 
 no warnings 'uninitialized';
 
@@ -45,7 +46,9 @@ sub get_data {
 sub get_weather {
     my ( $opts, $key ) = @_;
 
-    my $url = sprintf $API_URL, 'weather', $opts->{'location'}, $key;
+    my $endpoint = $opts->{'forecast'} ? 'forecast' : 'weather';
+
+    my $url  = sprintf $API_URL, $endpoint, $opts->{'location'}, $key;
     my $data = get_data($url);
 
     return $data;
@@ -61,34 +64,72 @@ sub get_api_key {
     return $key;
 }
 
-sub print_conditions {
-    my $info = shift;
+sub print_current {
+    my ( $data, $opts ) = @_;
 
-    printf "%-12s %s, %s\n", 'Location:', $info->{'name'},
-      $info->{'sys'}->{'country'};
+    printf "%-12s %s, %s\n", 'Location:', $data->{'name'},
+      $data->{'sys'}->{'country'};
 
-    printf "%-12s %s °\n", 'Latitude:', $info->{'coord'}->{'lat'};
+    printf "%-12s %s °\n", 'Latitude:', $data->{'coord'}->{'lat'};
 
-    printf "%-12s %s °\n", 'Longitude', $info->{'coord'}->{'lon'};
+    printf "%-12s %s °\n", 'Longitude', $data->{'coord'}->{'lon'};
 
     printf "%-12s %s\n", 'Sunrise',
-      strftime( "%H:%M:%S", localtime $info->{'sys'}->{'sunrise'} );
+      strftime( "%H:%M:%S", localtime $data->{'sys'}->{'sunrise'} );
 
     printf "%-12s %s\n", 'Sunset',
-      strftime( "%H:%M:%S", localtime $info->{'sys'}->{'sunset'} );
+      strftime( "%H:%M:%S", localtime $data->{'sys'}->{'sunset'} );
 
     printf "%-12s %s\n", 'Condition:',
-      ucfirst $info->{'weather'}->[0]->{'description'};
+      ucfirst $data->{'weather'}->[0]->{'description'};
 
-    printf "%-12s %s °C\n", 'Temperature:', $info->{'main'}->{'temp'};
+    printf "%-12s %s °C\n", 'Temperature:', $data->{'main'}->{'temp'};
 
-    printf "%-12s %s %%\n", 'Humidity:', $info->{'main'}->{'humidity'};
+    printf "%-12s %s %%\n", 'Humidity:', $data->{'main'}->{'humidity'};
 
-    printf "%-12s %s km/h\n", 'Wind:', $info->{'wind'}->{'speed'};
+    printf "%-12s %s km/h\n", 'Wind:', $data->{'wind'}->{'speed'};
 
-    printf "%-12s %s km\n", 'Visibility:', $info->{'visibility'} / 1000;
+    printf "%-12s %s km\n", 'Visibility:', $data->{'visibility'} / 1000;
 
-    printf "%-12s %s hPa\n", 'Pressure:', $info->{'main'}->{'pressure'};
+    printf "%-12s %s hPa\n", 'Pressure:', $data->{'main'}->{'pressure'};
+
+    exit 0;
+}
+
+sub print_forecast {
+    my ( $data, $opts ) = @_;
+
+    printf "%-12s %s, %s\n", 'Location:', $data->{'city'}->{'name'},
+      $data->{'city'}->{'country'};
+
+    printf "%-12s %s °\n", 'Latitude:', $data->{'city'}->{'coord'}->{'lat'};
+
+    printf "%-12s %s °\n", 'Longitude', $data->{'city'}->{'coord'}->{'lon'};
+
+    print "\n";
+
+    my $forecast = $opts->{'forecast'} - 1;
+    foreach my $entry ( @{ $data->{'list'} } ) {
+        my $hour = int strftime( "%H", gmtime $entry->{'dt'} );
+        next if ( $hour ne 15 );
+
+        printf "%-12s %s\n", 'Date:', strftime( "%A, %F", localtime $entry->{'dt'} );
+
+        printf "%-12s %s\n", 'Condition:',
+          ucfirst $entry->{'weather'}->[0]->{'description'};
+
+        printf "%-12s %s °C\n", 'Temperature:', $entry->{'main'}->{'temp'};
+
+        printf "%-12s %s %%\n", 'Humidity:', $entry->{'main'}->{'humidity'};
+
+        printf "%-12s %s km/h\n", 'Wind:', $entry->{'wind'}->{'speed'};
+
+        printf "%-12s %s hPa\n", 'Pressure:', $entry->{'main'}->{'pressure'};
+
+        print "\n";
+
+        last if ( !$forecast-- );
+    }
 
     exit 0;
 }
@@ -99,7 +140,11 @@ sub print_weather {
     my $key  = get_api_key();
     my $data = get_weather( $opts, $key );
 
-    print_conditions($data);
+    eval {
+        $opts->{'forecast'}
+          ? print_forecast( $data, $opts )
+          : print_current( $data, $opts );
+    };
 
     return;
 }
@@ -135,8 +180,10 @@ sub get_location {
 sub run {
     my $opts;
     GetOptions(
-        "help|h" => \$opts->{'help'},
-        "man|m"  => \$opts->{'man'},
+        "help|h"       => \$opts->{'help'},
+        "man|m"        => \$opts->{'man'},
+        "forecast|f=i" => \$opts->{'forecast'},
+        "current|c"    => \$opts->{'current'},
     ) or print_usage();
 
     my $count = 0;
@@ -147,6 +194,11 @@ sub run {
     print_usage() if ( ( $opts->{'help'} || $opts->{'man'} ) && $count > 1 );
     print_man()   if ( $opts->{'man'} );
     print_help()  if ( $opts->{'help'} );
+
+    print_usage() if ( $opts->{'forecast'} && $opts->{'current'} );
+    print_usage()
+      if ( $opts->{'forecast'}
+        && ( $opts->{'forecast'} < 1 || $opts->{'forecast'} > $MAX_FORECAST ) );
 
     $opts->{'location'} = $ARGV[0] || get_location();
 
@@ -167,7 +219,9 @@ weather - Show your weather.
 
 =head1 SYNOPSIS
 
-weather [LOCATION]
+weather [--current] [LOCATION]
+
+weather --forecast 1-5 [LOCATION]
 
 weather --help | --man
 
@@ -175,7 +229,13 @@ weather --help | --man
 
 =over 8
 
-None.
+=item current|c
+
+Get current weather data.
+
+=item forecast|f 1-5
+
+Get weather forecast up to five days starting with today.
 
 =back
 
@@ -191,7 +251,7 @@ City name (comma separated country) [default current location].
 
 =head1 DESCRIPTION
 
-weather is a tool to get current conditions for a given location.
+weather is a tool to get current or forecast conditions for a given location.
 
 An OpenWeatherMap API key L<http://openweathermap.org> is needed
 and must be provided in the user home, ~/.weatherrc.
