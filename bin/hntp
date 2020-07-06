@@ -5,10 +5,12 @@ use warnings;
 
 use Readonly;
 
+use English qw(-no_match_vars);
 use Carp qw(croak);
 use Furl;
 use Getopt::Long;
 use Pod::Usage;
+use Try::Tiny;
 
 use utf8;
 
@@ -87,7 +89,13 @@ sub get_date {
     my ($opts) = @_;
 
     my $furl = Furl->new();
-    my $resp = $furl->get( $opts->{'url'} );
+    my $resp = try {
+        $furl->get( $opts->{'url'} );
+    }
+    catch {
+        printf {*STDERR} "%s\n", (split /at/, $ARG)[0];
+        exit 1;
+    };
 
     return $resp->header('date');
 }
