@@ -7,7 +7,7 @@ _weather() {
     fi
 
     if [[ "$cur" == -* ]]; then
-        COMPREPLY=($(compgen -W '--help --man' -- "$cur"))
+        COMPREPLY=($(compgen -W '--help --man --forecast' -- "$cur"))
         return
     fi
 
