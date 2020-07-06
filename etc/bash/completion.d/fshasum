@@ -1,0 +1,32 @@
+_fshasum() {
+    local cur prev words cword
+    _get_comp_words_by_ref cur prev words cword
+
+    if [[ "$cur" == -* ]]; then
+        COMPREPLY=($(compgen -W '--help --man --algorithm --format' -- "$cur"))
+        return
+    fi
+
+    case "$prev" in
+        --help)
+            return 0
+            ;;
+        --man)
+            return 0
+            ;;
+        --algorithm)
+            COMPREPLY=($(compgen -W '1 224 256 384 512 512224 512256' -- "$cur"))
+            return 0
+            ;;
+        --format)
+            COMPREPLY=($(compgen -W 'binary base64 hex hexstr' -- "$cur"))
+            return 0
+            ;;
+    esac
+
+    return
+}
+
+complete -F _fshasum fshasum
+
+# vim: ft=sh
