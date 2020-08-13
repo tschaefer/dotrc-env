@@ -6,6 +6,7 @@ use warnings;
 use Furl;
 use Getopt::Long;
 use JSON::XS;
+use List::Util qw(max min);
 use Pod::Usage;
 use POSIX qw(strftime);
 use Readonly;
@@ -96,6 +97,25 @@ sub print_current {
     exit 0;
 }
 
+use Data::Printer;
+
+sub get_forecast_temperature {
+    my ($dt, $data) = @_;
+
+    my @t;
+    foreach my $entry (@{ $data->{'list'} }) {
+        my $cdt = int strftime( "%Y%m%d", localtime $entry->{'dt'} );
+        next if ($dt != $cdt);
+
+        push @t, $entry->{'main'}->{'temp'};
+    }
+
+    my $max = max @t;
+    my $min = min @t;
+
+    return ($max, $min);
+}
+
 sub print_forecast {
     my ( $data, $opts ) = @_;
 
@@ -113,18 +133,24 @@ sub print_forecast {
         my $hour = int strftime( "%H", gmtime $entry->{'dt'} );
         next if ( $hour ne 15 );
 
-        printf "%-12s %s\n", 'Date:', strftime( "%A, %F", localtime $entry->{'dt'} );
+        my $dt = int strftime( "%Y%m%d", localtime $entry->{'dt'} );
+        my ($max_temp, $min_temp) = get_forecast_temperature($dt, $data);
 
-        printf "%-12s %s\n", 'Condition:',
+        printf "%-16s %s\n", 'Date:',
+          strftime( "%A, %F", localtime $entry->{'dt'} );
+
+        printf "%-16s %s\n", 'Condition:',
           ucfirst $entry->{'weather'}->[0]->{'description'};
 
-        printf "%-12s %s °C\n", 'Temperature:', $entry->{'main'}->{'temp'};
+        printf "%-16s %s °C\n", 'Max Temperature:', $max_temp;
 
-        printf "%-12s %s %%\n", 'Humidity:', $entry->{'main'}->{'humidity'};
+        printf "%-16s %s °C\n", 'Min Temperature:', $min_temp;
 
-        printf "%-12s %s km/h\n", 'Wind:', $entry->{'wind'}->{'speed'};
+        printf "%-16s %s %%\n", 'Humidity:', $entry->{'main'}->{'humidity'};
 
-        printf "%-12s %s hPa\n", 'Pressure:', $entry->{'main'}->{'pressure'};
+        printf "%-16s %s km/h\n", 'Wind:', $entry->{'wind'}->{'speed'};
+
+        printf "%-16s %s hPa\n", 'Pressure:', $entry->{'main'}->{'pressure'};
 
         print "\n";
 
