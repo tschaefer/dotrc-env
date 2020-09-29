@@ -7,6 +7,7 @@ alias root="sudo bash --rcfile ${ENV_HOME}/.bashrc"
 alias screen="screen -c ${ENV_HOME}/.screenrc"
 alias vim="vim -u ${ENV_HOME}/.vimrc"
 alias vimdiff="vimdiff -u ${ENV_HOME}/.vimrc"
+alias weather="LC_TIME=en_US.UTF-8 weather"
 
 ## abbreviations
 alias c?="cpan -l 2>/dev/null | awk '{ print \$1 }' | sort | uniq | grep"
@@ -17,7 +18,7 @@ alias h?="h | grep"
 alias p?="_ps_grep"
 
 ## tools
-alias battery="acpi -b | awk '{ print \$5 }'"
+alias battery="acpi -b | awk '{ print \$5 \" \" \$3 }' | tr -d ','"
 alias calc="_calc"
 alias httpd="python2 -m SimpleHTTPServer"
 alias pubip="curl -k -s https://ipinfo.io/ip"
@@ -41,15 +42,8 @@ alias sshrc.nocheck="sshrc -o StrictHostKeyChecking=no \
     -o UserKnownHostsFile=/dev/null"
 alias mosh.screen="_mosh_screen"
 
-# python
-alias pip2.up="_pip2_up"
-alias pip3.up="_pip3_up"
-
 # misc
-alias apt.security="_apt_security"
 alias find.norev="_find_norev"
-alias perl.up="cpan-outdated | cpanm"
 alias ps.grep="_ps_grep"
-
 
 # vim:ft=sh

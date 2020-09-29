@@ -22,29 +22,7 @@ function _mosh_screen {
     mosh $@ -- screen -Rd
 }
 
-## python
-function _pip2_up {
-    pip2 install --user --upgrade $(pip2 list --user --format=columns | \
-        awk 'FNR > 2 {print $1 }')
-}
-
-function _pip3_up {
-    pip3 install --user --upgrade $(pip3 list --user --format=columns | \
-        awk 'FNR > 3 {print $1 }')
-}
-
 ## misc
-function _apt_security() {
-    local update="sudo apt-get update; sudo apt-get -s dist-upgrade | \
-        awk '/^Inst.*[S|s]ecuri/ { print $2 }' | xargs sudo apt-get install; \
-        sudo apt-get clean; sudo apt-get autoclean"
-    if [[ -n "${1}" ]]; then
-        ssh ${1} "${update}"
-    else
-        eval ${update}
-    fi
-}
-
 function _calc {
     echo "$1" | bc
 }
