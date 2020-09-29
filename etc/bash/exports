@@ -23,6 +23,9 @@ fi
 if [[ -d ${ENV_HOME}/.gem/ruby/2.5.0/bin ]]; then
     PATH=${PATH}:${ENV_HOME}/.gem/ruby/2.5.0/bin
 fi
+if [[ -d ${HOME}/.cargo/bin ]]; then
+    PATH=${PATH}:${HOME}/.cargo/bin
+fi
 export PATH MANPATH
 
 if [[ -n ${XDG_RUNTIME_DIR} ]]; then
