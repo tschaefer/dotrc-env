@@ -103,7 +103,9 @@ update_system() {
 update_vim() {
     echo -e "\033[33mStarting vim plugins update ...\033[39m"
 
-    vim +PluginUpdate +qall
+    if [[ -x $(type -P vim) ]]; then
+        vim +PluginUpdate +qall
+    fi
 
     echo -e "\033[33mdone.\033[39m"
 }
