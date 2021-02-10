@@ -1,6 +1,9 @@
 ## Here is an example for assembler.
 ##
 syntax "ASM" "\.(S|s|asm)$"
+magic "assembler source"
+comment "//"
+
 color red "\<[A-Z_]{2,}\>"
 color brightgreen "\.(data|subsection|text)"
 color green "\.(align|file|globl|global|hidden|section|size|type|weak)"
@@ -11,7 +14,7 @@ color brightcyan "^[[:space:]]*#[[:space:]]*(define|undef|include|ifn?def|endif|
 color brightyellow "<[^= 	]*>" ""(\\.|[^"])*""
 color brightyellow start=""(\\.|[^"])*\\[[:space:]]*$" end="^(\\.|[^"])*""
 ## Highlight comments
-color brightblue "//.*"
+color brightblue "^\s*//.*"
 color brightblue start="/\*" end="\*/"
 ## Highlight trailing whitespace
 color ,green "[[:space:]]+$"
