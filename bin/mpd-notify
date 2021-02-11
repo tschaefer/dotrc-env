@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import hashlib
 import mpd
@@ -30,7 +30,7 @@ def observe(mpc):
     while True:
         if mpc.status()['state'] in ['pause', 'play']:
             song = mpc.currentsong()
-            _sha = hashlib.sha256(str(song))
+            _sha = hashlib.sha256(str(song).encode('utf-8'))
             if not sha or sha.hexdigest() != _sha.hexdigest():
                 sha = _sha
                 notify(song)
