@@ -10,7 +10,7 @@ use Pod::Usage;
 use Readonly;
 use utf8;
 
-Readonly my $WTC_URL => 'https://whatthecommit.com/index.json';
+Readonly my $WTC_URL => 'http://whatthecommit.com/index.json';
 
 sub print_error {
     my $msg = shift;
