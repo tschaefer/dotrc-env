@@ -75,6 +75,13 @@ set softtabstop=4
 set tabstop=4
 set textwidth=78
 
+"" mouse
+set mouse=n
+set ttymouse=xterm2
+
+"" extra
+let g:perl_include_pod = 0
+
 "" features
 if has('terminal')
     packadd termdebug
