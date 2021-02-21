@@ -4,18 +4,34 @@ set runtimepath+=$VIMVUNDLE
 
 call vundle#begin()
 
+" plugin manager
 Plugin 'VundleVim/Vundle.vim'
-Plugin 'w0rp/ale.git'
-Plugin 'majutsushi/tagbar.git'
-Plugin 'tpope/vim-eunuch.git'
-Plugin 'scrooloose/nerdtree.git'
-Plugin 'jistr/vim-nerdtree-tabs.git'
+" syntax checker and linter
+Plugin 'w0rp/ale'
+" outline viewer
+Plugin 'majutsushi/tagbar'
+" unix comands
+Plugin 'tpope/vim-eunuch'
+" file system explorer
+Plugin 'scrooloose/nerdtree'
+" show nerdtree in all tabs
+Plugin 'jistr/vim-nerdtree-tabs'
+" source browsing tool
 Plugin 'vim-scripts/cscope.vim'
-Plugin 'juneedahamed/vc.vim.git'
-Plugin 'itchyny/lightline.vim.git'
-Plugin 'tpope/vim-surround.git'
-Plugin 'airblade/vim-gitgutter.git'
-Plugin 'hesselbom/vim-hsftp.git'
+" version control
+Plugin 'juneedahamed/vc.vim'
+" statusbar
+Plugin 'itchyny/lightline.vim'
+" quote signs
+Plugin 'tpope/vim-surround'
+" git diff in sign column
+Plugin 'airblade/vim-gitgutter'
+" simple git branch display
+Plugin 'itchyny/vim-gitbranch'
+" ack for vim
+Plugin 'mileszs/ack.vim'
+" code completion
+Plugin 'ervandew/supertab'
 
 call vundle#end()
 
@@ -40,6 +56,11 @@ let g:lightline = {
     \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
     \ },
     \ 'component_function': {
-    \   'gitbranch': 'fugitive#head'
+    \   'gitbranch': 'gitbranch#name'
     \ },
     \ }
+
+"" ale
+let g:ale_linters = {
+\   'perl': ['perl', 'perlcritic'],
+\ }
