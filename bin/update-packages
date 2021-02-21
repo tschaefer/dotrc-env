@@ -1,11 +1,13 @@
 #!/bin/bash
 
 readonly ME=${0##*/}
+readonly LOGDIR="/var/log/update-packages"
+readonly LOGFILE="${LOGDIR}/update-packages_$(date +%y%m%d%H%M%S).log"
 
 usage() {
 cat <<EOF
 Usage:
-    $ME [-a] | -e | -psy
+    $ME [-l] [-a] | -e | -psy
 
     $ME -h
 
@@ -17,6 +19,7 @@ Options:
     -s:     update system packages
     -v:     update vim plugins
     -y:     update python packages
+    -l:     log to file $LOG
 
 EOF
 }
@@ -112,7 +115,7 @@ update_vim() {
 
 
 get_opts() {
-    while getopts ":haepsvy" opt; do
+    while getopts ":haelpsvy" opt; do
         case $opt in
             a)
                 opt_a=1
@@ -132,6 +135,9 @@ get_opts() {
             y)
                 opt_y=1
                 ;;
+            l)
+                opt_l=1
+                ;;
             h)
                 opt_h=1
                 ;;
@@ -145,6 +151,17 @@ get_opts() {
 
     local opt_count=$(( $OPTIND - 1 ))
 
+    if [ -n "$opt_h" ] && \
+        [[ $opt_count -gt 1 ]]; then
+        usage >&2
+        exit 2
+    fi
+
+    if [[ -n "$opt_l" ]]; then
+        opt_count=$(( $opt_count -1 ))
+    fi
+
+
     if [[ $opt_count -eq 0 ]]; then
         opt_a=1
     fi
@@ -156,6 +173,14 @@ get_opts() {
     fi
 }
 
+log() {
+    if [[ -z "$opt_l" ]]; then
+        return
+    fi
+
+    tee -a $LOGFILE
+}
+
 main() {
     get_opts ${1+"$@"}
 
@@ -165,29 +190,29 @@ main() {
     fi
 
     if [[ -n "$opt_e" ]]; then
-        update_env
+        update_env | log
     fi
 
     if [[ -n "$opt_p" ]]; then
-        update_perl
+        update_perl | log
     fi
 
     if [[ -n "$opt_s" ]]; then
-        update_system
+        update_system | log
     fi
 
     if [[ -n "$opt_v" ]]; then
-        update_vim
+        update_vim | log
     fi
 
     if [[ -n "$opt_y" ]]; then
-        update_python
+        update_python | log
     fi
 
     if [[ -n "$opt_a" ]]; then
-        update_system
-        update_perl
-        update_python
+        update_system | log
+        update_perl   | log
+        update_python | log
     fi
 
     exit 0
