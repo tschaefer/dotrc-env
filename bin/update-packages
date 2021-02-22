@@ -175,10 +175,12 @@ get_opts() {
 
 log() {
     if [[ -z "$opt_l" ]]; then
-        return
+        target="/dev/null"
+    else
+        target=$LOGFILE
     fi
 
-    tee -a $LOGFILE
+    tee -a $target
 }
 
 main() {
