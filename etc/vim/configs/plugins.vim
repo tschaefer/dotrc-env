@@ -19,19 +19,19 @@ Plugin 'jistr/vim-nerdtree-tabs'
 " source browsing tool
 Plugin 'vim-scripts/cscope.vim'
 " version control
-Plugin 'juneedahamed/vc.vim'
+Plugin 'tpope/vim-fugitive'
 " statusbar
 Plugin 'itchyny/lightline.vim'
 " quote signs
 Plugin 'tpope/vim-surround'
 " git diff in sign column
 Plugin 'airblade/vim-gitgutter'
-" simple git branch display
-Plugin 'itchyny/vim-gitbranch'
 " ack for vim
 Plugin 'mileszs/ack.vim'
 " code completion
 Plugin 'ervandew/supertab'
+" buffer only
+Plugin 'vim-scripts/BufOnly.vim'
 
 call vundle#end()
 
@@ -56,7 +56,7 @@ let g:lightline = {
     \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
     \ },
     \ 'component_function': {
-    \   'gitbranch': 'gitbranch#name'
+    \   'gitbranch': 'FugitiveHead'
     \ },
     \ }
 
