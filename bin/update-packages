@@ -7,7 +7,7 @@ readonly LOGFILE="${LOGDIR}/update-packages_$(date +%y%m%d%H%M%S).log"
 usage() {
 cat <<EOF
 Usage:
-    $ME [-l] [-a] | -e | -psy
+    $ME [-l SYSLOG | FILE] [-a] | -epsy
 
     $ME -h
 
@@ -19,7 +19,7 @@ Options:
     -s:     update system packages
     -v:     update vim plugins
     -y:     update python packages
-    -l:     log to file $LOG
+    -l:     log to file or syslog (journald)
 
 EOF
 }
@@ -83,9 +83,11 @@ update_perl() {
 update_system() {
     echo -e "\033[33mStarting system packages update ...\033[39m"
 
-    local distri=$(awk -F '=' '/^ID/ { print $2 }' /etc/os-release)
+    local distro
 
-    case $distri in
+    distro=$(awk -F '=' '/^ID/ { print $2 }' /etc/os-release)
+
+    case $distro in
         debian)
             sudo apt-get update ; sudo apt-get -y dist-upgrade ; \
                 sudo apt-get -y autoremove --purge
@@ -115,7 +117,7 @@ update_vim() {
 
 
 get_opts() {
-    while getopts ":haelpsvy" opt; do
+    while getopts ":hael:psvy" opt; do
         case $opt in
             a)
                 opt_a=1
@@ -136,20 +138,26 @@ get_opts() {
                 opt_y=1
                 ;;
             l)
-                opt_l=1
+                opt_l="$OPTARG"
                 ;;
             h)
                 opt_h=1
                 ;;
             *)
-                echo "unknown option -$OPTARG"
-                usage
+                if [[ "$OPTARG" == "l" ]]; then
+                    echo "missing argument" >&2
+                else
+                    echo "unknown option -$OPTARG" >&2
+                fi
+                usage >&2
                 exit 2
                 ;;
         esac
     done
 
-    local opt_count=$(( $OPTIND - 1 ))
+    local opt_count
+
+    opt_count=$(( OPTIND - 1 ))
 
     if [ -n "$opt_h" ] && \
         [[ $opt_count -gt 1 ]]; then
@@ -158,7 +166,7 @@ get_opts() {
     fi
 
     if [[ -n "$opt_l" ]]; then
-        opt_count=$(( $opt_count -1 ))
+        opt_count=$(( opt_count - 2 ))
     fi
 
 
@@ -166,21 +174,28 @@ get_opts() {
         opt_a=1
     fi
 
-    if [ -n "$opt_a" -o -n "$opt_h" -o -n "$opt_e" -o -n "$opt_v" ] && \
-        [[ $opt_count -gt 1 ]]; then
+    if [[ -n "$opt_a" ]] || [[ -n "$opt_h" ]] || [[ -n "$opt_e" ]] ||\
+        [[ -n "$opt_v" ]] && [[ $opt_count -gt 1 ]]; then
+        echo "too much options" <&2
+        usage >&2
+        exit 2
+    fi
+
+    if [[ -n "$opt_l" ]] && [[ ! "$opt_l" =~ (FILE|SYSLOG) ]]; then
+        echo "bad argument" >&2
         usage >&2
         exit 2
     fi
 }
 
-log() {
-    if [[ -z "$opt_l" ]]; then
-        target="/dev/null"
-    else
-        target=$LOGFILE
+log_to_target() {
+    if [[ "$opt_l" == "SYSLOG" ]]; then
+        tee >(logger -p INFO -t update-packages)
+    elif [[ "$opt_l" == "FILE" ]]; then
+        tee -a $LOGFILE
     fi
 
-    tee -a $target
+    tee /dev/null
 }
 
 main() {
@@ -192,29 +207,29 @@ main() {
     fi
 
     if [[ -n "$opt_e" ]]; then
-        update_env | log
+        update_env | log_to_target
     fi
 
     if [[ -n "$opt_p" ]]; then
-        update_perl | log
+        update_perl | log_to_target
     fi
 
     if [[ -n "$opt_s" ]]; then
-        update_system | log
+        update_system | log_to_target
     fi
 
     if [[ -n "$opt_v" ]]; then
-        update_vim | log
+        update_vim | log_to_target
     fi
 
     if [[ -n "$opt_y" ]]; then
-        update_python | log
+        update_python | log_to_target
     fi
 
     if [[ -n "$opt_a" ]]; then
-        update_system | log
-        update_perl   | log
-        update_python | log
+        update_system | log_to_target
+        update_perl   | log_to_target
+        update_python | log_to_target
     fi
 
     exit 0
