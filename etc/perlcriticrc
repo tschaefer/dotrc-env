@@ -37,5 +37,3 @@ variables = $& $` $' $+ $* $. $. $/ $| $, $\ $" $; $# $% $= $- $~ $^ $: $^L $^A 
 [TestingAndDebugging::RequireUseStrict]
 equivalent_modules = Moose ExtUtils::MakeMaker
 
-[TestingAndDebugging::RequireUseWarnings]
-equivalent_modules = Moose ExtUtils::MakeMaker
