@@ -32,6 +32,14 @@ Plugin 'mileszs/ack.vim'
 Plugin 'ervandew/supertab'
 " buffer only
 Plugin 'vim-scripts/BufOnly.vim'
+" vue js
+Plugin 'posva/vim-vue'
+" no distraction
+Plugin 'junegunn/goyo.vim'
+" bye buffer
+Plugin 'moll/vim-bbye'
+" comment stuff out
+Plugin 'tpope/vim-commentary'
 
 call vundle#end()
 
@@ -64,3 +72,23 @@ let g:lightline = {
 let g:ale_linters = {
 \   'perl': ['perl', 'perlcritic'],
 \ }
+
+"" tagbar
+let g:tagbar_width = max([25, winwidth(0) / 5])
+let g:tagbar_type_perl = {
+    \ 'ctagstype'   : 'Perl',
+    \ 'kinds' : [
+        \ 'p:packages',
+        \ 'u:uses',
+        \ 'e:extends',
+        \ 'w:roles',
+        \ 'c:constants',
+        \ 'h:attributes',
+        \ 'x:modifiers',
+        \ 's:subroutines',
+    \ ],
+\ }
+
+"" supertab
+let g:SuperTabMappingForward = '<s-tab>'
+let g:SuperTabMappingBackward = '<s-nul>'
