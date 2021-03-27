@@ -21,3 +21,14 @@ nnoremap <F7> :TagbarToggle<cr>
 "" Plugins
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
+
+"" Custom
+if has('terminal')
+    func TabTerm()
+        terminal
+        wincmd x
+        res 50
+    endfu
+
+    nnoremap <expr> <leader>t TabTerm()
+endif
