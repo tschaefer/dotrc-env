@@ -51,6 +51,7 @@ set listchars+=extends:»
 set number
 set ruler
 set showbreak=↪
+let &colorcolumn="79,".join(range(120,999),",")
 
 "" behaviour
 set backspace=2
@@ -64,7 +65,8 @@ set secure
 set notimeout
 set ttimeout
 set ttimeoutlen=10
-let mapleader=","
+set shortmess-=S
+let mapleader="\<Space>"
 
 "" syntax
 set autoindent
