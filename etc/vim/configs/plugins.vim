@@ -40,6 +40,8 @@ Plugin 'junegunn/goyo.vim'
 Plugin 'moll/vim-bbye'
 " comment stuff out
 Plugin 'tpope/vim-commentary'
+" tag file manager
+Plugin 'ludovicchabant/vim-gutentags'
 
 call vundle#end()
 
@@ -55,6 +57,7 @@ let NERDTreeDirArrows = 1
 let NERDChristmasTree = 1
 let NERDTreeChDirMode = 2
 let NERDTreeMapJumpFirstChild = 'gK'
+let NERDTreeWinSize = 30
 
 "" lightline
 let g:lightline = {
@@ -74,18 +77,21 @@ let g:ale_linters = {
 \ }
 
 "" tagbar
-let g:tagbar_width = max([25, winwidth(0) / 5])
+let g:tagbar_width = 36
+let g:tagbar_show_tag_linenumbers = 1
 let g:tagbar_type_perl = {
     \ 'ctagstype'   : 'Perl',
     \ 'kinds' : [
         \ 'p:packages',
         \ 'u:uses',
         \ 'e:extends',
-        \ 'w:roles',
-        \ 'c:constants',
+        \ 'r:roles',
+        \ 'n:read-only',
+        \ 'g:globals',
         \ 'h:attributes',
         \ 'x:modifiers',
         \ 's:subroutines',
+        \ 'o:POD',
     \ ],
 \ }
 

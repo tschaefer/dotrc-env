@@ -21,6 +21,7 @@ nnoremap <F7> :TagbarToggle<cr>
 "" Plugins
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
+map <leader>r :NERDTreeFind<cr>
 
 "" Custom
 if has('terminal')
