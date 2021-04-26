@@ -1,13 +1,13 @@
---recurse=yes
---tag-relative=yes
---exclude=.git
-
 --regex-perl=/^package ([A-Za-z][A-Za-z0-9:]+);/\1/p,package,packages/
 --regex-perl=/^use ([A-Z][A-Za-z0-9:]+)[ \t]*.*;/\1/u,use,uses/
 --regex-perl=/^extends ['"]{0,1}([A-Z][A-Za-z0-9:]+)['"]{0,1};/\1/e,extend,extends/
 --regex-perl=/^use base ['"]{0,1}([A-Z][A-Za-z0-9:]+)['"]{0,1};/\1/e,extend,extends/
 --regex-perl=/^use parent ['"]{0,1}([A-Za-z][A-Za-z0-9:]+)['"]{0,1};/\1/e,extend,extends/
---regex-perl=/^with ['"]{0,1}([A-Za-z][A-Za-z0-9:]+)['"]{0,1};/\1/w,role,roles/
+--regex-perl=/^with ['"]{0,1}([A-Za-z][A-Za-z0-9:]+)['"]{0,1};/\1/r,role,roles/
 --regex-perl=/^has ['"]{0,1}([A-Za-z_][A-Za-z0-9_]+)['"]{0,1} /\1/h,attribute,attributes/
 --regex-perl=/^(after|around|before|override) ['"]{0,1}([A-Za-z_][A-Za-z0-9_]+)['"]{0,1} /\1: \2/x,modifier,modifiers/
---regex-perl=/^Readonly::(Scalar|Array|Hash) my ([\$@%][A-Za-z_][A-Za-z0-9_]+)/\2/c,constant,constants/
+--regex-perl=/^Readonly::(Scalar|Array|Hash) my ([\$@%][A-Za-z_][A-Za-z0-9_]+)/\2/n,readonly,read-only/
+--regex-perl=/^our ([\$@%][A-Za-z_][A-Za-z0-9_]+)/\1/g,global,globals/
+--regex-perl=/^\=head1 (.+)/\1/o,pod,POD/
+--regex-perl=/^\=head2 (.+)/-- \1/o,pod,POD/
+--regex-perl=/^\=head[3-5] (.+)/--- \1/o,pod,POD/
