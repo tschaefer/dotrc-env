@@ -42,6 +42,8 @@ Plugin 'moll/vim-bbye'
 Plugin 'tpope/vim-commentary'
 " tag file manager
 Plugin 'ludovicchabant/vim-gutentags'
+" markdown preview
+Plugin 'skanehira/preview-markdown.vim'
 
 call vundle#end()
 
