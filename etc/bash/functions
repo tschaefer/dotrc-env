@@ -1,15 +1,15 @@
 ## ssh / scp / mosh
-function _ssh_conf {
+_ssh_conf() {
     SSH_HOME=${ENV_HOME}/.ssh
     cat ${SSH_HOME}/config.global $(ls ${SSH_HOME}/config.local \
         2>/dev/null || echo /dev/null) | grep -v "^#" > ${SSH_HOME}/config
 }
 
-function _ssh_screen {
+_ssh_screen() {
     ssh $@ -t screen -Rd
 }
 
-function _ssh_sock {
+_ssh_sock() {
     [[ $EUID -eq 0 ]] && return 0
     ps -u $USER | grep ssh-agent | grep -q -v grep && return 0
 
@@ -18,16 +18,16 @@ function _ssh_sock {
     export SSH_AUTH_SOCK
 }
 
-function _mosh_screen {
+_mosh_screen() {
     mosh $@ -- screen -Rd
 }
 
 ## misc
-function _calc {
+_calc() {
     echo "$1" | bc
 }
 
-function _find_norev {
+_find_norev() {
     [ $# -eq 1 ] && {
         find . -type d -a -name ".svn" -prune -o -type d -a -name ".git" -prune \
             -o -type d -a -name ".vscode" -prune \
@@ -42,16 +42,21 @@ function _find_norev {
     }
 }
 
-function _ps_grep {
+_ps_grep() {
     ps -e -o pid,command | grep "$1" | grep -v grep
 }
 
-function _tinyurl {
+_tinyurl() {
     curl -L -k -s -w "\n" http://tinyurl.com/api-create.php?url=${1}
 }
 
-function _wttr() {
+_wttr() {
     curl -H "Accept-Language: ${LANG%_*}" wttr.in/"${1:-Frankfurt}?{$2:-0}"
+}
+
+### perl
+_perl_module_version() {
+    perl -le "use $1; print \$$1::VERSION"
 }
 
 # vim:ft=sh
