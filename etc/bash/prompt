@@ -4,7 +4,7 @@ if [[ ! -x $(type -p git) ]]; then
 fi
 
 ## git infos
-function set_git_branch {
+set_git_branch() {
 
     if [[ ! -e ${ENV_HOME_BASH}/git ]]; then
         return
@@ -22,7 +22,7 @@ function set_git_branch {
 }
 
 ## prompt symbol
-function set_prompt_symbol {
+set_prompt_symbol() {
     if [[ $1 -eq 0 ]]; then
         PROMPT_SYMBOL="»"
     else
@@ -31,7 +31,7 @@ function set_prompt_symbol {
 }
 
 ## build prompt
-function set_bash_prompt {
+set_bash_prompt() {
     set_prompt_symbol $?
 
     GIT=""
@@ -54,7 +54,6 @@ function set_bash_prompt {
  ${PROMPT_SYMBOL} "
         PS2="%> "
     fi
-
 }
 
 ## display prompt
