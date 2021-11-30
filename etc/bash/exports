@@ -83,6 +83,11 @@ elif [[ -x $(type -p lesspipe) ]]; then
     export LESSCLOSE="lesspipe %s %s"
 fi
 
+## manpages
+if [[ -x $(type -p manpager) ]]; then
+    export MANPAGER=manpager
+fi
+
 ## vim
 VIMVUNDLE=${ENV_HOME}/.vim/bundle/Vundle.vim
 if [[ -d ${VIMVUNDLE}  ]]; then
