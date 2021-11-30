@@ -2,7 +2,7 @@
 severity = 3
 verbose  = %F (line:%l) %m, %e [%p]\n
 include  = CodeLayout Documentation InputOutput Modules::ProhibitMultiplePackages
-exclude  = CodeLayout::RequireTidyCode RegularExpressions::RequireExtendedFormatting Moose::RequireCleanNamespace Documentation::RequirePodLinksIncludeText Subroutines::ProhibitUnusedPrivateSubroutines Subroutines::ProhibitBuiltinHomonyms
+exclude  = CodeLayout::RequireTidyCode RegularExpressions::RequireExtendedFormatting Moose::RequireCleanNamespace Documentation::RequirePodLinksIncludeText Subroutines::ProhibitUnusedPrivateSubroutines Subroutines::ProhibitBuiltinHomonyms Documentation::PodSpelling
 
 # Rules for POD
 [Documentation::RequirePodSections]
@@ -12,6 +12,7 @@ script_sections = NAME | SYNOPSIS | OPTIONS | DESCRIPTION
 # Max. 4 arguments for subroutines
 [Subroutines::ProhibitManyArgs]
 max_arguments = 4
+skip_object = 1
 
 # Definition of PerlTidy layout
 [CodeLayout::RequireTidyCode]
