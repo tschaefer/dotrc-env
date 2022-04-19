@@ -49,22 +49,6 @@ if [ -d ${ENV_HOME_BASH} ]; then
     done
 fi
 
-## perlbrew
-if [[ -r ${ENV_HOME}/.perlbrew/etc/bashrc ]]; then
-    . ${ENV_HOME}/.perlbrew/etc/bashrc
-    export PERLBREW_HOME=${ENV_HOME}/.perlbrew
-fi
-
-## nvm
-if [[ -d ${ENV_HOME}/.nvm ]]; then
-    export NVM_DIR="$ENV_HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-fi
-
-## direnv
-eval "$(direnv hook bash)"
-
 ## debuging
 #set +x
 

@@ -20,12 +20,6 @@ if [[ -d ${ENV_HOME}/.local/bin ]]; then
     PATH=${ENV_HOME}/.local/bin:${PATH}
     MANPATH=${ENV_HOME}/.local/share/man:${MANPATH}
 fi
-if [[ -d ${ENV_HOME}/.gem/ruby/2.5.0/bin ]]; then
-    PATH=${PATH}:${ENV_HOME}/.gem/ruby/2.5.0/bin
-fi
-if [[ -d ${ENV_HOME}/.cargo/bin ]]; then
-    PATH=${PATH}:${ENV_HOME}/.cargo/bin
-fi
 export PATH MANPATH
 
 if [[ -n ${XDG_RUNTIME_DIR} ]]; then
@@ -103,5 +97,45 @@ fi
 
 ## gpg
 export GPG_TTY=$(tty)
+
+## perl
+if [[ -r ${ENV_HOME}/.perlbrew/etc/bashrc ]]; then
+    . ${ENV_HOME}/.perlbrew/etc/bashrc
+    export PERLBREW_HOME=${ENV_HOME}/.perlbrew
+fi
+
+## nodejs
+if [[ -d ${ENV_HOME}/.nvm ]]; then
+    export NVM_DIR="$ENV_HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+fi
+
+## ruby
+if [[ -d ${ENV_HOME}/.rbenv ]]; then
+    export PATH=${PATH}:${ENV_HOME}/.rbenv/bin
+    if [[ ${EUID} -eq 0 ]]; then
+        EHOME=$HOME
+        export HOME=${ENV_HOME}
+        eval "$(rbenv init - bash)"
+        export HOME=$EHOME
+    else
+        eval "$(rbenv init - bash)"
+    fi
+fi
+
+## go
+if [[ -x $(type -p go) ]]; then
+    export GOPATH="${ENV_HOME}/.go"
+    export PATH=$PATH:"${ENV_HOME}/.go/bin"
+fi
+
+### rust
+if [[ -d ${ENV_HOME}/.cargo/bin ]]; then
+    export PATH=${PATH}:${ENV_HOME}/.cargo/bin
+fi
+
+## direnv
+eval "$(direnv hook bash)"
 
 # vim: set filetype=sh :
