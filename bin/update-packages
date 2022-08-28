@@ -7,19 +7,22 @@ readonly LOGFILE="${LOGDIR}/update-packages_$(date +%y%m%d%H%M%S).log"
 usage() {
 cat <<EOF
 Usage:
-    $ME [-l SYSLOG | FILE] [-a] | -epsy
+    $ME [-l SYSLOG | FILE] [-a] | -eprstvy | -j
 
     $ME -h
 
 Options:
     -h:     shows this message (help)
-    -a:     update all (perl, python, system) packages
+    -a:     update all (perl, python, ruby, rust, system) packages
     -e:     update dotrc environment
     -p:     update perl packages
+    -r:     update ruby packages
     -s:     update system packages
+    -t:     update rust
     -v:     update vim plugins
     -y:     update python packages
     -l:     log to file or syslog (journald)
+    -j:     show current (since today) log
 
 EOF
 }
@@ -80,6 +83,27 @@ update_perl() {
     echo -e "\033[33mdone.\033[39m"
 }
 
+update_ruby() {
+    echo -e "\033[33mStarting ruby packages update ...\033[39m"
+
+    if [[ -x $(type -P gem) ]]; then
+        gem update --verbose
+    fi
+
+    echo -e "\033[33mdone.\033[39m"
+}
+
+
+update_rust() {
+    echo -e "\033[33mStarting rust update ...\033[39m"
+
+    if [[ -x $(type -P rustup) ]]; then
+        rustup update
+    fi
+
+    echo -e "\033[33mdone.\033[39m"
+}
+
 update_system() {
     echo -e "\033[33mStarting system packages update ...\033[39m"
 
@@ -115,9 +139,17 @@ update_vim() {
     echo -e "\033[33mdone.\033[39m"
 }
 
+show_log() {
+    if [[ -e $LOGFILE ]]; then
+        less $LOGFILE
+    else
+        journalctl --all --since today --identifier update-packages \
+            --output cat --all
+    fi
+}
 
 get_opts() {
-    while getopts ":hael:psvy" opt; do
+    while getopts ":hael:prstvyj" opt; do
         case $opt in
             a)
                 opt_a=1
@@ -128,8 +160,14 @@ get_opts() {
             p)
                 opt_p=1
                 ;;
+            r)
+                opt_r=1
+                ;;
             s)
                 opt_s=1
+                ;;
+            t)
+                opt_t=1
                 ;;
             v)
                 opt_v=1
@@ -139,6 +177,9 @@ get_opts() {
                 ;;
             l)
                 opt_l="$OPTARG"
+                ;;
+            j)
+                opt_j=1
                 ;;
             h)
                 opt_h=1
@@ -159,7 +200,7 @@ get_opts() {
 
     opt_count=$(( OPTIND - 1 ))
 
-    if [ -n "$opt_h" ] && \
+    if [[ -n "$opt_h" ]] || [[ -n "$opt_j" ]] && \
         [[ $opt_count -gt 1 ]]; then
         usage >&2
         exit 2
@@ -206,6 +247,10 @@ main() {
         exit 0
     fi
 
+    if [[ -n "$opt_j" ]]; then
+        show_log
+    fi
+
     if [[ -n "$opt_e" ]]; then
         update_env | log_to_target
     fi
@@ -214,8 +259,16 @@ main() {
         update_perl | log_to_target
     fi
 
+    if [[ -n "$opt_r" ]]; then
+        update_ruby | log_to_target
+    fi
+
     if [[ -n "$opt_s" ]]; then
         update_system | log_to_target
+    fi
+
+    if [[ -n "$opt_t" ]]; then
+        update_rust | log_to_target
     fi
 
     if [[ -n "$opt_v" ]]; then
@@ -230,6 +283,8 @@ main() {
         update_system | log_to_target
         update_perl   | log_to_target
         update_python | log_to_target
+        update_ruby   | log_to_target
+        update_rust   | log_to_target
     fi
 
     exit 0
