@@ -44,6 +44,19 @@ Plugin 'tpope/vim-commentary'
 Plugin 'ludovicchabant/vim-gutentags'
 " markdown preview
 Plugin 'skanehira/preview-markdown.vim'
+" git messages
+Plugin 'rhysd/git-messenger.vim'
+" coffeescript syntax
+Plugin 'kchmck/vim-coffee-script'
+" ruby rspec
+Plugin 'thoughtbot/vim-rspec'
+" trim trailing whitespace
+Plugin 'csexton/trailertrash.vim'
+" fuzzy search
+Plugin 'junegunn/fzf'
+Plugin 'junegunn/fzf.vim'
+" jst.eco filetype
+Plugin 'briancollins/vim-jst'
 
 call vundle#end()
 
@@ -75,7 +88,8 @@ let g:lightline = {
 
 "" ale
 let g:ale_linters = {
-\   'perl': ['perl', 'perlcritic'],
+\   'perl': ['perl', 'perlcritic', 'perltidy'],
+\   'python': ['flake8'],
 \ }
 
 "" tagbar
@@ -100,3 +114,12 @@ let g:tagbar_type_perl = {
 "" supertab
 let g:SuperTabMappingForward = '<s-tab>'
 let g:SuperTabMappingBackward = '<s-nul>'
+
+"" git messenger
+let g:git_messenger_close_on_cursor_moved = 'v:false'
+
+"" ruby rspec
+map <Leader>r :call RunCurrentSpecFile()<CR>
+map <Leader>s :call RunNearestSpec()<CR>
+map <Leader>l :call RunLastSpec()<CR>
+map <Leader>a :call RunAllSpecs()<CR>

@@ -2,7 +2,6 @@
 set autoread
 set autowrite
 set cryptmethod=blowfish
-set exrc
 set fileencoding=utf-8
 
 "" history
