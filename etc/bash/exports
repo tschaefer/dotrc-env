@@ -109,6 +109,8 @@ if [[ -d ${ENV_HOME}/.nvm ]]; then
     export NVM_DIR="$ENV_HOME/.nvm"
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
     [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+    NODE_VERSION=$(node --version)
+    export PATH=${PATH}:${NVM_DIR}/versions/node/${NODE_VERSION}/lib/node_modules/corepack/shims
 fi
 
 ## ruby
