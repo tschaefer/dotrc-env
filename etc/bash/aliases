@@ -21,7 +21,7 @@ alias pmv?="_perl_module_version"
 alias battery="acpi -b | awk '{ print \$5 \" \" \$3 }' | tr -d ','"
 alias calc="_calc"
 alias httpd="python3 -m http.server"
-alias pubip="curl -k -s https://ipinfo.io/ip"
+alias pubip="curl -k -s https://ipinfo.io/ip; echo"
 alias tinyurl="_tinyurl"
 alias wttr="_wttr"
 
