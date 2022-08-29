@@ -4,6 +4,7 @@
 [core]
     pager = cat
     editor = vim
+    excludesFile = /home/tschaefer/.git/gitignore
 
 [color]
     ui = true
@@ -41,5 +42,8 @@
 
 [pull]
     ff = only
+
+[init]
+    defaultBranch = main
 
 # vim:ft=dosini
