@@ -109,10 +109,10 @@ update_system() {
 
     local distro
 
-    distro=$(awk -F '=' '/^ID/ { print $2 }' /etc/os-release)
+    distro=$(awk -F '=' '/^ID=/ { print $2 }' /etc/os-release)
 
     case $distro in
-        debian)
+        debian|raspbian)
             sudo apt-get update ; sudo apt-get -y dist-upgrade ; \
                 sudo apt-get -y autoremove --purge
                 sudo apt-get clean ; sudo apt-get autoclean
