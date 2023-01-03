@@ -56,10 +56,14 @@ export LC_MEASUREMENT=de_DE.UTF-8
 export LC_IDENTIFICATION=de_DE.UTF-8
 
 ## editor
-if [[ -x $(type -p vim) ]]; then
+if [[ $(type -t vim.notags) ]]; then
+    EDITOR=vim.notags
+elif [[ -x $(type -p vim) ]]; then
     EDITOR=vim
 elif [[ -x $(type -p nano) ]]; then
     EDITOR=nano
+else
+    EDITOR=""
 fi
 export EDITOR
 export VISUAL=${EDITOR}
