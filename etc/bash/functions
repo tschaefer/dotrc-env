@@ -51,7 +51,8 @@ _tinyurl() {
 }
 
 _wttr() {
-    curl -H "Accept-Language: ${LANG%_*}" wttr.in/"${1:-Frankfurt}?{$2:-0}"
+    CITY=${LC_CITY:-"Berlin"}
+    curl -H "Accept-Language: ${LANG%_*}" wttr.in/"${1:-$CITY}?{$2:-0}"
 }
 
 ### perl
