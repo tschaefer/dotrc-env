@@ -1,6 +1,11 @@
 [github]
     user = tschaefer
 
+[user]
+    signingKey = 88A6489BD0B2C61A!
+[commit]
+    gpgSign = true
+
 [core]
     pager = cat
     editor = vim
