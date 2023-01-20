@@ -11,6 +11,7 @@ alias weather="LC_TIME=en_US.UTF-8 ${ENV_HOME}/.bin/weather"
 ## abbreviations
 alias c?="cpan -l 2>/dev/null | awk '{ print \$1 }' | sort | uniq | grep"
 alias d?="dpkg -l | tail -n +6 | awk '{ print \$2 }' | grep"
+alias g?="gem list | awk '{ print \$1 }' | sort | uniq | grep"
 alias e="eval ${EDITOR}"
 alias h="history | cut -c 8-"
 alias h?="h | grep"
@@ -41,6 +42,7 @@ alias ssh.sock="_ssh_sock"
 alias sshrc.nocheck="sshrc -o StrictHostKeyChecking=no \
     -o UserKnownHostsFile=/dev/null"
 alias mosh.screen="_mosh_screen"
+alias ssh.kill="_ssh_kill"
 
 # misc
 alias find.norev="_find_norev"
