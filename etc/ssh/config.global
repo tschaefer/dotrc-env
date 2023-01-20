@@ -4,9 +4,7 @@ Host *
     ControlPersist 15m
     ForwardAgent yes
     HashKnownHosts yes
-    IdentityFile ~/.ssh/id_rsa
     LogLevel VERBOSE
     ServerAliveInterval 540
-    UseRoaming no
 
 # vim:ft=sshconfig
