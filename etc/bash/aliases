@@ -43,6 +43,7 @@ alias sshrc.nocheck="sshrc -o StrictHostKeyChecking=no \
     -o UserKnownHostsFile=/dev/null"
 alias mosh.screen="_mosh_screen"
 alias ssh.kill="_ssh_kill"
+alias ssh.list="_ssh_list"
 
 # misc
 alias find.norev="_find_norev"

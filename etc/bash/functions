@@ -6,9 +6,14 @@ _ssh_conf() {
 }
 
 _ssh_kill() {
-    ps -e -o pid,command | grep -m 1 'mux' | \
+    ps -e -o pid,command | grep '\[mux\]' | \
         grep -w "$1" | awk '{ print $1 }' | \
         xargs kill -9 2>/dev/null
+}
+
+_ssh_list() {
+    ps -e -o pid,command | grep '\[mux\]' | \
+        awk -F '/' '{ print $NF }' | sed 's/ \[mux\]//'
 }
 
 _ssh_screen() {
