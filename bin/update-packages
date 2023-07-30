@@ -28,7 +28,7 @@ EOF
 }
 
 update_env() {
-    echo -e "\033[33mStarting dotrc envrionment update ...\033[39m"
+    echo -e "\033[33mStarting dotrc envrionment update ...\033[39m 🐘"
 
     if [[ -d ${HOME}/.env ]]; then
         cd ${HOME}/.env ; git pull ; cd - >/dev/null
@@ -38,7 +38,7 @@ update_env() {
 }
 
 update_python() {
-    echo -e "\033[33mStarting python packages update ...\033[39m"
+    echo -e "\033[33mStarting python packages update ...\033[39m 🐍"
 
     if [[ -x $(type -P pip2) ]]; then
         version=$(python2 --version 2>&1)
@@ -60,11 +60,17 @@ update_python() {
             awk 'FNR > 3 {print $1 }')
     fi
 
+    if [[ -x $(type -P pipx) ]]; then
+        version=$(pipx --version)
+        echo -e "\033[33mpipx ${version}\033[39m"
+        pipx upgrade-all
+    fi
+
     echo -e "\033[33mdone.\033[39m"
 }
 
 update_perl() {
-    echo -e "\033[33mStarting perl packages update ...\033[39m"
+    echo -e "\033[33mStarting perl packages update ...\033[39m 🐪"
 
     if [[ -x $(type -P perlbrew) ]]; then
         for version in $(perlbrew list | tr -d ' *'); do
@@ -84,7 +90,7 @@ update_perl() {
 }
 
 update_ruby() {
-    echo -e "\033[33mStarting ruby packages update ...\033[39m"
+    echo -e "\033[33mStarting ruby packages update ...\033[39m 🦊"
 
     if [[ -x $(type -P gem) ]]; then
         gem update --verbose
@@ -95,7 +101,7 @@ update_ruby() {
 
 
 update_rust() {
-    echo -e "\033[33mStarting rust update ...\033[39m"
+    echo -e "\033[33mStarting rust update ...\033[39m 🦀"
 
     if [[ -x $(type -P rustup) ]]; then
         rustup update
@@ -105,7 +111,7 @@ update_rust() {
 }
 
 update_system() {
-    echo -e "\033[33mStarting system packages update ...\033[39m"
+    echo -e "\033[33mStarting system packages update ...\033[39m 🐧"
 
     local distro
 
@@ -113,7 +119,7 @@ update_system() {
 
     case $distro in
         debian|raspbian)
-            sudo apt-get update ; sudo apt-get -y dist-upgrade ; \
+            sudo apt-get update ; sudo apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade ; \
                 sudo apt-get -y autoremove --purge
                 sudo apt-get clean ; sudo apt-get autoclean
             ;;
@@ -130,7 +136,7 @@ update_system() {
 }
 
 update_vim() {
-    echo -e "\033[33mStarting vim plugins update ...\033[39m"
+    echo -e "\033[33mStarting vim plugins update ...\033[39m 🦅"
 
     if [[ -x $(type -P vim) ]]; then
         vim +PluginUpdate +qall
@@ -141,7 +147,7 @@ update_vim() {
 
 show_log() {
     if [[ -e $LOGFILE ]]; then
-        less $LOGFILE
+        ${PAGER:less} $LOGFILE
     else
         journalctl --all --since today --identifier update-packages \
             --output cat --all
