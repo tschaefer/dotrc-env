@@ -42,7 +42,7 @@ update_python() {
     echo -e "\033[33mStarting python update ...\033[39m 🐍"
 
     if [[ -x $(type -P pip2) ]]; then
-        version=$(python2 --version 2>&1)
+        version=$(python2 --version)
         echo -e "\033[33m${version}\033[39m"
 
         sudo python2 -m pip install --upgrade pip
@@ -64,6 +64,7 @@ update_python() {
     if [[ -x $(type -P pipx) ]]; then
         version=$(pipx --version)
         echo -e "\033[33mpipx ${version}\033[39m"
+
         pipx upgrade-all
     fi
 
@@ -93,6 +94,9 @@ update_perl() {
 update_ruby() {
     echo -e "\033[33mStarting ruby update ...\033[39m 🦊"
 
+    version=$(ruby --version | awk '{ print $1 " " $2 }')
+    echo -e "\033[33m${version}\033[39m"
+
     if [[ -x $(type -P gem) ]]; then
         gem update --verbose
     fi
@@ -104,6 +108,9 @@ update_ruby() {
 update_rust() {
     echo -e "\033[33mStarting rust update ...\033[39m 🦀"
 
+    version=$(rustc --version | awk '{ print $1 " " $2 }')
+    echo -e "\033[33m${version}\033[39m"
+
     if [[ -x $(type -P rustup) ]]; then
         rustup update
     fi
@@ -114,10 +121,10 @@ update_rust() {
 update_system() {
     echo -e "\033[33mStarting system update ...\033[39m 🐧"
 
-    local distro
+    pretty_name=$(awk -F '"' '/^PRETTY_NAME=/ { print $2 }' /etc/os-release)
+    echo -e "\033[33m${pretty_name}\033[39m"
 
     distro=$(awk -F '=' '/^ID=/ { print $2 }' /etc/os-release)
-
     case $distro in
         debian|raspbian)
             sudo apt-get update ; sudo apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade ; \
