@@ -94,10 +94,10 @@ update_perl() {
 update_ruby() {
     echo -e "\033[33mStarting ruby update ...\033[39m 🦊"
 
-    version=$(ruby --version | awk '{ print $1 " " $2 }')
-    echo -e "\033[33m${version}\033[39m"
-
     if [[ -x $(type -P gem) ]]; then
+        version=$(ruby --version | awk '{ print $1 " " $2 }')
+        echo -e "\033[33m${version}\033[39m"
+
         gem update --verbose
     fi
 
@@ -108,10 +108,10 @@ update_ruby() {
 update_rust() {
     echo -e "\033[33mStarting rust update ...\033[39m 🦀"
 
-    version=$(rustc --version | awk '{ print $1 " " $2 }')
-    echo -e "\033[33m${version}\033[39m"
-
     if [[ -x $(type -P rustup) ]]; then
+        version=$(rustc --version | awk '{ print $1 " " $2 }')
+        echo -e "\033[33m${version}\033[39m"
+
         rustup update
     fi
 
@@ -122,16 +122,17 @@ update_system() {
     echo -e "\033[33mStarting system update ...\033[39m 🐧"
 
     pretty_name=$(awk -F '"' '/^PRETTY_NAME=/ { print $2 }' /etc/os-release)
-    echo -e "\033[33m${pretty_name}\033[39m"
-
     distro=$(awk -F '=' '/^ID=/ { print $2 }' /etc/os-release)
+
     case $distro in
         debian|raspbian)
+            echo -e "\033[33m${pretty_name}\033[39m"
             sudo apt-get update ; sudo apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade ; \
                 sudo apt-get -y autoremove --purge
                 sudo apt-get clean ; sudo apt-get autoclean
             ;;
         gentoo)
+            echo -e "\033[33m${pretty_name}\033[39m"
             sudo emerge --sync ; \
                 sudo emerge --verbose --update --newuse --deep @world
             ;;
@@ -147,7 +148,10 @@ update_vim() {
     echo -e "\033[33mStarting vim plugins update ...\033[39m 🦅"
 
     if [[ -x $(type -P vim) ]]; then
-        vim +PluginUpdate +qall
+        version=$(vim --version | awk 'NR==1 { print $5 }')
+        echo -e "\033[33mvim ${version}\033[39m"
+
+        vim +PluginUpdate +qall 2>/dev/null
     fi
 
     echo -e "\033[33mdone.\033[39m"
