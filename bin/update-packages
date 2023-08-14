@@ -43,7 +43,7 @@ update_python() {
 
     if [[ -x $(type -P pip2) ]]; then
         version=$(python2 --version)
-        echo -e "\033[33m${version}\033[39m"
+        echo -e "\033[32m${version}\033[39m"
 
         sudo python2 -m pip install --upgrade pip
 
@@ -53,7 +53,7 @@ update_python() {
 
     if [[ -x $(type -P pip3) ]]; then
         version=$(python3 --version)
-        echo -e "\033[33m${version}\033[39m"
+        echo -e "\033[32m${version}\033[39m"
 
         sudo python3 -m pip install --upgrade pip
 
@@ -63,7 +63,7 @@ update_python() {
 
     if [[ -x $(type -P pipx) ]]; then
         version=$(pipx --version)
-        echo -e "\033[33mpipx ${version}\033[39m"
+        echo -e "\033[32mpipx ${version}\033[39m"
 
         pipx upgrade-all
     fi
@@ -80,7 +80,7 @@ update_perl() {
                 continue
             fi
 
-            echo -e "\033[33m${version}\033[39m"
+            echo -e "\033[32m${version}\033[39m"
 
             ${PERLBREW_ROOT}/perls/${version}/bin/cpan-outdated | \
                 ${PERLBREW_ROOT}/perls/${version}/bin/perl \
@@ -96,7 +96,7 @@ update_ruby() {
 
     if [[ -x $(type -P gem) ]]; then
         version=$(ruby --version | awk '{ print $1 " " $2 }')
-        echo -e "\033[33m${version}\033[39m"
+        echo -e "\033[32m${version}\033[39m"
 
         gem update --verbose
     fi
@@ -110,7 +110,7 @@ update_rust() {
 
     if [[ -x $(type -P rustup) ]]; then
         version=$(rustc --version | awk '{ print $1 " " $2 }')
-        echo -e "\033[33m${version}\033[39m"
+        echo -e "\033[32m${version}\033[39m"
 
         rustup update
     fi
@@ -126,13 +126,13 @@ update_system() {
 
     case $distro in
         debian|raspbian)
-            echo -e "\033[33m${pretty_name}\033[39m"
+            echo -e "\033[32m${pretty_name}\033[39m"
             sudo apt-get update ; sudo apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade ; \
                 sudo apt-get -y autoremove --purge
                 sudo apt-get clean ; sudo apt-get autoclean
             ;;
         gentoo)
-            echo -e "\033[33m${pretty_name}\033[39m"
+            echo -e "\033[32m${pretty_name}\033[39m"
             sudo emerge --sync ; \
                 sudo emerge --verbose --update --newuse --deep @world
             ;;
@@ -149,7 +149,7 @@ update_vim() {
 
     if [[ -x $(type -P vim) ]]; then
         version=$(vim --version | awk 'NR==1 { print $5 }')
-        echo -e "\033[33mvim ${version}\033[39m"
+        echo -e "\033[32mvim ${version}\033[39m"
 
         vim +PluginUpdate +qall 2>/dev/null
     fi
