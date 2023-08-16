@@ -167,6 +167,7 @@ show_log() {
 }
 
 get_opts() {
+    local opt_count=0
     while getopts ":hael:prstvyj" opt; do
         case $opt in
             a)
@@ -212,11 +213,8 @@ get_opts() {
                 exit 2
                 ;;
         esac
+        (( opt_count++ ))
     done
-
-    local opt_count
-
-    opt_count=$(( OPTIND - 1 ))
 
     if [[ -n "$opt_h" ]] || [[ -n "$opt_j" ]] && \
         [[ $opt_count -gt 1 ]]; then
@@ -225,7 +223,7 @@ get_opts() {
     fi
 
     if [[ -n "$opt_l" ]]; then
-        opt_count=$(( opt_count - 2 ))
+        opt_count=$(( opt_count - 1 ))
     fi
 
 
