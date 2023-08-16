@@ -28,6 +28,8 @@
     fdiff = !git diff --color | diff-so-fancy | less --tabs=4 -RFX
     adog = log --all --decorate --oneline --graph
     sdiff = diff --stat
+    mstatus = !git sstatus | grep -v '??' | grep -v 'A '
+    bush = !git push
 
 [apply]
     whitespace = strip
