@@ -268,39 +268,39 @@ main() {
     fi
 
     if [[ -n "$opt_e" ]]; then
-        update_env | log_to_target
+        update_env 2>&1 | log_to_target
     fi
 
     if [[ -n "$opt_p" ]]; then
-        update_perl | log_to_target
+        update_perl 2>&1 | log_to_target
     fi
 
     if [[ -n "$opt_r" ]]; then
-        update_ruby | log_to_target
+        update_ruby 2>&1 | log_to_target
     fi
 
     if [[ -n "$opt_s" ]]; then
-        update_system | log_to_target
+        update_system 2>&1 | log_to_target
     fi
 
     if [[ -n "$opt_t" ]]; then
-        update_rust | log_to_target
+        update_rust 2>&1 | log_to_target
     fi
 
     if [[ -n "$opt_v" ]]; then
-        update_vim | log_to_target
+        update_vim 2>&1 | log_to_target
     fi
 
     if [[ -n "$opt_y" ]]; then
-        update_python | log_to_target
+        update_python 2>&1 | log_to_target
     fi
 
     if [[ -n "$opt_a" ]]; then
-        update_system | log_to_target
-        update_perl   | log_to_target
-        update_python | log_to_target
-        update_ruby   | log_to_target
-        update_rust   | log_to_target
+        update_system 2>&1 | log_to_target
+        update_perl   2>&1 | log_to_target
+        update_python 2>&1 | log_to_target
+        update_ruby   2>&1 | log_to_target
+        update_rust   2>&1 | log_to_target
     fi
 
     exit 0
