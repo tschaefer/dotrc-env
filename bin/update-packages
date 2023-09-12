@@ -127,8 +127,8 @@ update_system() {
     case $distro in
         debian|raspbian)
             echo -e "\033[32m${pretty_name}\033[39m"
-            sudo apt-get update ; sudo apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade ; \
-                sudo apt-get -y autoremove --purge
+            sudo apt-get update ; sudo apt-get --option Dpkg::Options::="--force-confold" --yes dist-upgrade ; \
+                sudo apt-get --yes autoremove --purge
                 sudo apt-get clean ; sudo apt-get autoclean
             ;;
         gentoo)
