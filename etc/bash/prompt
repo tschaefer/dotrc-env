@@ -45,6 +45,10 @@ set_bash_prompt() {
     xargs basename)
     EXEC=":\[${_fg_yellow}\]${EXEC}\[${_reset_fg}\]"
 
+    if [[ -n ${VIRTUAL_ENV} ]]; then
+        EXEC="${EXEC}@\[${_fg_red}\]venv\[${_reset_fg}\]"
+    fi
+
     if [[ ${EUID} == 0 ]] ; then
        PS1="\[${_fg_red}\]\u\[${_reset_fg}\]@\[${_fg_blue}\]\h\[${_reset_fg}\]${EXEC}${GIT} \[${_fg_cyan}\]\w\[${_reset_fg}\]
  ${PROMPT_SYMBOL} "
@@ -54,6 +58,7 @@ set_bash_prompt() {
  ${PROMPT_SYMBOL} "
         PS2="%> "
     fi
+
 }
 
 ## display prompt
