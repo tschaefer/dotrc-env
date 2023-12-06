@@ -126,7 +126,7 @@ set nowrap
 set stateflags
 
 ## Allow nano to be suspended (with ^Z by default).
-set suspendable
+# set suspendable
 
 ## Use this tab size instead of the default; it must be greater than 0.
 set tabsize 4
@@ -150,6 +150,7 @@ set trimblanks
 # set zap
 
 ## Color setup
+include "/usr/share/nano/*.nanorc"
 include "~/.nano/*.nanorc"
 
 # vim:ft=conf
