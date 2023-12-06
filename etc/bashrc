@@ -10,21 +10,24 @@ fi
 case ${OSTYPE} in
     darwin*)
         ENV_OS=Darwin
-        ENV_USER=${SUDO_USER:-${USER}}
         ;;
     linux*)
         ENV_OS=Linux
-        ENV_USER=$(stat -c %U $(readlink -f /proc/self/fd/0))
         ;;
     solaris*)
         ENV_OS=Solaris
-        ENV_USER=${SUDO_USER:-${USER}}
         ;;
     *)
         ENV_OS=${OSTYPE}
-        ENV_USER=${SUDO_USER:-${USER}}
         ;;
 esac
+
+## User
+if [[ -z ${ENV_USER} ]]; then
+    # ENV_USER="$(stat -c %U "$(readlink -f /proc/self/fd/0)")"
+    E_USER=${SUDO_USER:-${USER}}
+    ENV_USER=${ENV_USER:-${E_USER}}
+fi
 
 ## home
 ENV_HOME=${HOME}
@@ -44,7 +47,8 @@ if [ -d ${ENV_HOME_BASH} ]; then
     for FILE in format colors prompt options functions exports aliases term \
         completion hosts marks; do
         if [[ -r ${ENV_HOME_BASH}/${FILE} ]]; then
-        . ${ENV_HOME_BASH}/${FILE}
+            # shellcheck source=/dev/null
+            . ${ENV_HOME_BASH}/${FILE}
         fi
     done
 fi
