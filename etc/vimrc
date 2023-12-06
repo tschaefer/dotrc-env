@@ -9,3 +9,12 @@ runtime! configs/mappings.vim
 if !empty($VIMVUNDLE)
     runtime! configs/plugins.vim
 endif
+
+let s:rc  = getcwd() . '/.local.vim'
+let s:sig = getcwd() . '/.local.vim.asc'
+if filereadable(s:rc) && filereadable(s:sig)
+    let null = system('gpg --verify ' . s:sig . ' ' . s:rc)
+    if v:shell_error == 0
+        exe 'source' s:rc
+    endif
+endif
