@@ -1,8 +1,10 @@
 ## ssh / scp / mosh
 _ssh_conf() {
     SSH_HOME=${ENV_HOME}/.ssh
-    cat ${SSH_HOME}/config.global $(ls ${SSH_HOME}/config.local \
-        2>/dev/null || echo /dev/null) | grep -v "^#" > ${SSH_HOME}/config
+    cat ${SSH_HOME}/config.global "$(ls ${SSH_HOME}/config.local \
+        2>/dev/null || echo /dev/null)" | grep -v "^#" > ${SSH_HOME}/config
+
+    echo "# vim:ft=sshconfig" >> ${SSH_HOME}/config
 }
 
 _ssh_kill() {
@@ -17,7 +19,7 @@ _ssh_list() {
 }
 
 _ssh_screen() {
-    ssh $@ -t screen -Rd
+    ssh "$@" -t screen -Rd
 }
 
 _ssh_sock() {
@@ -30,7 +32,7 @@ _ssh_sock() {
 }
 
 _mosh_screen() {
-    mosh $@ -- screen -Rd
+    mosh "$@" -- screen -Rd
 }
 
 ## misc
@@ -49,7 +51,7 @@ _find_norev() {
         shift
         find . -type d -a -name ".svn" -prune -o -type d -a -name ".git" -prune \
             -o -type d -a -name ".vscode" -prune \
-            -o -name "$name" $@
+            -o -name "$name" "$@"
     }
 }
 
