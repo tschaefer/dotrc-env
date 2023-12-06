@@ -56,9 +56,7 @@ export LC_MEASUREMENT=de_DE.UTF-8
 export LC_IDENTIFICATION=de_DE.UTF-8
 
 ## editor
-if [[ $(type -t vim.notags) ]]; then
-    EDITOR=vim.notags
-elif [[ -x $(type -p vim) ]]; then
+if [[ -x $(type -p vim) ]]; then
     EDITOR=vim
 elif [[ -x $(type -p nano) ]]; then
     EDITOR=nano
@@ -142,6 +140,21 @@ if [[ -d ${ENV_HOME}/.cargo/bin ]]; then
 fi
 
 ## direnv
-eval "$(direnv hook bash)"
+if [[ -x $(type -p direnv) ]]; then
+    eval "$(direnv hook bash)"
+fi
+
+## conda
+__conda_setup="$(${ENV_HOME}/.local/share/miniconda/bin/conda shell.bash hook 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "${ENV_HOME}/.local/share/miniconda/etc/profile.d/conda.sh" ]; then
+        . "${ENV_HOME}/.local/share/miniconda/etc/profile.d/conda.sh"
+    else
+        export PATH="${ENV_HOME}/.local/share/miniconda/bin:$PATH"
+    fi
+fi
+unset __conda_setup
 
 # vim: set filetype=sh :
