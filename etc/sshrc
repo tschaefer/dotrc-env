@@ -3,7 +3,7 @@ if [[ $- != *i* ]]; then
     return
 fi
 
-## debugging
+## enable debugging
 #set -x
 
 ## OS
@@ -14,6 +14,7 @@ case ${OSTYPE} in
         ;;
     linux*)
         ENV_OS=Linux
+        # shellcheck disable=SC2046
         ENV_USER=$(stat -c %U $(readlink -f /proc/self/fd/0))
         ;;
     solaris*)
@@ -43,27 +44,31 @@ if [ -d ${ENV_HOME_BASH} ]; then
     for FILE in format colors prompt options functions exports aliases term \
         completion marks hosts; do
         if [[ -r ${ENV_HOME_BASH}/${FILE} ]]; then
+        # shellcheck disable=SC1090
         . ${ENV_HOME_BASH}/${FILE}
         fi
     done
 fi
 
-## perlbrew
-if [[ -r ${HOME}/.perlbrew/etc/bashrc ]]; then
-    . ${HOME}/.perlbrew/etc/bashrc
-    export PERLBREW_HOME=${HOME}/.perlbrew
+## local
+USER_HOME=$(grep "^${ENV_USER}:" /etc/passwd | cut -d: -f 6)
+if [[ -r ${USER_HOME}/.sshrc.local ]]; then
+    . ${USER_HOME}/.sshrc.local
 fi
 
 ## overload
+# shellcheck disable=SC2139
 alias root="sudo bash --rcfile ${SSHHOME}/.sshrc"
 PATH=${PATH}:${ENV_HOME}/bin
 if [[ -d ${HOME}/.bin ]]; then
     PATH=${PATH}:${HOME}/.bin
 fi
+if [[ -d ${HOME}/.local/bin ]]; then
+    PATH=${PATH}:${HOME}/.local/bin
+fi
 export PATH
 
-## debuging
+## disable debuging
 #set +x
-
 
 # vim: set ft=sh :
