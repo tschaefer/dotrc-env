@@ -2,7 +2,7 @@
 alias git="HOME=${ENV_HOME} git"
 alias gitdiff="git diff --no-index"
 alias htop="HTOPRC=${ENV_HOME}/.htoprc htop"
-alias nano="HOME=${ENV_HOME} nano"
+alias nano="nano --rcfile ${ENV_HOME}/.nano"
 alias root="sudo bash --rcfile ${ENV_HOME}/.bashrc"
 alias screen="screen -c ${ENV_HOME}/.screenrc"
 alias vim="vim -u ${ENV_HOME}/.vimrc"
