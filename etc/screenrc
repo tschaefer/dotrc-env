@@ -28,6 +28,6 @@ bindkey -m "^[[5;2~" stuff ^u
 bindkey -m "^[[6;2~" stuff ^d
 
 ## local configuration
-source ~/.screen/local
+# source ~/.screen/local
 
 # vim:ft=screen
