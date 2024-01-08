@@ -151,6 +151,5 @@ set trimblanks
 
 ## Color setup
 include "/usr/share/nano/*.nanorc"
-include "~/.nano/*.nanorc"
 
 # vim:ft=conf
