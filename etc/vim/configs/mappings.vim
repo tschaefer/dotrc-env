@@ -23,13 +23,29 @@ nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
 map <leader>r :NERDTreeFind<cr>
 
-"" Custom
-if has('terminal')
-    func TabTerm()
-        terminal
-        wincmd x
-        res 50
-    endfu
+func TabTerm()
+    exec "botright terminal"
+    exec "resize 20"
+endfu
+nnoremap <expr> <leader>t TabTerm()
 
-    nnoremap <expr> <leader>t TabTerm()
-endif
+func TabVerTerm()
+    exec "vertical botright terminal"
+endfu
+nnoremap <expr> <leader>v TabVerTerm()
+
+function! TabCloseRight(bang)
+    let cur=tabpagenr()
+    while cur < tabpagenr('$')
+        exe 'tabclose' . a:bang . ' ' . (cur + 1)
+    endwhile
+endfunction
+
+function! TabCloseLeft(bang)
+    while tabpagenr() > 1
+        exe 'tabclose' . a:bang . ' 1'
+    endwhile
+endfunction
+
+command! -bang Tabcloseright call TabCloseRight('<bang>')
+command! -bang Tabcloseleft call TabCloseLeft('<bang>')

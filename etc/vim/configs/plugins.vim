@@ -20,10 +20,9 @@ Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'vim-scripts/cscope.vim'
 " version control
 Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-rhubarb'
 " statusbar
 Plugin 'itchyny/lightline.vim'
-" quote signs
-Plugin 'tpope/vim-surround'
 " git diff in sign column
 Plugin 'airblade/vim-gitgutter'
 " ack for vim
@@ -32,22 +31,16 @@ Plugin 'mileszs/ack.vim'
 Plugin 'ervandew/supertab'
 " buffer only
 Plugin 'vim-scripts/BufOnly.vim'
-" vue js
-Plugin 'posva/vim-vue'
 " no distraction
 Plugin 'junegunn/goyo.vim'
 " bye buffer
 Plugin 'moll/vim-bbye'
-" comment stuff out
-Plugin 'tpope/vim-commentary'
 " tag file manager
 Plugin 'ludovicchabant/vim-gutentags'
 " markdown preview
 Plugin 'skanehira/preview-markdown.vim'
 " git messages
 Plugin 'rhysd/git-messenger.vim'
-" coffeescript syntax
-Plugin 'kchmck/vim-coffee-script'
 " ruby rspec
 Plugin 'thoughtbot/vim-rspec'
 " trim trailing whitespace
@@ -55,8 +48,12 @@ Plugin 'csexton/trailertrash.vim'
 " fuzzy search
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
-" jst.eco filetype
-Plugin 'briancollins/vim-jst'
+" Github CoPilot
+Plugin 'github/copilot.vim'
+" Coffeescript
+Plugin 'kchmck/vim-coffee-script'
+" GraphQL
+Plugin 'jparise/vim-graphql'
 
 call vundle#end()
 
@@ -90,7 +87,13 @@ let g:lightline = {
 let g:ale_linters = {
 \   'perl': ['perl', 'perlcritic', 'perltidy'],
 \   'python': ['flake8'],
+\   'sh': ['shellcheck'],
+\   'html': [],
 \ }
+let g:ale_sh_shellcheck_dialect = 'bash'
+let g:ale_sh_shellcheck_options = '--severity=warning'
+let g:ale_virtualtext_cursor = 'disabled'
+let g:ale_echo_msg_format = '[%severity%::%linter%] %s'
 
 "" tagbar
 let g:tagbar_width = 36
@@ -123,3 +126,7 @@ map <Leader>r :call RunCurrentSpecFile()<CR>
 map <Leader>s :call RunNearestSpec()<CR>
 map <Leader>l :call RunLastSpec()<CR>
 map <Leader>a :call RunAllSpecs()<CR>
+map <Leader>f :call RunNextFailure()<CR>
+
+"" markdown preview
+let g:preview_markdown_auto_update = 1

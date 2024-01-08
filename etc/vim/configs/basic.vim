@@ -66,6 +66,7 @@ set ttimeout
 set ttimeoutlen=10
 set shortmess-=S
 let mapleader="\<Space>"
+set noshowmode
 
 "" syntax
 set autoindent
@@ -77,8 +78,14 @@ set tabstop=4
 set textwidth=78
 
 "" mouse
-set mouse=n
-set ttymouse=xterm2
+set mouse=nv
+set ttymouse=sgr
+
+"" folding
+set foldmethod=syntax
+set foldnestmax=10
+set nofoldenable
+set foldlevel=2
 
 "" extra
 let g:perl_include_pod = 0
