@@ -1,12 +1,13 @@
-## non-interactive shell
-if [[ $- != *i* ]]; then
+case $- in
+  *i*) ;;
+    *) return;;
+esac
+
+if [[ -e ${HOME}/.oh-my-bashrc ]]; then
+    . ${HOME}/.oh-my-bashrc
     return
 fi
 
-## enable debugging
-#set -x
-
-## OS
 case ${OSTYPE} in
     darwin*)
         ENV_OS=Darwin
@@ -27,48 +28,226 @@ case ${OSTYPE} in
         ;;
 esac
 
-## home
 ENV_HOME=${SSHHOME}/.sshrc.d
 if [[ ${EUID} -eq 0 ]] && [[ -z $SSHHOME ]]; then
     SSHHOME=$(dirname ${SUDO_COMMAND##* })
     export SSHHOME
     ENV_HOME=${SSHHOME}/.sshrc.d
 fi
+export ENV_OS ENV_USER ENV_HOME
 
-## exports
-ENV_HOME_BASH=${ENV_HOME}/bash
-export ENV_OS ENV_USER ENV_HOME ENV_HOME_BASH
+# shellcheck disable=SC2139
+alias root="sudo bash --rcfile ${SSHHOME}/.sshrc"
 
-## bash
-if [ -d ${ENV_HOME_BASH} ]; then
-    for FILE in format colors prompt options functions exports aliases term \
-        completion marks hosts; do
-        if [[ -r ${ENV_HOME_BASH}/${FILE} ]]; then
-        # shellcheck disable=SC1090
-        . ${ENV_HOME_BASH}/${FILE}
-        fi
-    done
-fi
-
-## local
 USER_HOME=$(grep "^${ENV_USER}:" /etc/passwd | cut -d: -f 6)
 if [[ -r ${USER_HOME}/.sshrc.local ]]; then
     . ${USER_HOME}/.sshrc.local
 fi
 
-## overload
-# shellcheck disable=SC2139
-alias root="sudo bash --rcfile ${SSHHOME}/.sshrc"
-PATH=${PATH}:${ENV_HOME}/bin
-if [[ -d ${HOME}/.bin ]]; then
-    PATH=${PATH}:${HOME}/.bin
-fi
-if [[ -d ${HOME}/.local/bin ]]; then
-    PATH=${PATH}:${HOME}/.local/bin
-fi
-export PATH
+function _env_init_path {
+    local path
 
-## disable debuging
-#set +x
+    PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
+    for path in ${ENV_HOME}/bin ${USER_HOME}/.bin ${USER_HOME}/.local/bin; do
+        if [[ -d ${path} ]]; then
+            PATH=${PATH}:${path}
+        fi
+    done
+    export PATH
+}
 
-# vim: set ft=sh :
+function _env_init_manpath {
+    local path
+
+    if [[ ! $(type -t -- manpath) ]]; then
+        return
+    fi
+
+    MANPATH=$(manpath)
+    for path in ${ENV_HOME}/man ${USER_HOME}/.local/man ${USER_HOME}/.local/share/man; do
+        if [[ -d ${path} ]]; then
+            MANPATH=${MANPATH}:${path}
+        fi
+    done
+    export MANPATH
+}
+_env_init_path
+_env_init_manpath
+
+if [[ -n ${XDG_RUNTIME_DIR} ]]; then
+    ENV_TMP=${XDG_RUNTIME_DIR}/tmp
+else
+    ENV_TMP=/tmp/${USER}.tmp
+fi
+trap 'rm -rf ${ENV_TMP}' EXIT
+if [[ ! -d "${ENV_TMP}" ]]; then
+    mkdir --mode=0700 "${ENV_TMP}"
+fi
+export ENV_TMP
+
+if [[ -S ${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh ]]; then
+    export SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh
+elif [[ -S ${XDG_RUNTIME_DIR}/ssh-agent.socket ]]; then
+    export SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/ssh-agent.socket
+fi
+
+GPG_TTY=$(tty)
+export GPG_TTY
+
+export HISTCONTROL=ignoreboth
+export HISTSIZE=32768
+export HISTFILESIZE=${HISTSIZE}
+export HISTTIMEFORMAT="%Y%m%d %T "
+
+if [[ -z ${LANG} ]]; then
+    export LANG=C
+fi
+
+if [[ $(type -t -- less) ]]; then
+    export PAGER=less
+    export LESS="-F -R -M --shift 5 -x 4"
+    export LESSCOLOR="always"
+    export LESSQUIET=1
+    export LESSHISTFILE=-
+
+    if [[ $(type -t -- lesspipe) ]]; then
+        eval "$(lesspipe)"
+    fi
+else
+    export PAGER=more
+fi
+
+if [[ $(type -t -- manpager) ]]; then
+    export MANPAGER="manpager"
+fi
+
+if [[ $(type -t -- nano) ]]; then
+    export EDITOR="nano"
+    export VISUAL="nano"
+
+    if [[ -e ${ENV_HOME}/nanorc ]]; then
+        # shellcheck disable=SC2139
+        alias nano="nano --rcfile ${ENV_HOME}/nanorc"
+    fi
+fi
+
+if [[ $(type -t -- screen) ]]; then
+    # shellcheck disable=SC2139
+    alias screen="screen -c ${ENV_HOME}/screenrc"
+fi
+
+shopt -s histappend
+shopt -s checkwinsize
+shopt -s cdspell
+shopt -s checkhash
+shopt -s cmdhist
+shopt -s extglob
+shopt -s histreedit
+shopt -s histverify
+shopt -s hostcomplete
+shopt -s no_empty_cmd_completion
+set -o emacs
+
+case ${TERM} in
+    vt100)
+        [[ $(type -t -- resize) ]] && resize
+        ;;
+    xterm*)
+        [[ ${EUID} -ne 0 ]] && echo -ne "\033]0;${USER}@${HOSTNAME%%.*}\007"
+        ;;
+    *)
+        ;;
+esac
+
+if [[ $(type -t -- dircolors) ]]; then
+    if [[ -r ${ENV_HOME}/dircolors ]]; then
+        eval "$(dircolors -b ${ENV_HOME}/dircolors)"
+    else
+        eval "$(dircolors -b)"
+    fi
+
+    alias ls="ls --color=auto"
+    alias grep="grep --color=auto"
+    alias fgrep="fgrep --color=auto"
+    alias egrep="egrep --color=auto"
+fi
+
+_text_bold="\033[1m"
+_text_dim="\033[2m"
+_text_underline="\033[4m"
+_text_reverse="\033[7m"
+
+_reset_all="\033[0m"
+_reset_fg="\033[39m"
+_reset_bg="\033[49m"
+_reset_bold="\033[21m"
+_reset_dim="\033[22m"
+_reset_underline="\033[24m"
+_reset_inverse="\033[27m"
+
+_fg_grey_darker="\033[30m"
+_fg_red="\033[31m"
+_fg_green="\033[32m"
+_fg_yellow="\033[33m"
+_fg_blue="\033[34m"
+_fg_magenta="\033[35m"
+_fg_cyan="\033[36m"
+_fg_white="\033[37m"
+_fg_black="\033[90m"
+_fg_orange="\033[91m"
+_fg_grey_dark="\033[92m"
+_fg_grey_mid="\033[93m"
+_fg_grey_light="\033[94m"
+_fg_violet="\033[95m"
+_fg_grey_lighter="\033[96m"
+_fg_white="\033[97m"
+_fg_grey="\033[39m"
+
+_bg_grey_darker="\033[40m"
+_bg_red="\033[41m"
+_bg_green="\033[42m"
+_bg_yellow="\033[43m"
+_bg_blue="\033[44m"
+_bg_magenta="\033[45m"
+_bg_cyan="\033[46m"
+_bg_white="\033[47m"
+_bg_black="\033[100m"
+_bg_orange="\033[101m"
+_bg_grey_dark="\033[102m"
+_bg_grey_mid="\033[103m"
+_bg_grey_light="\033[104m"
+_bg_violet="\033[105m"
+_bg_grey_lighter="\033[106m"
+_bg_white="\033[107m"
+_bg_grey="\033[49m"
+
+function set_bash_prompt_symbol {
+    if [[ $1 -eq 0 ]]; then
+        PROMPT_SYMBOL="»"
+    else
+        PROMPT_SYMBOL="\[${_fg_red}\]»\[${_reset_fg}\]"
+    fi
+}
+
+function set_bash_prompt {
+    set_bash_prompt_symbol $?
+
+    cmd=$(ps -A -o pid,comm | awk -v ppid=$PPID '$1 == ppid { print $2 }')
+    cmd=$(basename ${cmd:-$SHELL})
+    cmd="\[${_fg_yellow}\]${cmd}\[${_reset_fg}\]"
+
+    if [[ ${EUID} == 0 ]] ; then
+        who="\[${_fg_red}\]\u\[${_reset_fg}\]"
+        PS2="root %> "
+    else
+        who="\[${_fg_white}\]\u\[${_reset_fg}\]"
+        PS2="%> "
+    fi
+    host="\[${_fg_blue}\]\h\[${_reset_fg}\]"
+    dir="\[${_fg_cyan}\]\w\[${_reset_fg}\]"
+
+    PS1="${who}@${host}:${cmd} ${dir}
+ ${PROMPT_SYMBOL} "
+
+}
+PROMPT_COMMAND=set_bash_prompt
