@@ -27,7 +27,4 @@ bindkey "^[[5;2~" eval "copy" "stuff ^u"
 bindkey -m "^[[5;2~" stuff ^u
 bindkey -m "^[[6;2~" stuff ^d
 
-## local configuration
-# source ~/.screen/local
-
 # vim:ft=screen
