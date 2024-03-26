@@ -1,25 +1,13 @@
-## system
-case ${ENV_OS} in
-    Darwin)
-        if [[ -f /usr/local/etc/bash_completion ]]; then
-            . /usr/local/etc/bash_completion
-        fi
-        ;;
-    *)
-        if [[ -f /etc/bash_completion ]]; then
-            . /etc/bash_completion
-        fi
-        ;;
-esac
+if [[ -f /etc/bash_completion ]]; then
+    . /etc/bash_completion
+fi
 
-## local
 if [[ -d /usr/local/share/bash-completion/completions ]]; then
     for FILE in /usr/local/share/bash-completion/completions/*; do
         [ \( -f ${FILE} -o -h ${FILE} \) -a -r ${FILE} ] && . ${FILE}
     done
 fi
 
-## user
 if [[ -d ${ENV_HOME_BASH}/completion.d ]]; then
     for FILE in ${ENV_HOME_BASH}/completion.d/*; do
         [ \( -f ${FILE} -o -h ${FILE} \) -a -r ${FILE} ] && . ${FILE}

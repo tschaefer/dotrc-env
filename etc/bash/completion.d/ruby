@@ -1,0 +1,77 @@
+#! bash
+# bash completion for the `ruby` command.
+#
+# Copyright (c) 2009-2021 Daniel Luz <dev dot gsz at mernen dot com>.
+# Distributed under the MIT license.
+# https://mernen.com/projects/completion-ruby
+#
+# To use, source this file on bash:
+#   . completion-ruby
+
+__ruby() {
+    local cmd=$1
+    local cur=$2
+    local prev=$3
+    COMPREPLY=()
+
+    local options="
+        -0 -a -c -C -d -e -E -F -h -i -I -K -l -n -p -r -s -S -T -U -v -w -W0 -W1 -W2 -x
+        --encoding --external-encoding --internal-encoding
+        --disable-all --disable-gems --disable-rubyopt
+        --enable-all --enable-gems --enable-rubyopt
+        --debug --copyright --help --verbose --version"
+
+    local i
+    local script_given script_in_path path_script_pos
+    local switches_accepted=1
+    local complete_dirs
+    for ((i=1; i < $COMP_CWORD; ++i)); do
+        local arg=${COMP_WORDS[$i]}
+
+        case $arg in
+        --)
+            # End of switches
+            switches_accepted=""
+            [[ $COMP_CWORD != $((i + 1)) ]] && script_given=1
+            break;;
+        -S)
+            script_in_path=1
+            path_script_pos=$((i + 1));;
+        -e)
+            script_given=1
+            ((i++));;
+        -h | --help)
+            switches_accepted=""
+            script_given=1;;
+        -C | -I)
+            [[ $COMP_CWORD = $((i + 1)) ]] && complete_dirs=1
+            ((i++));;
+        -*) ;;
+        *)
+            # Non-switch arg, must be the script name
+            script_given=1
+            switches_accepted=""
+            break;;
+        esac
+    done
+
+    if [[ $complete_dirs ]]; then
+        if type -t _filedir >/dev/null; then
+            _filedir -d
+        fi
+    elif [[ $switches_accepted && $cur = -* ]]; then
+        COMPREPLY=($(compgen -W "$options" -- "$cur"))
+    elif [[ ! $script_given ]]; then
+        if [[ $script_in_path ]]; then
+            COMPREPLY=($(compgen -c -- "$cur"))
+        elif type -t _filedir >/dev/null; then
+            _filedir rb
+        fi
+    elif [[ $script_given && $path_script_pos ]]; then
+        local _RUBY_COMMAND_PREFIX=("${_RUBY_COMMAND_PREFIX[@]}" "$cmd" -S)
+        _command_offset "$path_script_pos"
+    fi
+}
+
+complete -F __ruby -o filenames -o bashdefault -o default ruby ruby1.{8..9} ruby2.{0..7}
+# vim: ai ft=sh sw=4 sts=4 et

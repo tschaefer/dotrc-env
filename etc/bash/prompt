@@ -41,8 +41,12 @@ set_bash_prompt() {
 
     echo -ne "\033]0;${USER}@${HOSTNAME%%.*}\007"
 
-    EXEC=$(ps -A -o pid,comm | awk -v ppid=$PPID '$1 == ppid { print $2 }' | \
-    xargs basename)
+    EXEC=$(ps -A -o pid,comm | awk -v ppid=$PPID '$1 == ppid { print $2 }')
+    if [[ -n ${EXEC} ]]; then
+        EXEC=$(basename ${EXEC})
+    else
+        EXEC=$(basename $SHELL)
+    fi
     EXEC=":\[${_fg_yellow}\]${EXEC}\[${_reset_fg}\]"
 
     if [[ -n ${VIRTUAL_ENV} ]]; then

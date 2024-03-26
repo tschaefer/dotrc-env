@@ -1,13 +1,14 @@
 ## bail out
 if [[ ! -x $(type -p dircolors) ]]; then
+    # shellcheck disable=SC2105
     continue
 fi
 
 ## dirs
 if [[ -f ${ENV_HOME}/.dir_colors ]]; then
-    eval $(dircolors -b ${ENV_HOME}/.dir_colors)
+    eval "$(dircolors -b ${ENV_HOME}/.dir_colors)"
 else
-    eval $(dircolors -b)
+    eval "$(dircolors -b)"
 fi
 
 ## tools

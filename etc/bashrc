@@ -1,33 +1,10 @@
-## non-interactive shell
 if [[ $- != *i* ]]; then
     return
 fi
 
-## debugging
 #set -x
 
-## OS
-case ${OSTYPE} in
-    darwin*)
-        ENV_OS=Darwin
-        ;;
-    linux*)
-        ENV_OS=Linux
-        ;;
-    solaris*)
-        ENV_OS=Solaris
-        ;;
-    *)
-        ENV_OS=${OSTYPE}
-        ;;
-esac
-
-## User
-if [[ -z ${ENV_USER} ]]; then
-    # ENV_USER="$(stat -c %U "$(readlink -f /proc/self/fd/0)")"
-    E_USER=${SUDO_USER:-${USER}}
-    ENV_USER=${ENV_USER:-${E_USER}}
-fi
+ENV_USER=${SUDO_USER:-$USER}
 
 ## home
 ENV_HOME=${HOME}
@@ -38,14 +15,12 @@ if [[ ${EUID} -eq 0 ]]; then
     fi
 fi
 
-## exports
 ENV_HOME_BASH=${ENV_HOME}/.bash
 export ENV_OS ENV_USER ENV_HOME ENV_HOME_BASH
 
-## bash
 if [ -d ${ENV_HOME_BASH} ]; then
     for FILE in format colors prompt options functions exports aliases term \
-        completion hosts marks; do
+        completion hosts; do
         if [[ -r ${ENV_HOME_BASH}/${FILE} ]]; then
             # shellcheck source=/dev/null
             . ${ENV_HOME_BASH}/${FILE}

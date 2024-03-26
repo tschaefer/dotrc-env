@@ -1,20 +1,7 @@
 ## path
-case ${ENV_OS} in
-    Darwin)
-        PATH=${ENV_HOME}/.bin:/usr/local/opt/coreutils/libexec/gnubin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
-        MANPATH=/usr/local/opt/coreutils/libexec/gnuman:/usr/share/man
-        ;;
-    Solaris)
-        PATH=${ENV_HOME}/.bin:/opt/local/bin:/usr/local/bin:/usr/bin:/bin:/opt/local/sbin:/usr/local/sbin:/usr/sbin:/sbin
-        MANPATH=/opt/local/man:/usr/share/man
-        ;;
-    *)
-        PATH=${ENV_HOME}/.bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/games:/usr/games
-        MANPATH=${MANPATH}
-        ;;
-esac
+PATH=${ENV_HOME}/.bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
 if [[ -d /usr/games ]]; then
-    PATH=${PATH}:/usr/games
+    PATH=${PATH}:/usr/local/games:/usr/games
 fi
 if [[ -d ${ENV_HOME}/.local/bin ]]; then
     PATH=${ENV_HOME}/.local/bin:${PATH}
@@ -27,10 +14,8 @@ if [[ -n ${XDG_RUNTIME_DIR} ]]; then
 else
     ENV_TMP=/tmp/${USER}.tmp
 fi
-if [[ ! -d ${ENV_TMP} ]]; then
-    mkdir ${ENV_TMP}
-    chmod 700 ${ENV_TMP}
-fi
+# shellcheck disable=SC2174
+mkdir -p -m 0700 ${ENV_TMP}
 export ENV_TMP
 
 ## history
@@ -98,7 +83,8 @@ elif [[ -S ${XDG_RUNTIME_DIR}/ssh-agent.socket ]]; then
 fi
 
 ## gpg
-export GPG_TTY=$(tty)
+GPG_TTY=$(tty)
+export GPG_TTY
 
 ## perl
 if [[ -r ${ENV_HOME}/.perlbrew/etc/bashrc ]]; then
