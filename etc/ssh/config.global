@@ -6,5 +6,6 @@ Host *
     HashKnownHosts yes
     LogLevel VERBOSE
     ServerAliveInterval 540
+    ForwardX11 no
 
 # vim:ft=sshconfig
