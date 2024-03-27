@@ -1,9 +1,0 @@
-## host
-if [[ -d ${ENV_HOME_BASH}/hosts.d ]]; then
-    if [[ -r ${ENV_HOME_BASH}/hosts.d/${HOSTNAME} ]]; then
-        # shellcheck source=/dev/null
-        . ${ENV_HOME_BASH}/hosts.d/${HOSTNAME}
-    fi
-fi
-
-# vim:ft=sh

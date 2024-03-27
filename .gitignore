@@ -36,9 +36,6 @@ etc/newsboat/history.cmdline
 etc/newsboat/history.search
 etc/newsboat/queue
 ## bash
-etc/bash/hosts.d/*
+etc/oh-my-bash.d/plugins/machine/machine.d/*
 ## misc
 *.bak
-## Visual Code
-.vscode/
-*.code-workspace

@@ -1,6 +1,6 @@
 "" vundle
 filetype off
-set runtimepath+=$VIMVUNDLE
+set runtimepath+=${HOME}/.vim/bundle/Vundle.vim
 
 call vundle#begin()
 
@@ -130,3 +130,6 @@ map <Leader>f :call RunNextFailure()<CR>
 
 "" markdown preview
 let g:preview_markdown_auto_update = 1
+
+"" gutentags
+let g:gutentags_project_root = ['.git', '.hg', '.svn', '.bzr', '_darcs', '_FOSSIL_', '.fslckout', '.gtstop']

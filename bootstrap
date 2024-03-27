@@ -8,6 +8,8 @@ if [[ -e ${ENV_LOCK} ]]; then
     exit 1
 fi
 
+git clone https://github.com/ohmybash/oh-my-bash.git ${HOME}/.oh-my-bash
+
 set -x
 ln -snf ${ENV_DOC}/bin ${HOME}/.bin
 set +x
@@ -15,7 +17,7 @@ set +x
 ENV_ETC=${ENV_DOC}/etc
 for SRC in ${ENV_ETC}/*; do
     SRC=${SRC##*/}
-    if [[ ${SRC} == ${ENV_ETC##*/} ]]; then
+    if [[ ${SRC} == "${ENV_ETC##*/}" ]]; then
         continue
     fi
 
@@ -29,12 +31,14 @@ for SRC in ${ENV_ETC}/*; do
     set +x
 done
 
-if [[ -x $(type -p git) && -x $(type -p vim) ]]; then
+if [[ $(type -t -- vim) ]]; then
     VIMVUNDLE=${HOME}/.vim/bundle/Vundle.vim
     git clone https://github.com/VundleVim/Vundle.vim.git ${VIMVUNDLE}
     ENV_HOME=${HOME} VIMVUNDLE=${VIMVUNDLE} vim +PluginInstall +qall
 fi
 
 touch ${ENV_LOCK}
+
+source ${HOME}/.bashrc
 
 # vim:ft=sh

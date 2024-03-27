@@ -1,7 +1,3 @@
-if [[ ! -r ${ENV_HOME}/.perlbrew/etc/bashrc ]]; then
-    return
-fi
-
 source /usr/share/bash-completion/completions/ssh
 
 complete -F _ssh sshrc

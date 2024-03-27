@@ -1,14 +1,11 @@
 "" environment
 set nocompatible
-set runtimepath=${ENV_HOME}/.vim,$VIMRUNTIME
+set runtimepath=${HOME}/.vim,$VIMRUNTIME
 filetype plugin indent on
 
 runtime! configs/basic.vim
 runtime! configs/mappings.vim
-
-if !empty($VIMVUNDLE)
-    runtime! configs/plugins.vim
-endif
+runtime! configs/plugins.vim
 
 let s:rc  = getcwd() . '/.local.vim'
 let s:sig = getcwd() . '/.local.vim.asc'

@@ -1,34 +1,54 @@
-if [[ $- != *i* ]]; then
-    return
-fi
+case $- in
+  *i*) ;;
+    *) return;;
+esac
 
-#set -x
-
-ENV_USER=${SUDO_USER:-$USER}
-
-## home
-ENV_HOME=${HOME}
+export OSH_USER=${SUDO_USER:-$USER}
 if [[ ${EUID} -eq 0 ]]; then
-    ENV_HOME=$(grep "^${ENV_USER}:" /etc/passwd | cut -d: -f 6)
-    if [[ -z ${ENV_HOME} ]]; then
-        ENV_HOME=$(eval echo ~${ENV_USER})
+    OSH_HOME=$(getent passwd ${OSH_USER} | cut -d: -f 6)
+    if [[ -z ${OSH_HOME} ]]; then
+        OSH_HOME=$(eval echo ~${OSH_USER})
     fi
+
+    export OSH_HOME
+else
+    export OSH_HOME=${HOME}
 fi
+# shellcheck disable=SC2139
+alias root="sudo bash --rcfile ${OSH_HOME}/.bashrc"
 
-ENV_HOME_BASH=${ENV_HOME}/.bash
-export ENV_OS ENV_USER ENV_HOME ENV_HOME_BASH
 
-if [ -d ${ENV_HOME_BASH} ]; then
-    for FILE in format colors prompt options functions exports aliases term \
-        completion hosts; do
-        if [[ -r ${ENV_HOME_BASH}/${FILE} ]]; then
-            # shellcheck source=/dev/null
-            . ${ENV_HOME_BASH}/${FILE}
+function _omb_init_path {
+    local path
+
+    PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/games:/usr/games
+    for path in ${OSH_HOME}/.bin ${OSH_HOME}/.local/bin; do
+        if [[ -d ${path} ]]; then
+            PATH=${path}:${PATH}
         fi
     done
-fi
 
-## debuging
-#set +x
+    export PATH
+}
 
-# vim:ft=sh
+function _omb_init_manpath {
+    local path
+
+    MANPATH=""
+    MANPATH=$(manpath)
+    for path in ${OSH_HOME}/.local/man ${OSH_HOME}/.local/share/man; do
+        if [[ -d ${path} ]]; then
+            MANPATH=${path}:${MANPATH}
+        fi
+    done
+
+    export MANPATH
+}
+
+_omb_init_path
+_omb_init_manpath
+
+unset _omb_init_path
+unset _omb_init_manpath
+
+source ${OSH_HOME}/.oh-my-bashrc
