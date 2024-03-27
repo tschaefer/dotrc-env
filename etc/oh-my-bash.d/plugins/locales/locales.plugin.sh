@@ -1,7 +1,7 @@
 #! bash oh-my-bash.module
 
-OMB_PLUGIN_LOCALES_LANGUAGE="en_US.UTF8 de_DE.UTF8 C.UT8 C"
-OMB_PLUGIN_LOCALES_COUNTRY="de_DE.UTF8 C.UTF8 C"
+OMB_PLUGIN_LOCALES_LANGUAGE="en_US.UTF-8 de_DE.UTF-8 C.UTF-8 C"
+OMB_PLUGIN_LOCALES_COUNTRY="de_DE.UTF-8 C.UTF-8 C"
 
 function _omb_plugin_locale_available {
     local locale
@@ -10,7 +10,7 @@ function _omb_plugin_locale_available {
     locale=$1
 
     locales=$(locale --all-locales | tr '\n' ' ')
-    echo "${locales}" | grep --quiet --ignore-case --word-regexp $locale
+    echo "${locales}" | grep --quiet --ignore-case --word-regexp "$(echo ${locale} | tr -d '-')"
 }
 
 function _omb_plugin_locales_set_country {
@@ -23,7 +23,17 @@ function _omb_plugin_locales_set_country {
 
     for locale in "${country[@]}"; do
         if _omb_plugin_locale_available $locale; then
-            export LANG=$locale
+            export LC_ADDRESS=${locale}
+            export LC_COLLATE=${locale}
+            export LC_CTYPE=${locale}
+            export LC_IDENTIFICATION=${locale}
+            export LC_MEASUREMENT=${locale}
+            export LC_MONETARY=${locale}
+            export LC_NAME=${locale}
+            export LC_NUMERIC=${locale}
+            export LC_PAPER=${locale}
+            export LC_TELEPHONE=${locale}
+            export LC_TIME=${locale}
             break
         fi
     done
@@ -39,7 +49,7 @@ function _omb_plugin_locales_set_language {
 
     for locale in "${language[@]}"; do
         if _omb_plugin_locale_available $locale; then
-            export LC_MESSAGES=$locale
+            export LC_MESSAGES=${locale}
             break
         fi
     done
