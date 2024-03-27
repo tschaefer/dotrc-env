@@ -74,6 +74,10 @@ function _env_init_manpath {
 _env_init_path
 _env_init_manpath
 
+if [[ -e /etc/bash_completion ]]; then
+    . /etc/bash_completion
+fi
+
 if [[ -n ${XDG_RUNTIME_DIR} ]]; then
     ENV_TMP=${XDG_RUNTIME_DIR}/tmp
 else
