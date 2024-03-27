@@ -10,21 +10,17 @@ SCM_THEME_PROMPT_SUFFIX="${_omb_prompt_white})${_omb_prompt_normal}"
 SCM_THEME_PROMPT_DIRTY=" ${_omb_prompt_red}-=${_omb_prompt_normal}"
 SCM_THEME_PROMPT_CLEAN=" ${_omb_prompt_green}+=${_omb_prompt_normal}"
 
-function _omb_theme_PROMPT_SYMBOL {
-    if [[ $1 -eq 0 ]]; then
+function _omb_theme_PROMPT_COMMAND {
+    if [[ $? -eq 0 ]]; then
         PROMPT_SYMBOL="»"
     else
         PROMPT_SYMBOL="${_omb_prompt_red}»${_omb_prompt_normal}"
     fi
-}
 
-function _omb_theme_PROMPT_COMMAND {
     local cmd
     local who
     local host
     local dir
-
-    _omb_theme_PROMPT_SYMBOL $?
 
     cmd=$(ps -A -o pid,comm | awk -v ppid=$PPID '$1 == ppid { print $2 }')
     cmd=$(basename ${cmd:-$SHELL})
