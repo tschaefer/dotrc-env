@@ -14,7 +14,7 @@ function _omb_plugin_fzf {
     cur="$(fzf --version)"
     req='0.48.0'
 
-    if [ "$(printf '%s\n' "$req" "$cur" | sort -V | head -n1)" = "$req" ]; then
+    if [ "$(printf '%s\n' "$req" "$cur" | sort --version-sort | head --lines=1)" = "$req" ]; then
         eval "$(fzf --bash)"
     else
         . ${OMB_PLUGIN_FZF_KEY_BINDINGS}

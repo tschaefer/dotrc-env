@@ -12,4 +12,4 @@ function _omb_plugin_machine {
     fi
 }
 _omb_plugin_machine
-unset _omb_plugin_machine
+unset -f _omb_plugin_machine

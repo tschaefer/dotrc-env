@@ -7,7 +7,7 @@ if _omb_util_command_exists less; then
     export LESSQUIET=1
     export LESSHISTFILE=-
 
-    if [[ -x $(type -P lesspipe) ]]; then
+    if [[ $(type -t -- lesspipe) ]]; then
         eval "$(lesspipe)"
     fi
 else
