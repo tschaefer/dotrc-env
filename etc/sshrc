@@ -106,6 +106,7 @@ export HISTTIMEFORMAT="%Y%m%d %T "
 if [[ -z ${LANG} ]]; then
     export LANG=C
 fi
+export TZ="Europe/Berlin"
 
 if [[ $(type -t -- less) ]]; then
     export PAGER=less
