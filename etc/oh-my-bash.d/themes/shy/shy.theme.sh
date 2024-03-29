@@ -26,8 +26,7 @@ function _omb_theme_shy_PROMPT_COMMAND {
     host="${_omb_prompt_navy}\h:${cmd}${_omb_prompt_normal}"
     dir="${_omb_prompt_lime}\w${_omb_prompt_normal}"
 
-    PS1="┍ ${host} ${dir} $(scm_prompt_info)
-${symbol}"
+    PS1="┍ ${host} ${dir} $(scm_prompt_info)\n${symbol}"
 }
 
 _omb_util_add_prompt_command _omb_theme_shy_PROMPT_COMMAND

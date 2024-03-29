@@ -46,8 +46,7 @@ function _omb_theme_zerowing_PROMPT_COMMAND {
     # shellcheck disable=SC2154
     dir="${_omb_prompt_teal}\w${_omb_prompt_normal}"
 
-    PS1="${who}@${host}:${cmd}$(scm_prompt_info) ${dir}
- ${symbol} "
+    PS1="${who}@${host}:${cmd}$(scm_prompt_info) ${dir}\n ${symbol} "
 }
 
 _omb_util_add_prompt_command _omb_theme_zerowing_PROMPT_COMMAND
