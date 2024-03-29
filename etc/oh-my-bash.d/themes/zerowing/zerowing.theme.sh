@@ -1,6 +1,9 @@
 #! bash oh-my-bash.module
 
-SCM_GIT_SHOW_MINIMAL_INFO=true
+OMB_THEME_ZEROWING_SHOW_MOTD="true"
+_OMB_THEME_ZEROWING_MOTD=""
+
+SCM_GIT_SHOW_MINIMAL_INFO="true"
 
 SCM_THEME_BRANCH_PREFIX="${_omb_prompt_olive}branch:${_omb_prompt_normal}"
 SCM_THEME_TAG_PREFIX="${_omb_prompt_olive}tag:${_omb_prompt_normal}"
@@ -11,6 +14,10 @@ SCM_THEME_PROMPT_DIRTY=" ${_omb_prompt_red}✗${_omb_prompt_normal}"
 SCM_THEME_PROMPT_CLEAN=" ${_omb_prompt_green}✓${_omb_prompt_normal}"
 
 function _omb_theme_zerowing_PROMPT_COMMAND {
+    if [[ ${OMB_THEME_ZEROWING_SHOW_MOTD} == "true" ]] && [[ -z ${_OMB_THEME_ZEROWING_MOTD} ]]; then
+        echo "All your prompt are belong to us. 👽"
+        _OMB_THEME_ZEROWING_MOTD="true"
+    fi
     if [[ $? -eq 0 ]]; then
         local symbol="»"
     else
