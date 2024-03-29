@@ -14,6 +14,6 @@ if _omb_util_command_exists direnv; then
 fi
 
 OMB_PLUGIN_MISC_ROOT_USAGE="true"
-function _omb_user_is_root {
+function _omb_plugin_misc_user_is_root {
     test ${EUID} -eq 0
 }

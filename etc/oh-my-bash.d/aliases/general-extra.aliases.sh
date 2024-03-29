@@ -6,7 +6,7 @@ unalias less
 function _omb_aliases_general_calculator {
     echo "$@" | bc -l
 }
-alias calculator='_omb_aliases_general_calc'
+alias calculator='_omb_aliases_general_calculator'
 
 function _omb_aliases_general_shorten_url {
     curl -L -k -s -w "\n" http://tinyurl.com/api-create.php?url=${1}

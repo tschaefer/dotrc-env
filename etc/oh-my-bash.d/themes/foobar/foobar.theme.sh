@@ -2,8 +2,8 @@
 
 SCM_THEME_PROMPT_PREFIX="${_omb_prompt_olive}["
 SCM_THEME_PROMPT_SUFFIX="${_omb_prompt_olive}]${_omb_prompt_normal}"
-SCM_THEME_PROMPT_DIRTY=" ${_omb_prompt_normal}${_omb_prompt_red}x${_omb_prompt_normal}"
-SCM_THEME_PROMPT_CLEAN=" ${_omb_prompt_normal}${_omb_prompt_green}!${_omb_prompt_normal}"
+SCM_THEME_PROMPT_DIRTY=" ${_omb_prompt_normal}${_omb_prompt_red}-${_omb_prompt_normal}"
+SCM_THEME_PROMPT_CLEAN=" ${_omb_prompt_normal}${_omb_prompt_green}+${_omb_prompt_normal}"
 
 PROMPT_DIRTRIM=0
 
