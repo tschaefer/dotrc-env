@@ -226,34 +226,40 @@ _bg_grey_lighter="\033[106m"
 _bg_white="\033[107m"
 _bg_grey="\033[49m"
 
-function set_bash_prompt_symbol {
-    if [[ $1 -eq 0 ]]; then
-        PROMPT_SYMBOL="»"
-    else
-        PROMPT_SYMBOL="\[${_fg_red}\]»\[${_reset_fg}\]"
-    fi
-}
 
 function set_bash_prompt {
-    set_bash_prompt_symbol $?
+    if [[ $1 -eq 0 ]]; then
+        local symbol=">>"
+    else
+        local symbol="${_fg_red}>>${_reset_fg}"
+    fi
+
+    local cmd
+    local host
+    local dir
 
     cmd=$(ps -A -o pid,comm | awk -v ppid=$PPID '$1 == ppid { print $2 }')
     cmd=$(basename ${cmd:-$SHELL})
-    cmd="\[${_fg_yellow}\]${cmd}\[${_reset_fg}\]"
-
-    if [[ ${EUID} == 0 ]] ; then
-        who="\[${_fg_red}\]\u\[${_reset_fg}\]"
-        PS2="root %> "
-    else
-        who="\[${_fg_white}\]\u\[${_reset_fg}\]"
-        PS2="%> "
+    if [[ ${EUID} -eq 0 ]]; then
+        cmd="${_fg_red}${cmd}${_reset_fg}"
     fi
-    host="\[${_fg_blue}\]\h\[${_reset_fg}\]"
-    dir="\[${_fg_cyan}\]\w\[${_reset_fg}\]"
+    host="${_fg_blue}[\h:${cmd}]${_reset_fg}"
+    dir="${_fg_grey_dark}[\w]${_reset_fg}"
 
-    PS1="${who}@${host}:${cmd} ${dir}
- ${PROMPT_SYMBOL} "
+    local git
+    if [[ $(type -t -- __git_ps1) ]]; then
+        GIT_PS1_SHOWDIRTYSTATE=1
+        GIT_PS1_SHOWSTASHSTATE=1
+        GIT_PS1_SHOWUNTRACKEDFILES=1
+        GIT_PS1_SHOWUPSTREAM="auto legacy"
+        GIT_PS1_SHOWCOLORHINTS=1
 
+        git=$(__git_ps1 " [%s]")
+        git="${_fg_yellow}${git}${_reset_fg}"
+    fi
+
+    PS1="${host} ${dir}${git}\n ${symbol} "
+    PS2=" %> "
 }
 PROMPT_COMMAND=set_bash_prompt
 
