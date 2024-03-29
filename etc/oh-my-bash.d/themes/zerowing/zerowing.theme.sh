@@ -5,8 +5,8 @@ SCM_GIT_SHOW_MINIMAL_INFO=true
 SCM_THEME_BRANCH_PREFIX="${_omb_prompt_olive}branch:${_omb_prompt_normal}"
 SCM_THEME_TAG_PREFIX="${_omb_prompt_olive}tag:${_omb_prompt_normal}"
 SCM_THEME_DETACHED_PREFIX="${_omb_prompt_olive}detached:${_omb_prompt_normal}"
-SCM_THEME_PROMPT_PREFIX=" ${_omb_prompt_white}(${_omb_prompt_normal}"
-SCM_THEME_PROMPT_SUFFIX="${_omb_prompt_white})${_omb_prompt_normal}"
+SCM_THEME_PROMPT_PREFIX=" ("
+SCM_THEME_PROMPT_SUFFIX=")"
 SCM_THEME_PROMPT_DIRTY=" ${_omb_prompt_red}✗${_omb_prompt_normal}"
 SCM_THEME_PROMPT_CLEAN=" ${_omb_prompt_green}✓${_omb_prompt_normal}"
 
