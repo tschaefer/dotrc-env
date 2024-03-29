@@ -10,7 +10,7 @@ SCM_THEME_PROMPT_SUFFIX=")"
 SCM_THEME_PROMPT_DIRTY=" ${_omb_prompt_red}✗${_omb_prompt_normal}"
 SCM_THEME_PROMPT_CLEAN=" ${_omb_prompt_green}✓${_omb_prompt_normal}"
 
-function _omb_theme_PROMPT_COMMAND {
+function _omb_theme_zerowing_PROMPT_COMMAND {
     if [[ $? -eq 0 ]]; then
         local symbol="»"
     else
@@ -43,4 +43,4 @@ function _omb_theme_PROMPT_COMMAND {
  ${symbol} "
 }
 
-_omb_util_add_prompt_command _omb_theme_PROMPT_COMMAND
+_omb_util_add_prompt_command _omb_theme_zerowing_PROMPT_COMMAND

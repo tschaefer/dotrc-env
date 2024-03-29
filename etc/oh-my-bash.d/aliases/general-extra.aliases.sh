@@ -15,6 +15,6 @@ alias shorten-url='_omb_aliases_general_shorten_url'
 
 function _omb_aliases_general_wttr {
     local city=${ADDRESS_CITY:-"Berlin"}
-    curl -H "Accept-Language: ${LC_MESSAGES%_*}" "https://wttr.in/${1:-$city}?format=4"
+    curl --silent --header "Accept-Language: ${LC_MESSAGES%_*}" "https://wttr.in/${1:-$city}?format=4"
 }
 alias wttr='_omb_aliases_general_wttr'
