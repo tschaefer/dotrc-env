@@ -35,7 +35,9 @@ function _omb_theme_zerowing_PROMPT_COMMAND {
 
     cmd=$(ps -A -o pid,comm | awk -v ppid=$PPID '$1 == ppid { print $2 }')
     cmd=$(basename "${cmd:-$SHELL}")
-    # shellcheck disable=SC2154
+    if _omb_prompt_get_virtualenv; then
+        cmd="${cmd}+"
+    fi
     cmd="${_omb_prompt_olive}${cmd}${_omb_prompt_normal}"
 
     if [[ ${EUID} -eq 0 ]]; then
@@ -45,9 +47,7 @@ function _omb_theme_zerowing_PROMPT_COMMAND {
         who="${_omb_prompt_white}\u${_omb_prompt_normal}"
         PS2="%> "
     fi
-    # shellcheck disable=SC2154
     host="${_omb_prompt_navy}\h${_omb_prompt_normal}"
-    # shellcheck disable=SC2154
     dir="${_omb_prompt_teal}\w${_omb_prompt_normal}"
 
     PS1="${who}@${host}:${cmd}$(scm_prompt_info) ${dir}\n ${symbol} "

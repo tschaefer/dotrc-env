@@ -26,6 +26,9 @@ function _omb_theme_shy_PROMPT_COMMAND {
 
     cmd=$(ps -A -o pid,comm | awk -v ppid=$PPID '$1 == ppid { print $2 }')
     cmd=$(basename "${cmd:-$SHELL}")
+    if _omb_prompt_get_virtualenv; then
+        cmd="${cmd}+"
+    fi
     if [[ ${EUID} -eq 0 ]]; then
         cmd="${_omb_prompt_red}${cmd}${_omb_prompt_normal}"
     fi
