@@ -1,11 +1,17 @@
 #! bash oh-my-bash.module
 
+SCM_GIT_SHOW_DETAILS="false"
+
 SCM_THEME_PROMPT_PREFIX="${_omb_prompt_olive}"
-SCM_THEME_PROMPT_SUFFIX=" "
+SCM_THEME_PROMPT_SUFFIX=""
 SCM_THEME_PROMPT_DIRTY=" ${_omb_prompt_normal}${_omb_prompt_red}✗${_omb_prompt_normal}"
 SCM_THEME_PROMPT_CLEAN=" ${_omb_prompt_normal}${_omb_prompt_green}✓${_omb_prompt_normal}"
+SCM_THEME_BRANCH_PREFIX="branch:"
 
-PROMPT_DIRTRIM=0
+SCM_GIT_AHEAD_CHAR=">"
+SCM_GIT_BEHIND_CHAR="<"
+
+PROMPT_DIRTRIM=3
 
 function _omb_theme_shy_PROMPT_COMMAND {
     if [[ $? -eq 0 ]]; then
@@ -19,7 +25,7 @@ function _omb_theme_shy_PROMPT_COMMAND {
     local dir
 
     cmd=$(ps -A -o pid,comm | awk -v ppid=$PPID '$1 == ppid { print $2 }')
-    cmd=$(basename ${cmd:-$SHELL})
+    cmd=$(basename "${cmd:-$SHELL}")
     if [[ ${EUID} -eq 0 ]]; then
         cmd="${_omb_prompt_red}${cmd}${_omb_prompt_normal}"
     fi

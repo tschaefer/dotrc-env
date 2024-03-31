@@ -14,7 +14,7 @@ if _omb_util_command_exists apt-file; then
     alias apff='apt-file find'
 
     function _omb_aliases_apt_file_find_executable {
-        apt-file find $1 | grep "bin/${1}$"
+        apt-file find "$1" | grep "bin/${1}$"
     }
     alias apffe="_omb_aliases_apt_file_find_executable"
 fi

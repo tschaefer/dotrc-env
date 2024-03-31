@@ -9,7 +9,7 @@ fi
 GPG_TTY=$(tty)
 export GPG_TTY
 
-if _omb_util_command_exists direnv; then
+if _omb_util_binary_exists direnv; then
     eval "$(direnv hook bash)"
 fi
 

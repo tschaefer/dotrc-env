@@ -1,9 +1,9 @@
 #! bash oh-my-bash.module
 
 OMB_THEME_ZEROWING_SHOW_MOTD="true"
-_OMB_THEME_ZEROWING_MOTD=""
+_OMB_THEME_ZEROWING_REVEALED_MOTD="false"
 
-SCM_GIT_SHOW_MINIMAL_INFO="true"
+SCM_GIT_SHOW_DETAILS="false"
 
 SCM_THEME_BRANCH_PREFIX="${_omb_prompt_olive}branch:${_omb_prompt_normal}"
 SCM_THEME_TAG_PREFIX="${_omb_prompt_olive}tag:${_omb_prompt_normal}"
@@ -13,11 +13,9 @@ SCM_THEME_PROMPT_SUFFIX=")"
 SCM_THEME_PROMPT_DIRTY=" ${_omb_prompt_red}✗${_omb_prompt_normal}"
 SCM_THEME_PROMPT_CLEAN=" ${_omb_prompt_green}✓${_omb_prompt_normal}"
 
+PROMPT_DIRTRIM=3
+
 function _omb_theme_zerowing_PROMPT_COMMAND {
-    if [[ ${OMB_THEME_ZEROWING_SHOW_MOTD} == "true" ]] && [[ -z ${_OMB_THEME_ZEROWING_MOTD} ]]; then
-        echo "All your prompt are belong to us. 👽"
-        _OMB_THEME_ZEROWING_MOTD="true"
-    fi
     if [[ $? -eq 0 ]]; then
         local symbol="»"
     else
@@ -29,8 +27,14 @@ function _omb_theme_zerowing_PROMPT_COMMAND {
     local host
     local dir
 
+    if [[ ${OMB_THEME_ZEROWING_SHOW_MOTD} == "true" ]] && \
+        [[ ${_OMB_THEME_ZEROWING_REVEALED_MOTD} == "false" ]]; then
+        echo "All your prompt are belong to us. 👽"
+        _OMB_THEME_ZEROWING_REVEALED_MOTD="true"
+    fi
+
     cmd=$(ps -A -o pid,comm | awk -v ppid=$PPID '$1 == ppid { print $2 }')
-    cmd=$(basename ${cmd:-$SHELL})
+    cmd=$(basename "${cmd:-$SHELL}")
     # shellcheck disable=SC2154
     cmd="${_omb_prompt_olive}${cmd}${_omb_prompt_normal}"
 

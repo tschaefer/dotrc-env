@@ -48,7 +48,7 @@ function _omb_init_manpath {
 _omb_init_path
 _omb_init_manpath
 
-unset _omb_init_path
-unset _omb_init_manpath
+unset -f _omb_init_path
+unset -f _omb_init_manpath
 
 source ${OSH_HOME}/.oh-my-bashrc

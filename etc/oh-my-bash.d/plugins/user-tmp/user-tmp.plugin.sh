@@ -1,18 +1,16 @@
 #! bash oh-my-bash.module
 
-OMB_PLUGIN_USER_TMP_REMOVE_ON_EXIT="false"
-
-if [[ -n ${XDG_RUNTIME_DIR} ]]; then
-    OSH_TMP=${XDG_RUNTIME_DIR}/tmp
-else
-    OSH_TMP=/tmp/${USER}.tmp
-fi
+OMB_PLUGIN_USER_TMP_REMOVE_ON_EXIT=${OMB_PLUGIN_USER_TMP_REMOVE_ON_EXIT:-"false"}
 
 if [[ ${OMB_PLUGIN_USER_TMP_REMOVE_ON_EXIT} == "true" ]]; then
+    OSH_TMP=$(mktemp --directory --tmpdir="${XDG_RUNTIME_DIR:-/tmp}")
     trap 'rm -rf ${OSH_TMP}' EXIT
-fi
-
-if [[ ! -d "${OSH_TMP}" ]]; then
-    mkdir --mode=0700 "${OSH_TMP}" >/dev/null
+else
+    if [[ -n ${XDG_RUNTIME_DIR} ]]; then
+        OSH_TMP=${XDG_RUNTIME_DIR}/tmp
+    else
+        OSH_TMP=/tmp/${USER}.tmp
+    fi
+    mkdir --parent --mode=0700 "${OSH_TMP}" >/dev/null
 fi
 export OSH_TMP

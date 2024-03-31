@@ -10,9 +10,9 @@ function _omb_plugin_bat_alias {
     local language=$3
 
     if [[ ${plain} == "true" ]]; then
-        ${executable} --plain --language=${language} "${@:4}"
+        ${executable} --plain --language="${language}" "${@:4}"
     else
-        ${executable} --language=${language} "${@:4}"
+        ${executable} --language="${language}" "${@:4}"
     fi
 }
 
@@ -21,7 +21,7 @@ function _omb_plugin_bat {
     local available="false"
 
     for executable in bat batcat; do
-        if _omb_util_command_exists ${executable}; then
+        if _omb_util_binary_exists "${executable}"; then
             available="true"
             break
         fi
@@ -32,7 +32,7 @@ function _omb_plugin_bat {
         return
     fi
 
-    export BAT_THEME="Solarized (dark)"
+    export BAT_THEME=${BAT_THEME:-"Solarized (dark)"}
 
     alias b="${executable}"
     alias bl="_omb_plugin_bat_alias ${executable} false"

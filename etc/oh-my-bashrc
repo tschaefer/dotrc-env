@@ -15,7 +15,7 @@ OSH_THEME="foobar"
 # OMB_THEME_RANDOM_IGNORED=("powerbash10k" "wanelo")
 
 # Uncomment the following line to use case-sensitive completion.
-# OMB_CASE_SENSITIVE="true"
+OMB_CASE_SENSITIVE="true"
 
 # Uncomment the following line to use hyphen-insensitive completion. Case
 # sensitive completion must be off. _ and - will be interchangeable.
@@ -77,8 +77,8 @@ OSH_CUSTOM=${OSH_HOME}/.oh-my-bash.d
 OMB_USE_SUDO=false
 
 # To enable/disable display of Python virtualenv and condaenv
-# OMB_PROMPT_SHOW_PYTHON_VENV=true  # enable
-OMB_PROMPT_SHOW_PYTHON_VENV=false # disable
+OMB_PROMPT_SHOW_PYTHON_VENV=true  # enable
+# OMB_PROMPT_SHOW_PYTHON_VENV=false # disable
 
 # Which completions would you like to load? (completions can be found in ~/.oh-my-bash/completions/*)
 # Custom completions may be added to ~/.oh-my-bash/custom/completions/
@@ -114,7 +114,6 @@ plugins=(
   editor
   fzf
   git
-  go
   locales
   machine
   misc

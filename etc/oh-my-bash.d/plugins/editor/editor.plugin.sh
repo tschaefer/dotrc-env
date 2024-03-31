@@ -6,11 +6,11 @@ function _omb_plugin_editor {
     local editor
 
     for editor in ${OMB_PLUGIN_EDITOR_LIST}; do
-        if _omb_util_command_exists ${editor}; then
+        if _omb_util_binary_exists "${editor}"; then
             export EDITOR=${editor}
             export VISUAL=$EDITOR
 
-            alias e=$EDITOR
+            alias e="$EDITOR"
 
             break
         fi

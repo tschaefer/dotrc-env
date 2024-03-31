@@ -4,7 +4,7 @@ case $- in
 esac
 
 if [[ -e ${HOME}/.oh-my-bashrc ]]; then
-    . ${HOME}/.oh-my-bashrc
+    source "${HOME}"/.oh-my-bashrc
     return
 fi
 
@@ -30,7 +30,7 @@ esac
 
 ENV_HOME=${SSHHOME}/.sshrc.d
 if [[ ${EUID} -eq 0 ]] && [[ -z $SSHHOME ]]; then
-    SSHHOME=$(dirname ${SUDO_COMMAND##* })
+    SSHHOME=$(dirname "${SUDO_COMMAND##* }")
     export SSHHOME
     ENV_HOME=${SSHHOME}/.sshrc.d
 fi
@@ -41,7 +41,7 @@ alias root="sudo bash --rcfile ${SSHHOME}/.sshrc"
 
 USER_HOME=$(grep "^${ENV_USER}:" /etc/passwd | cut -d: -f 6)
 if [[ -r ${USER_HOME}/.sshrc.local ]]; then
-    . ${USER_HOME}/.sshrc.local
+    source "${USER_HOME}"/.sshrc.local
 fi
 
 function _env_init_path {
@@ -59,7 +59,7 @@ function _env_init_path {
 function _env_init_manpath {
     local path
 
-    if [[ ! $(type -t -- manpath) ]]; then
+    if [[ ! $(type -P -- manpath) ]]; then
         return
     fi
 
@@ -75,18 +75,11 @@ _env_init_path
 _env_init_manpath
 
 if [[ -e /etc/bash_completion ]]; then
-    . /etc/bash_completion
+    source /etc/bash_completion
 fi
 
-if [[ -n ${XDG_RUNTIME_DIR} ]]; then
-    ENV_TMP=${XDG_RUNTIME_DIR}/tmp
-else
-    ENV_TMP=/tmp/${USER}.tmp
-fi
+ENV_TMP=$(mktemp --directory --tmpdir="${XDG_RUNTIME_DIR:-"/tmp"}")
 trap 'rm -rf ${ENV_TMP}' EXIT
-if [[ ! -d "${ENV_TMP}" ]]; then
-    mkdir --mode=0700 "${ENV_TMP}"
-fi
 export ENV_TMP
 
 if [[ -S ${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh ]]; then
@@ -115,18 +108,18 @@ if [[ $(type -t -- less) ]]; then
     export LESSQUIET=1
     export LESSHISTFILE=-
 
-    if [[ $(type -t -- lesspipe) ]]; then
+    if [[ $(type -P -- lesspipe) ]]; then
         eval "$(lesspipe)"
     fi
 else
     export PAGER=more
 fi
 
-if [[ $(type -t -- manpager) ]]; then
+if [[ $(type -P -- manpager) ]]; then
     export MANPAGER="manpager"
 fi
 
-if [[ $(type -t -- nano) ]]; then
+if [[ $(type -P -- nano) ]]; then
     export EDITOR="nano"
     export VISUAL="nano"
 
@@ -136,7 +129,7 @@ if [[ $(type -t -- nano) ]]; then
     fi
 fi
 
-if [[ $(type -t -- screen) ]]; then
+if [[ $(type -P -- screen) ]] && [[ -e ${ENV_HOME}/screenrc ]]; then
     # shellcheck disable=SC2139
     alias screen="screen -c ${ENV_HOME}/screenrc"
 fi
@@ -155,7 +148,7 @@ set -o emacs
 
 case ${TERM} in
     vt100)
-        [[ $(type -t -- resize) ]] && resize
+        [[ $(type -P -- resize) ]] && resize
         ;;
     xterm*)
         [[ ${EUID} -ne 0 ]] && echo -ne "\033]0;${USER}@${HOSTNAME%%.*}\007"
@@ -164,9 +157,9 @@ case ${TERM} in
         ;;
 esac
 
-if [[ $(type -t -- dircolors) ]]; then
+if [[ $(type -P -- dircolors) ]]; then
     if [[ -r ${ENV_HOME}/dircolors ]]; then
-        eval "$(dircolors -b ${ENV_HOME}/dircolors)"
+        eval "$(dircolors -b "${ENV_HOME}"/dircolors)"
     else
         eval "$(dircolors -b)"
     fi
@@ -239,7 +232,7 @@ function set_bash_prompt {
     local dir
 
     cmd=$(ps -A -o pid,comm | awk -v ppid=$PPID '$1 == ppid { print $2 }')
-    cmd=$(basename ${cmd:-$SHELL})
+    cmd=$(basename "${cmd:-$SHELL}")
     if [[ ${EUID} -eq 0 ]]; then
         cmd="${_fg_red}${cmd}${_reset_fg}"
     fi
@@ -247,7 +240,7 @@ function set_bash_prompt {
     dir="${_fg_grey_dark}[\w]${_reset_fg}"
 
     local git
-    if [[ $(type -t -- __git_ps1) ]]; then
+    if [[ $(declare -F __git_ps1) ]]; then
         GIT_PS1_SHOWDIRTYSTATE=1
         GIT_PS1_SHOWSTASHSTATE=1
         GIT_PS1_SHOWUNTRACKEDFILES=1
@@ -257,6 +250,8 @@ function set_bash_prompt {
         git=$(__git_ps1 " [%s]")
         git="${_fg_yellow}${git}${_reset_fg}"
     fi
+
+    PROMPT_DIRTRIM=3
 
     PS1="${host} ${dir}${git}\n ${symbol} "
     PS2=" %> "
