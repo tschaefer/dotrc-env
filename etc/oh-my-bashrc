@@ -110,6 +110,7 @@ aliases=(
 plugins=(
   bat
   battery
+  blueaudio
   cargo
   editor
   fzf
