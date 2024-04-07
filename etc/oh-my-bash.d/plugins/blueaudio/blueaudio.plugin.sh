@@ -12,7 +12,8 @@ function _omb_plugin_blueaudio_devices {
             continue
         fi
 
-        name=$(bluetoothctl info "${device}" | awk '/Alias:/ { print $2 }')
+        name=$(bluetoothctl info "${device}" | awk '/Alias:/ { print $2 }' \
+            | sed -r 's/[^a-zA-Z0-9]/_/g' | tr '[:upper:]' '[:lower:]')
         alias $name="_omb_plugin_blueaudio_ctl ${device}"
         complete -F _complete_alias $name
     done
