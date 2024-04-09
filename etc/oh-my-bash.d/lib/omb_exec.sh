@@ -1,24 +1,28 @@
 unset -f upgrade_oh_my_bash
 
 function _omb_exec_usage {
+    local ME="oh-my-bash"
 cat <<EOF
 Usage:
-    $ME help | reload | reexec | list COMPONENT
+    $ME help
+    $ME reload | reexec
+    $ME list COMPONENTS
+    $ME info COMPONENT NAME
+    $ME upgrade
 
 Actions:
     help:       shows this message (help)
     reload:     reload the shell
     reexec:     reexec the shell
     list:       list components: plugins, completions, aliases, themes
+    info:       show component information: plugin, theme
+    upgrade:    upgrade Oh My Bash
 
 EOF
 }
 
 function _omb_exec_banner {
-    GREEN=$(tput setaf 2 2>/dev/null || tput AF 2 2>/dev/null)
-    NORMAL=$(tput sgr0 2>/dev/null || tput me 2>/dev/null)
-
-    printf '%s' "$GREEN"
+    printf '%s' ${_omb_term_green}
     # shellcheck disable=SC1003,SC2016
     printf '%s\n' \
         '         __                          __               __  ' \
@@ -27,7 +31,12 @@ function _omb_exec_banner {
         '/ /_/ / / / /  / / / / / / /_/ /  / /_/ / /_/ (__  ) / / /' \
         '\____/_/ /_/  /_/ /_/ /_/\__, /  /_.___/\__,_/____/_/ /_/ ' \
         '                        /____/                            '
-    printf '%s' "$NORMAL"
+    printf '%s' ${_omb_term_normal}
+}
+
+function _omb_exec_help {
+    _omb_exec_banner
+    _omb_exec_usage
 }
 
 function _omb_exec_upgrade {
@@ -59,25 +68,40 @@ function _omb_exec_list_components {
         plugins)
             echo "${_omb_term_navy}List Oh My Bash plugins${_omb_term_normal}"
             _omb_exec_banner
-            readarray -t available_plugins < <(find ${OSH}/plugins ${OSH_CUSTOM}/plugins \
-                -type f -name "*.plugin.*sh" -exec basename '{}' \; | sort -u | \
-                sed -E 's/.plugin.(bash|sh)//')
 
+            local available_plugins=()
+            readarray -t available_plugins < <(find ${OSH}/plugins ${OSH_CUSTOM}/plugins \
+                -type f -name "*.plugin.*sh")
+
+            local plugin
             for plugin in "${available_plugins[@]}"; do
+                local path
+                path=$(dirname "$plugin")
+                plugin=$(basename "$plugin" | sed -E 's/.plugin.(bash|sh)//')
+
+                local installed=''
                 if echo "${plugins[*]}" | grep -wq "${plugin}"; then
-                    echo "$plugin ${_omb_term_green}✓${_omb_term_normal}"
-                else
-                    echo "$plugin"
+                    installed="${_omb_term_green}✓${_omb_term_normal}"
                 fi
+
+                local readme=''
+                if [[ -e "${path}/README.md" ]]; then
+                    readme="${_omb_term_olive}®${_omb_term_normal}"
+                fi
+
+                echo "$plugin $readme $installed"
             done
             ;;
         completions)
             echo "${_omb_term_navy}List Oh My Bash completions${_omb_term_normal}"
             _omb_exec_banner
+
+            local available_completions=()
             readarray -t available_completions < <(find ${OSH}/completions ${OSH_CUSTOM}/completions \
-                -type f -name "*.completion.*sh" -exec basename '{}' \; | sort -u | \
+                -type f -name "*.completion.*sh" -exec basename '{}' \; | \
                 sed -E 's/.completion.(bash|sh)//')
 
+            local completion
             for completion in "${available_completions[@]}"; do
                 if echo "${completions[*]}" | grep -wq "${completion}"; then
                     echo "$completion ${_omb_term_green}✓${_omb_term_normal}"
@@ -89,10 +113,13 @@ function _omb_exec_list_components {
         aliases)
             echo "${_omb_term_navy}List Oh My Bash aliases${_omb_term_normal}"
             _omb_exec_banner
+
+            local available_aliases=()
             readarray -t available_aliases < <(find ${OSH}/aliases ${OSH_CUSTOM}/aliases \
-                -type f -name "*.aliases.*sh" -exec basename '{}' \; | sort -u | \
+                -type f -name "*.aliases.*sh" -exec basename '{}' \; | \
                 sed -E 's/.aliases.(bash|sh)//')
 
+            local alias
             for alias in "${available_aliases[@]}"; do
                 if echo "${aliases[*]}" | grep -wq "${alias}"; then
                     echo "$alias ${_omb_term_green}✓${_omb_term_normal}"
@@ -104,16 +131,28 @@ function _omb_exec_list_components {
         themes)
             echo "${_omb_term_navy}List Oh My Bash themes${_omb_term_normal}"
             _omb_exec_banner
-            readarray -t available_themes < <(find ${OSH}/themes ${OSH_CUSTOM}/themes \
-                -type f -name "*.theme.*sh" -exec basename '{}' \; | sort -u | \
-                sed -E 's/.theme.(bash|sh)//')
 
+            local themes=()
+            readarray -t available_themes < <(find ${OSH}/themes ${OSH_CUSTOM}/themes \
+                -type f -name "*.theme.*sh")
+
+            local theme
             for theme in "${available_themes[@]}"; do
+                local path
+                path=$(dirname "$theme")
+                theme=$(basename "$theme" | sed -E 's/.theme.(bash|sh)//')
+
+                local installed=''
                 if [[ "$theme" == "${OSH_THEME}" ]]; then
-                    echo "$theme ${_omb_term_green}✓${_omb_term_normal}"
-                else
-                    echo "$theme"
+                    installed="${_omb_term_green}✓${_omb_term_normal}"
                 fi
+
+                local readme=''
+                if [[ -e "${path}/README.md" ]]; then
+                    readme="${_omb_term_olive}®${_omb_term_normal}"
+                fi
+
+                echo "$theme $readme $installed"
             done
             ;;
         *)
@@ -121,6 +160,51 @@ function _omb_exec_list_components {
             return 1
             ;;
     esac
+}
+
+function _omb_exec_info_component {
+    if [[ $# -lt 2 ]]; then
+        _omb_exec_usage >&2
+        return 1
+    fi
+
+    local component=$1
+    local name=$2
+
+    local locations=()
+    case $component in
+        plugin)
+            locations=({"$OSH_CUSTOM","$OSH"}/plugins/"$name")
+            ;;
+        theme)
+            locations=({"$OSH_CUSTOM","$OSH"}/themes/"$name")
+            ;;
+        *)
+            _omb_exec_usage >&2
+            return 1
+            ;;
+    esac
+
+    local location
+    for location in "${locations[@]}"; do
+        if [[ -e "${location}/README.md" ]]; then
+            local pager
+            if _omb_util_binary_exists "batcat"; then
+                pager="batcat --plain"
+            elif _omb_util_binary_exists "bat"; then
+                pager="bat --plain"
+            elif [[ -n $PAGER ]]; then
+                pager="$PAGER"
+            else
+                pager="cat"
+            fi
+
+            ${pager} "${location}/README.md"
+            return 0
+        fi
+    done
+
+    return 1
 }
 
 function _omb_exec {
@@ -131,7 +215,10 @@ function _omb_exec {
 
     case $1 in
         help)
-            _omb_exec_usage
+            _omb_exec_help
+            ;;
+        info)
+            _omb_exec_info_component $2 $3
             ;;
         list)
             _omb_exec_list_components $2
@@ -153,6 +240,10 @@ function _omb_exec {
 }
 
 function _omp_exec_completion {
+    if [[ "${#COMP_WORDS[@]}" -gt 3 ]]; then
+        return
+    fi
+
     local cur prev
     _get_comp_words_by_ref -n : cur prev
 
@@ -161,7 +252,12 @@ function _omp_exec_completion {
         return
     fi
 
-    mapfile -t COMPREPLY < <(compgen -W "help list reexec reload upgrade" -- "$cur")
+    if [[ $prev == "info" ]]; then
+        mapfile -t COMPREPLY < <(compgen -W "plugin theme" -- "$cur")
+        return
+    fi
+
+    mapfile -t COMPREPLY < <(compgen -W "help info list reexec reload upgrade" -- "$cur")
 }
 complete -F _omp_exec_completion _omb_exec
 
