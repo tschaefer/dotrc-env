@@ -13,6 +13,6 @@ else
     export PAGER=more
 fi
 
-if _omb_util_binary_exists manpager; then
+if _omb_util_binary_exists "manpager"; then
     export MANPAGER=manpager
 fi

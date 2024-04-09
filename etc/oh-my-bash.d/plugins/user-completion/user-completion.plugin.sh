@@ -7,4 +7,6 @@ function _omb_plugin_user_completion {
         source "${completion}"
     done
 }
+
 _omb_plugin_user_completion
+unset -f _omb_plugin_user_completion

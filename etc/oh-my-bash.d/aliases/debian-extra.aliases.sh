@@ -5,7 +5,7 @@ alias aparp='sudo apt autoremove --purge'
 alias apsen='sudo apt search --names-only'
 
 function _omb_aliases_dpkg_list_short {
-    dpkg -l | tail -n +6 | awk '{ print $2 }'
+    dpkg --list | tail --lines +6 | awk '{ print $2 }'
 }
 alias dls=_omb_aliases_dpkg_list_short
 alias dlsq="_omb_aliases_dpkg_list_short | grep "

@@ -75,3 +75,7 @@ function _omb_plugin_locales_set_language {
 _omb_plugin_locales_set_timezone
 _omb_plugin_locales_set_units
 _omb_plugin_locales_set_language
+unset -f _omb_plugin_locales_set_timezone
+unset -f _omb_plugin_locales_is_available
+unset -f _omb_plugin_locales_set_units
+unset -f _omb_plugin_locales_set_language

@@ -4,7 +4,7 @@ OMB_PLUGIN_FZF_KEY_BINDINGS=${OMB_PLUGIN_FZF_KEY_BINDINGS:-/usr/share/doc/fzf/ex
 OMB_PLUGIN_FZF_COMPLETION=${OMB_PLUGIN_FZF_COMPLETION:-/usr/share/bash-completion/completions/fzf}
 
 function _omb_plugin_fzf {
-    if ! _omb_util_binary_exists fzf; then
+    if ! _omb_util_binary_exists "fzf"; then
         return
     fi
 
@@ -21,4 +21,6 @@ function _omb_plugin_fzf {
         source "${OMB_PLUGIN_FZF_COMPLETION}"
     fi
 }
+
 _omb_plugin_fzf
+unset -f _omb_plugin_fzf

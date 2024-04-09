@@ -18,3 +18,4 @@ function _omb_plugin_editor {
 }
 
 _omb_plugin_editor
+unset -f _omb_plugin_editor
