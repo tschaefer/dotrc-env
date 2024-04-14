@@ -23,7 +23,6 @@ EOF
 
 function _omb_exec_banner {
     printf '%s' ${_omb_term_green}
-    # shellcheck disable=SC1003,SC2016
     printf '%s\n' \
         '         __                          __               __  ' \
         '  ____  / /_     ____ ___  __  __   / /_  ____ ______/ /_ ' \
@@ -239,6 +238,10 @@ function _omb_exec {
     esac
 }
 
+function omb {
+    _omb_exec "$@"
+}
+
 function _omp_exec_completion {
     if [[ "${#COMP_WORDS[@]}" -gt 3 ]]; then
         return
@@ -259,11 +262,9 @@ function _omp_exec_completion {
 
     mapfile -t COMPREPLY < <(compgen -W "help info list reexec reload upgrade" -- "$cur")
 }
-complete -F _omp_exec_completion _omb_exec
+complete -F _omp_exec_completion omb
 
-alias oh-my-bash='_omb_exec'
+alias oh-my-bash='omb'
 complete -F _complete_alias oh-my-bash
-alias omb='_omb_exec'
-complete -F _complete_alias omb
-alias osh='_omb_exec'
+alias osh='omb'
 complete -F _complete_alias osh
