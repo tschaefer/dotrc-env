@@ -8,9 +8,9 @@ function _omb_aliases_dpkg_list_short {
     dpkg --list | tail --lines +6 | awk '{ print $2 }'
 }
 alias dls=_omb_aliases_dpkg_list_short
-alias dlsq="_omb_aliases_dpkg_list_short | grep "
+alias dlsq="_omb_aliases_dpkg_list_short | grep"
 
-if _omb_util_command_exists apt-file; then
+if _omb_util_command_exists "apt-file"; then
     alias apff='apt-file find'
 
     function _omb_aliases_apt_file_find_executable {

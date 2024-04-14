@@ -109,12 +109,12 @@ aliases=(
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
   bat
-  battery
   blueaudio
   cargo
   editor
   fzf
   git
+  htop
   locales
   machine
   misc
@@ -126,6 +126,7 @@ plugins=(
   sudo
   user-completion
   user-tmp
+  zoxide
 )
 
 # Which plugins would you like to conditionally load? (plugins can be found in ~/.oh-my-bash/plugins/*)

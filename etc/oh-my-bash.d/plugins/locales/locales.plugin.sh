@@ -8,7 +8,7 @@ function timezones {
     if _omb_util_binary_exists "timedatectl"; then
         timedatectl list-timezones --no-pager
     else
-        awk '!/#/ { print $3 }' /usr/share/zoneinfo/zone.tab
+        awk '!/#/ { print $3 }' /usr/share/zoneinfo/zone.tab | sort
     fi
 }
 
@@ -79,3 +79,5 @@ unset -f _omb_plugin_locales_set_timezone
 unset -f _omb_plugin_locales_is_available
 unset -f _omb_plugin_locales_set_units
 unset -f _omb_plugin_locales_set_language
+
+alias dt="date +%FT%T%z"
