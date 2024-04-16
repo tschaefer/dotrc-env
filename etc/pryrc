@@ -1,0 +1,113 @@
+# frozen_string_literal: true
+
+### Prompt
+
+module Prompt
+  # nodoc
+  class Foobar
+    Color = Pry::Helpers::Text
+
+    NAME = 'foobar'
+    DESCRIPTION = <<~DESC
+      I'm meaningless.
+      [host:pry] [/path/to/obj] >>
+    DESC
+
+    def initialize
+      Pry::Prompt.add(
+        NAME,
+        DESCRIPTION.chomp,
+        ['>>', '%>']
+      ) do |obj, _, _, sep|
+        host = `hostname`.chomp
+        exec = 'pry'
+        path = obj.to_s.eql?('main') ? '/' : "/#{obj.to_s.gsub('::', '/')}"
+
+        "#{Color.blue("[#{host}:#{exec}]")} \033[92m[#{path}]\033[0m #{sep} "
+      end
+    end
+  end
+
+  # nodoc
+  class Shy
+    Color = Pry::Helpers::Text
+
+    NAME = 'shy'
+    DESCRIPTION = <<~DESC
+      A lack of comfort.
+      host:pry /path/to/obj >>
+    DESC
+
+    def initialize
+      Pry::Prompt.add(
+        NAME,
+        DESCRIPTION.chomp,
+        ['➜', '%>']
+      ) do |obj, _, _, sep|
+        host = `hostname`.chomp
+        exec = 'pry'
+        path = obj.to_s.eql?('main') ? '/' : "/#{obj.to_s.gsub('::', '/')}"
+
+        "#{Color.blue("#{host}:#{exec}")} \033[92m#{path}\033[0m #{sep} "
+      end
+    end
+  end
+
+  # nodoc
+  class Zerowing
+    Color = Pry::Helpers::Text
+
+    NAME = 'zerowing'
+    DESCRIPTION = <<~DESC
+      All your prompt are belong to us.👽
+      user@host:pry /path/to/obj »
+    DESC
+
+    def initialize # rubocop:disable Metrics/MethodLength
+      Pry::Prompt.add(
+        NAME,
+        DESCRIPTION.chomp,
+        ['»', '%>']
+      ) do |obj, _, _, sep|
+        user = `whoami`.chomp
+        host = `hostname`.chomp
+        exec = 'pry'
+        path = obj.to_s.eql?('main') ? '/' : "/#{obj.to_s.gsub('::', '/')}"
+
+        format(
+          '%<user>s@%<host>s:%<exec>s %<path>s %<separator>s ',
+          user: Color.white(user),
+          host: Color.blue(host),
+          exec: Color.yellow(exec),
+          path: Color.cyan(path),
+          separator: sep
+        )
+      end
+    end
+  end
+end
+
+Prompt.constants.each do |theme|
+  Prompt.const_get("Prompt::#{theme}").new
+end
+
+Pry.config.prompt = Pry::Prompt[Prompt::Foobar::NAME]
+
+### History
+
+Pry.config.history_file = File.expand_path('~/.pry_history')
+Pry.config.history_save = true
+Pry.config.history_load = true
+
+### Theme
+
+Pry.config.theme = 'solarized' if defined?(PryTheme)
+
+### Pry Doc
+%w[pry-doc pry-byebug pry-rescue].each do |gem|
+  require gem
+rescue LoadError => e
+  warn "#{e.message.split.last} not found."
+end
+
+# vim: set ft=ruby :
