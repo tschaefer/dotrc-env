@@ -1,3 +1,5 @@
+#! bash oh-my-bash.module
+
 unset -f upgrade_oh_my_bash
 
 function _omb_exec_usage {
@@ -250,15 +252,16 @@ function _omp_exec_completion {
     local cur prev
     _get_comp_words_by_ref -n : cur prev
 
-    if [[ $prev == "list" ]]; then
-        mapfile -t COMPREPLY < <(compgen -W "plugins completions aliases themes" -- "$cur")
-        return
-    fi
-
-    if [[ $prev == "info" ]]; then
-        mapfile -t COMPREPLY < <(compgen -W "plugin theme" -- "$cur")
-        return
-    fi
+    case $prev in
+        list)
+            mapfile -t COMPREPLY < <(compgen -W "plugins completions aliases themes" -- "$cur")
+            return
+            ;;
+        info)
+            mapfile -t COMPREPLY < <(compgen -W "plugin theme" -- "$cur")
+            return
+            ;;
+    esac
 
     mapfile -t COMPREPLY < <(compgen -W "help info list reexec reload upgrade" -- "$cur")
 }

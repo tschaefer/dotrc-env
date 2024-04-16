@@ -1,5 +1,11 @@
 #! bash oh-my-bash.module
 
+if [[ -S ${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh ]]; then
+    export SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh
+elif [[ -S ${XDG_RUNTIME_DIR}/ssh-agent.socket ]]; then
+    export SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/ssh-agent.socket
+fi
+
 function _omb_plugin_ssh_config {
     local ssh_home
 
@@ -51,14 +57,17 @@ function _omb_plugin_ssh_run {
         return 1
     fi
 
-    exec=$(type -p $exec)
+    exec=$(type -P -- ${exec})
+    if [[ $(file --mime-type ${exec} | awk '{ print $2 }') != 'text/x-shellscript' ]]; then
+        return 1
+    fi
 
-    ssh -t "$host" "
+    ssh -t "${host}" "
         export RUN_LIB="'$(mktemp --directory --suffix=.run)'"
-        "'trap "rm -rf $RUN_LIB" EXIT'"
-        echo $'"$(cat $exec | xxd -ps)"' | xxd -ps -r > "'$RUN_LIB/run'"
-        "'chmod +x $RUN_LIB/run'"
-        "'$RUN_LIB/run'" $args
+        "'trap "rm -rf ${RUN_LIB}" EXIT'"
+        echo $'"$(cat ${exec} | xxd -ps)"' | xxd -ps -r > "'${RUN_LIB}/run'"
+        "'chmod +x ${RUN_LIB}/run'"
+        "'${RUN_LIB}/run'" ${args}
     "
 
     return $?
