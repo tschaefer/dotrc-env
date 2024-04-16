@@ -111,13 +111,14 @@ plugins=(
   bat
   blueaudio
   cargo
+  direnv
   editor
   fzf
   git
+  gpg
   htop
   locales
   machine
-  misc
   nvm
   pager
   perlbrew
