@@ -25,8 +25,6 @@ Plugin 'tpope/vim-rhubarb'
 Plugin 'itchyny/lightline.vim'
 " git diff in sign column
 Plugin 'airblade/vim-gitgutter'
-" ack for vim
-Plugin 'mileszs/ack.vim'
 " code completion
 Plugin 'ervandew/supertab'
 " buffer only
@@ -37,8 +35,6 @@ Plugin 'junegunn/goyo.vim'
 Plugin 'moll/vim-bbye'
 " tag file manager
 Plugin 'ludovicchabant/vim-gutentags'
-" markdown preview
-Plugin 'skanehira/preview-markdown.vim'
 " git messages
 Plugin 'rhysd/git-messenger.vim'
 " ruby rspec
@@ -50,10 +46,6 @@ Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 " Github CoPilot
 Plugin 'github/copilot.vim'
-" Coffeescript
-Plugin 'kchmck/vim-coffee-script'
-" GraphQL
-Plugin 'jparise/vim-graphql'
 
 call vundle#end()
 
