@@ -5,9 +5,6 @@ User env and app dotrc files.
 ## Introduction
 
 __dotrc-env__ is yet another \*nix environment.
-It contains configuration files of following apps:
-
-    bash vim git screen nano ssh
 
 The whole environment is kick-started with a bootstrap scripts.
 
@@ -22,14 +19,31 @@ Beware the script removes all existing destination files!
 
     $ bash ~/.env/bootstrap
 
-The vim plugin manager [https://github.com/VundleVim/Vundle.vim](Vundle.vim)
+The vim plugin manager [Vundle.vim](https://github.com/VundleVim/Vundle.vim)
 is git cloned and all configured vim plugins - see `etc/vim/configs/plugins.vim` - are installed.
 
 ### License
 
-License CC BY-SA 3.0: Creative Commons Attribution-ShareAlike 3.0 Unported or
-later [http://creativecommons.org/licenses/by-sa/3.0/](http://creativecommons.org/licenses/by-sa/3.0/)
-This is free software: you are free to change and redistribute it.
-There is NO WARRANTY, to the extent permitted by law.
+MIT License
 
-This is significant preconditioned no other license is violated.
+Copyright (c) 2012-2024 Tobias Schäfer
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+THIS IS SIGNIFICANT PRECONDITIONED NO OTHER LICENSE IS VIOLATED.
