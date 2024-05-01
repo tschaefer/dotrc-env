@@ -3,11 +3,6 @@ case $- in
     *) return;;
 esac
 
-if [[ -e ${HOME}/.oh-my-bashrc ]]; then
-    source "${HOME}"/.oh-my-bashrc
-    return
-fi
-
 case ${OSTYPE} in
     darwin*)
         ENV_OS=Darwin
@@ -27,6 +22,16 @@ case ${OSTYPE} in
         ENV_USER=${SUDO_USER:-${USER}}
         ;;
 esac
+
+ENV_HOME=$(eval echo ~${ENV_USER})
+if [[ -e ${ENV_HOME}/.oh-my-bashrc ]]; then
+    source "${ENV_HOME}"/.oh-my-bashrc
+    unset ENV_HOME
+    unset ENV_OS
+    unset ENV_USER
+
+    return
+fi
 
 ENV_HOME=${SSHHOME}/.sshrc.d
 if [[ ${EUID} -eq 0 ]] && [[ -z $SSHHOME ]]; then
@@ -63,6 +68,8 @@ function _env_init_manpath {
         return
     fi
 
+    unset MANPATH
+
     MANPATH=$(manpath)
     for path in ${ENV_HOME}/man ${USER_HOME}/.local/man ${USER_HOME}/.local/share/man; do
         if [[ -d ${path} ]]; then
@@ -72,7 +79,9 @@ function _env_init_manpath {
     export MANPATH
 }
 _env_init_path
+unset -f _env_init_path
 _env_init_manpath
+unset -f _env_init_manpath
 
 if [[ -e /etc/bash_completion ]]; then
     source /etc/bash_completion
@@ -219,9 +228,33 @@ _bg_grey_lighter="\033[106m"
 _bg_white="\033[107m"
 _bg_grey="\033[49m"
 
+function set_bash_prompt_host {
+    local cmd=$1
+    local host
+    host="${_fg_blue}[\h:${cmd}]${_reset_fg}"
+
+    if [[ -n ${ENV_KEEP_HOSTNAME} ]]; then
+        echo ${host}
+        return
+    fi
+
+    if [[ ! $(type -P -- systemd-detect-virt) ]]; then
+        echo ${host}
+        return
+    fi
+
+    if systemd-detect-virt --quiet --container && \
+        [[ -f /etc/os-release ]]; then
+        local id
+        id=$(awk -F '=' '/^ID=/ { print $2 }' /etc/os-release)
+        host="${_fg_blue}[${id}:${cmd}]${_reset_fg}"
+    fi
+
+    echo ${host}
+}
 
 function set_bash_prompt {
-    if [[ $1 -eq 0 ]]; then
+    if [[ $? -eq 0 ]]; then
         local symbol=">>"
     else
         local symbol="${_fg_red}>>${_reset_fg}"
@@ -236,7 +269,7 @@ function set_bash_prompt {
     if [[ ${EUID} -eq 0 ]]; then
         cmd="${_fg_red}${cmd}${_reset_fg}"
     fi
-    host="${_fg_blue}[\h:${cmd}]${_reset_fg}"
+    host=$(set_bash_prompt_host ${cmd})
     dir="${_fg_grey_dark}[\w]${_reset_fg}"
 
     local git
