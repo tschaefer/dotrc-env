@@ -46,7 +46,9 @@ alias calculator='_omb_aliases_general_calculator'
 function _omb_aliases_general_shorten_url {
     exec 3< <(curl --silent --location --write-out "\n" \
         https://tinyurl.com/api-create.php?url="${1}")
-    spinner
+    if [[ -t 1 ]]; then
+        spinner
+    fi
 
     cat <&3
 }
@@ -57,8 +59,10 @@ function _omb_aliases_general_wttr {
 
     exec 3< <(curl --silent --location --write-out "\n" \
         --compressed --header "Accept-Language: ${LC_MESSAGES%_*}" \
-        "https://wttr.in/${1:-$station}?format=%l:%20%C,%20%t,%20%w")
-    spinner
+        "https://wttr.in/${1:-$station}?format=%l:%20%C,%20%t")
+    if [[ -t 1 ]]; then
+        spinner
+    fi
 
     echo "🛰️  $(cat <&3)"
 }
@@ -67,7 +71,9 @@ alias wttr='_omb_aliases_general_wttr'
 function _omb_aliases_general_gitignore {
     exec 3< <(curl --silent --location --write-out "\n" \
         "https://www.toptal.com/developers/gitignore/api/$*")
-    spinner
+    if [[ -t 1 ]]; then
+        spinner
+    fi
 
     cat <&3
 }
@@ -78,7 +84,9 @@ function _omb_aliases_general_ident_me {
 
     exec 3< <(curl --silent --location --write-out "\n" \
         https://${version}.ident.me)
-    spinner
+    if [[ -t 1 ]]; then
+        spinner
+    fi
 
     cat <&3
 }

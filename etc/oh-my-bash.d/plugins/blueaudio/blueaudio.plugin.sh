@@ -66,10 +66,16 @@ function _omb_plugin_blueaudio_ctl {
 }
 
 function _omp_plugin_blueaudio_completion {
-    local cur
-    _get_comp_words_by_ref -n : cur
+    local cur prev
+    _get_comp_words_by_ref -n : cur prev
 
-    mapfile -t COMPREPLY < <(compgen -W "comm music on off status battery" -- "$cur")
+    local actions="comm music on off status battery"
+
+    if echo "${actions}" | grep --word-regexp --quiet "${prev}"; then
+        return
+    fi
+
+    mapfile -t COMPREPLY < <(compgen -W "${actions}" -- "$cur")
 }
 complete -F _omp_plugin_blueaudio_completion _omb_plugin_blueaudio_ctl
 

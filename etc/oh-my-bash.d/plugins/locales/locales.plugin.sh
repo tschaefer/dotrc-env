@@ -27,7 +27,7 @@ function _omb_plugin_locales_is_available {
     locale=$1
 
     locales=$(locale --all-locales | tr '\n' ' ')
-    echo "${locales}" | grep --quiet --ignore-case --word-regexp "$(echo "${locale}" | tr -d '-')"
+    echo "${locales}" | grep --quiet --ignore-case --word-regexp "$(echo "${locale}" | tr --delete '-')"
 }
 
 function _omb_plugin_locales_set_units {

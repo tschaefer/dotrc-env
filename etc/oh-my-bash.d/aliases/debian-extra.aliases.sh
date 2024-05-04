@@ -7,8 +7,10 @@ alias apsen='sudo apt search --names-only'
 function _omb_aliases_dpkg_list_short {
     dpkg --list | tail --lines +6 | awk '{ print $2 }'
 }
-alias dls=_omb_aliases_dpkg_list_short
-alias dlsq="_omb_aliases_dpkg_list_short | grep"
+alias dpls=_omb_aliases_dpkg_list_short
+alias dplsq="_omb_aliases_dpkg_list_short | grep"
+alias dpi='sudo dpkg --install'
+alias dpp='sudo dpkg --purge'
 
 if _omb_util_command_exists "apt-file"; then
     alias apff='apt-file find'
