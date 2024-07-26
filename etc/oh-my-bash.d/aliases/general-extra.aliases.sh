@@ -79,6 +79,11 @@ function _omb_aliases_general_gitignore {
 }
 alias gi='_omb_aliases_general_gitignore'
 
+function _omb_aliases_general_git_status_modified {
+    git status --porcelain | awk '/^[^?]/ {print "\033[31m"$1"\033[0m" " " $2 }'
+}
+alias gssm='_omb_aliases_general_git_status_modified'
+
 function _omb_aliases_general_ident_me {
     local version=${1:-4}
 

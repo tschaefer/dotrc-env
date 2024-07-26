@@ -11,7 +11,7 @@ function _omb_plugin_fzf {
     local cur
     local req
 
-    cur="$(fzf --version)"
+    cur="$(fzf --version | awk '{ print $1 }')"
     req='0.48.0'
 
     if [ "$(printf '%s\n' "${req}" "${cur}" | sort --version-sort | head --lines=1)" = "${req}" ]; then

@@ -81,3 +81,8 @@ alias ssh-screen='_omb_plugin_ssh_screen'
 alias mosh-screen='_omb_plugin_mosh_screen'
 alias ssh-tmux='_omb_plugin_ssh_tmux'
 alias mosh-tmux='_omb_plugin_mosh_tmux'
+
+if [[ -f ${OSH}/completions/ssh.completion.sh ]]; then
+    source ${OSH}/completions/ssh.completion.sh
+    complete -o default -o nospace -F _omb_completion_ssh ssh-run ssh-screen ssh-tmux mosh mosh-screen mosh-tmux
+fi

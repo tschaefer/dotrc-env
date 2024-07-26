@@ -11,6 +11,7 @@ alias dpls=_omb_aliases_dpkg_list_short
 alias dplsq="_omb_aliases_dpkg_list_short | grep"
 alias dpi='sudo dpkg --install'
 alias dpp='sudo dpkg --purge'
+alias dplf='dpkg --listfiles'
 
 if _omb_util_command_exists "apt-file"; then
     alias apff='apt-file find'

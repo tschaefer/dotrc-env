@@ -6,5 +6,8 @@ if [[ -d ${OSH_HOME:-$HOME}/.rbenv ]]; then
     else
         export PATH=${OSH_HOME:-$HOME}/.rbenv/bin:${PATH}
         eval "$(rbenv init - bash)"
+
+        # TODO: Remove this once rbenv is fixed
+        rm -f ${OSH_HOME:-$HOME}/.rbenv/shims/*.lock 2>/dev/null
     fi
 fi

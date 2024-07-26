@@ -86,6 +86,7 @@ OMB_PROMPT_SHOW_PYTHON_VENV=true  # enable
 # Add wisely, as too many completions slow down shell startup.
 completions=(
   git
+  ssh
 )
 
 # Which aliases would you like to load? (aliases can be found in ~/.oh-my-bash/aliases/*)
