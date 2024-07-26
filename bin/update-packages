@@ -16,6 +16,7 @@ Options:
     -h:     shows this message (help)
     -a:     update all (perl, python, ruby, rust, system) packages
     -e:     update dotrc environment
+    -o:     update oh-my-bash
     -p:     update perl packages
     -r:     update ruby packages
     -s:     update system packages
@@ -41,7 +42,7 @@ update_env() {
 update_python() {
     echo -e "\033[33mStarting python update ...\033[39m 🐍"
 
-    if [[ -x $(type -P pip2) ]]; then
+    if type -P -- "pip2" &> /dev/null; then
         version=$(python2 --version)
         echo -e "\033[32m${version}\033[39m"
 
@@ -51,7 +52,7 @@ update_python() {
             awk 'FNR > 2 {print $1 }')"
     fi
 
-    if [[ -x $(type -P pip3) ]]; then
+    if type -P -- "pip3" &> /dev/null; then
         version=$(python3 --version)
         echo -e "\033[32m${version}\033[39m"
 
@@ -61,7 +62,7 @@ update_python() {
             awk 'FNR > 3 {print $1 }')"
     fi
 
-    if [[ -x $(type -P pipx) ]]; then
+    if type -P -- "pipx" &> /dev/null; then
         version=$(pipx --version)
         echo -e "\033[32mpipx ${version}\033[39m"
 
@@ -74,7 +75,7 @@ update_python() {
 update_perl() {
     echo -e "\033[33mStarting perl update ...\033[39m 🐪"
 
-    if [[ -x $(type -P perlbrew) ]]; then
+    if type -P -- "perlbrew" &> /dev/null; then
         for version in $(perlbrew list | tr -d ' *'); do
             if [[ $version =~ @ ]]; then
                 continue
@@ -91,14 +92,28 @@ update_perl() {
     echo -e "\033[33mdone.\033[39m"
 }
 
+_update_rbenv() {
+    for dir in ${HOME}/.rbenv ${HOME}/.rbenv/plugins/ruby-build; do
+        [[ ! -d $dir ]] && continue
+
+        cd $dir >/dev/null 2>&1 || return
+        git pull
+        cd - >/dev/null 2>&1 || return
+    done
+}
+
 update_ruby() {
     echo -e "\033[33mStarting ruby update ...\033[39m 🦊"
 
-    if [[ -x $(type -P gem) ]]; then
-        version=$(ruby --version | awk '{ print $1 " " $2 }')
-        echo -e "\033[32m${version}\033[39m"
+    if type -P -- "rbenv" &> /dev/null; then
+        _update_rbenv
+        eval "$(rbenv init - bash)"
+        for version in $(rbenv versions --bare); do
+            echo -e "\033[32m${version}\033[39m"
 
-        gem update --verbose
+            rbenv shell $version
+            gem update --verbose --system
+        done
     fi
 
     echo -e "\033[33mdone.\033[39m"
@@ -108,7 +123,7 @@ update_ruby() {
 update_rust() {
     echo -e "\033[33mStarting rust update ...\033[39m 🦀"
 
-    if [[ -x $(type -P rustup) ]]; then
+    if type -P -- "rustup" &> /dev/null; then
         version=$(rustc --version | awk '{ print $1 " " $2 }')
         echo -e "\033[32m${version}\033[39m"
 
@@ -125,19 +140,20 @@ update_system() {
     distro=$(awk -F '=' '/^ID=/ { print $2 }' /etc/os-release)
 
     case $distro in
-        debian|raspbian)
+        debian|raspbian|kali)
             echo -e "\033[32m${pretty_name}\033[39m"
-            sudo apt-get update ; sudo apt-get --option Dpkg::Options::="--force-confold" --yes dist-upgrade ; \
-                sudo apt-get --yes autoremove --purge
-                sudo apt-get clean ; sudo apt-get autoclean
+            sudo apt-get update
+            sudo apt-get --option Dpkg::Options::="--force-confold" --yes dist-upgrade
+            sudo apt-get --yes autoremove --purge
+            sudo apt-get clean
+            sudo apt-get autoclean
             ;;
         gentoo)
             echo -e "\033[32m${pretty_name}\033[39m"
-            sudo emerge --sync ; \
-                sudo emerge --verbose --update --newuse --deep @world
+            sudo emerge --sync
+            sudo emerge --verbose --update --newuse --deep @world
             ;;
         *)
-            return
             ;;
     esac
 
@@ -147,11 +163,24 @@ update_system() {
 update_vim() {
     echo -e "\033[33mStarting vim plugins update ...\033[39m 🦅"
 
-    if [[ -x $(type -P vim) ]]; then
+    if type -P -- "vim" &> /dev/null; then
         version=$(vim --version | awk 'NR==1 { print $5 }')
         echo -e "\033[32mvim ${version}\033[39m"
 
         vim +PluginUpdate +qall 2>/dev/null
+    fi
+
+    echo -e "\033[33mdone.\033[39m"
+}
+
+update_oh_my_bash() {
+    echo -e "\033[33mStarting oh-my-bash update ...\033[39m 🐏"
+
+    OSH=${OSH:-$HOME/.oh-my-bash}
+    OSH_UPGRADE=${OSH}/tools/upgrade.sh
+
+    if test -f $OSH_UPGRADE; then
+        source $OSH_UPGRADE
     fi
 
     echo -e "\033[33mdone.\033[39m"
@@ -168,7 +197,7 @@ show_log() {
 
 get_opts() {
     local opt_count=0
-    while getopts ":hael:prstvyj" opt; do
+    while getopts ":hael:oprstvyj" opt; do
         case $opt in
             a)
                 opt_a=1
@@ -181,6 +210,9 @@ get_opts() {
                 ;;
             r)
                 opt_r=1
+                ;;
+            o)
+                opt_o=1
                 ;;
             s)
                 opt_s=1
@@ -275,6 +307,10 @@ main() {
         update_perl 2>&1 | log_to_target
     fi
 
+    if [[ -n "$opt_o" ]]; then
+        update_oh_my_bash 2>&1 | log_to_target
+    fi
+
     if [[ -n "$opt_r" ]]; then
         update_ruby 2>&1 | log_to_target
     fi
@@ -296,11 +332,12 @@ main() {
     fi
 
     if [[ -n "$opt_a" ]]; then
-        update_system 2>&1 | log_to_target
-        update_perl   2>&1 | log_to_target
-        update_python 2>&1 | log_to_target
-        update_ruby   2>&1 | log_to_target
-        update_rust   2>&1 | log_to_target
+        update_system     2>&1 | log_to_target
+        update_oh_my_bash 2>&1 | log_to_target
+        update_perl       2>&1 | log_to_target
+        update_python     2>&1 | log_to_target
+        update_ruby       2>&1 | log_to_target
+        update_rust       2>&1 | log_to_target
     fi
 
     exit 0
