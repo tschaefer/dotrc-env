@@ -26,8 +26,12 @@ function _omb_plugin_locales_is_available {
 
     locale=$1
 
-    locales=$(locale --all-locales | tr '\n' ' ')
-    echo "${locales}" | grep --quiet --ignore-case --word-regexp "$(echo "${locale}" | tr --delete '-')"
+    if [[ $OSTYPE =~ linux* ]]; then
+        locale="$(echo "${locale}" | tr -d '-')"
+    fi
+
+    locales=$(locale -a | tr '\n' ' ')
+    echo "${locales}" | grep --quiet --ignore-case --word-regexp ${locale}
 }
 
 function _omb_plugin_locales_set_units {
@@ -67,6 +71,7 @@ function _omb_plugin_locales_set_language {
     for locale in "${language[@]}"; do
         if _omb_plugin_locales_is_available "${locale}"; then
             export LC_MESSAGES=${locale}
+            export LANG=${locale}
             break
         fi
     done

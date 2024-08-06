@@ -63,11 +63,11 @@ function _omb_plugin_ssh_run {
     fi
 
     ssh -t "${host}" "
-        export RUN_LIB="'$(mktemp --directory --suffix=.run)'"
+        export RUN_LIB="'$(mktemp -d -p /tmp ssh-run.XXXXXX)'"
         "'trap "rm -rf ${RUN_LIB}" EXIT'"
         echo $'"$(cat ${exec} | xxd -ps)"' | xxd -ps -r > "'${RUN_LIB}/run'"
         "'chmod +x ${RUN_LIB}/run'"
-        "'${RUN_LIB}/run'" ${args}
+        bash "'${RUN_LIB}/run'" ${args}
     "
 
     return $?

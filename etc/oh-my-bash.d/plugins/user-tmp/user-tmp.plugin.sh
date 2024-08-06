@@ -11,6 +11,7 @@ else
     else
         OSH_TMP=/tmp/${USER}.tmp
     fi
-    mkdir --parent --mode=0700 "${OSH_TMP}" >/dev/null
+    # shellcheck disable=SC2174
+    mkdir -p -m 0677 "${OSH_TMP}" >/dev/null
 fi
 export OSH_TMP
