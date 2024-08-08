@@ -12,9 +12,16 @@ case ${OSTYPE} in
         ENV_OS=Linux
         # shellcheck disable=SC2046
         ENV_USER=$(stat -c %U $(readlink -f /proc/self/fd/0))
+        if [[ -r /etc/os-release ]]; then
+            ENV_LINUX_RELEASE=$(awk -F '=' '/^ID=/ { print $2 }' /etc/os-release)
+        fi
         ;;
     solaris*)
         ENV_OS=Solaris
+        ENV_USER=${SUDO_USER:-${USER}}
+        ;;
+    freebsd*)
+        ENV_OS=FreeBSD
         ENV_USER=${SUDO_USER:-${USER}}
         ;;
     *)
@@ -24,11 +31,12 @@ case ${OSTYPE} in
 esac
 
 ENV_HOME=$(eval echo ~${ENV_USER})
-if [[ -e ${ENV_HOME}/.oh-my-bashrc ]]; then
-    source "${ENV_HOME}"/.oh-my-bashrc
+if [[ -e ${ENV_HOME}/.bashrc ]]; then
+    source "${ENV_HOME}"/.bashrc
     unset ENV_HOME
     unset ENV_OS
     unset ENV_USER
+    unset ENV_LINUX_RELEASE
 
     return
 fi
@@ -39,12 +47,12 @@ if [[ ${EUID} -eq 0 ]] && [[ -z $SSHHOME ]]; then
     export SSHHOME
     ENV_HOME=${SSHHOME}/.sshrc.d
 fi
-export ENV_OS ENV_USER ENV_HOME
+export ENV_OS ENV_USER ENV_HOME ENV_LINUX_RELEASE
+export TERM=xterm-256color
 
-# shellcheck disable=SC2139
 alias root="sudo bash --rcfile ${SSHHOME}/.sshrc"
 
-USER_HOME=$(grep "^${ENV_USER}:" /etc/passwd | cut -d: -f 6)
+USER_HOME=$(grep "^${SUDO_USER:-$ENV_USER}:" /etc/passwd | cut -d: -f 6)
 if [[ -r ${USER_HOME}/.sshrc.local ]]; then
     source "${USER_HOME}"/.sshrc.local
 fi
@@ -82,6 +90,7 @@ _env_init_path
 unset -f _env_init_path
 _env_init_manpath
 unset -f _env_init_manpath
+unset USER_HOME
 
 if [[ -e /etc/bash_completion ]]; then
     source /etc/bash_completion
@@ -133,13 +142,39 @@ if [[ $(type -P -- nano) ]]; then
     export VISUAL="nano"
 
     if [[ -e ${ENV_HOME}/nanorc ]]; then
-        # shellcheck disable=SC2139
         alias nano="nano --rcfile ${ENV_HOME}/nanorc"
     fi
 fi
 
+if [[ $(type -P -- batcat || type -P -- bat) ]]; then
+    exec=$(type -P -- batcat || type -P -- bat)
+    export BAT_THEME=${BAT_THEME:-"Solarized (dark)"}
+
+    alias b="${exec}"
+    alias bp="${exec} --plain"
+    alias bl="${exec} --language"
+    alias blp="${exec} --plain --language"
+
+    alias cat="${exec} --pager=never --plain"
+
+    unset exec
+fi
+
+if [[ $(type -P -- fzf) ]]; then
+    if fzf --bash >/dev/null 2>&1; then
+        eval "$(fzf --bash)"
+    elif [[ -r "/usr/share/doc/fzf/examples/key-bindings.bash" ]]; then
+        source "/usr/share/doc/fzf/examples/key-bindings.bash"
+    fi
+fi
+
+if [[ ${ENV_OS} == "Linux" ]]; then
+    alias ipas='ip --color addr show'
+    alias ipr='ip --color route show'
+    alias ipl='ip --color link show'
+fi
+
 if [[ $(type -P -- screen) ]] && [[ -e ${ENV_HOME}/screenrc ]]; then
-    # shellcheck disable=SC2139
     alias screen="screen -c ${ENV_HOME}/screenrc"
 fi
 
@@ -244,10 +279,8 @@ function set_bash_prompt_host {
     fi
 
     if systemd-detect-virt --quiet --container && \
-        [[ -f /etc/os-release ]]; then
-        local id
-        id=$(awk -F '=' '/^ID=/ { print $2 }' /etc/os-release)
-        host="${_fg_blue}[${id}:${cmd}]${_reset_fg}"
+        [[ -n ${ENV_LINUX_RELEASE} ]]; then
+        host="${_fg_blue}[${ENV_LINUX_RELEASE}:${cmd}]${_reset_fg}"
     fi
 
     echo ${host}
