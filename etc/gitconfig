@@ -1,6 +1,3 @@
-[github]
-    user = tschaefer
-
 [user]
     signingKey = 88A6489BD0B2C61A!
 
@@ -73,5 +70,11 @@
     light = false
     line-numbers = true
     syntax-theme = Solarized (dark)
+
+[tag]
+    gpgSign = true
+
+[github]
+    user = tschaefer
 
 # vim:ft=dosini
