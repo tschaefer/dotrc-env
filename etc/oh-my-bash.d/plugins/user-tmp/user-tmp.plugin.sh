@@ -12,6 +12,6 @@ else
         OSH_TMP=/tmp/${USER}.tmp
     fi
     # shellcheck disable=SC2174
-    mkdir -p -m 0677 "${OSH_TMP}" >/dev/null
+    mkdir -p -m 0700 "${OSH_TMP}" >/dev/null
 fi
 export OSH_TMP
