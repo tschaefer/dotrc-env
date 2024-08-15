@@ -95,14 +95,19 @@ completions=(
 # Add wisely, as too many aliases slow down shell startup.
 aliases=(
   chmod
-  debian
-  debian-extra
   general
   general-extra
   ls
   pipx
   editor
 )
+
+if [[ ${OSID} == "debian" ]]; then
+  aliases+=(
+    debian
+    debian-extra
+  )
+fi
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-bash/plugins/*)
 # Custom plugins may be added to ~/.oh-my-bash/custom/plugins/
