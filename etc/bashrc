@@ -3,7 +3,8 @@ case $- in
     *) return;;
 esac
 
-export OSH_USER=${SUDO_USER:-$USER}
+OSH_USER=${SUDO_USER:-$USER}
+export OSH_USER
 if [[ ${EUID} -eq 0 ]]; then
     OSH_HOME=$(getent passwd ${OSH_USER} | cut -d: -f 6)
     if [[ -z ${OSH_HOME} ]]; then
@@ -17,6 +18,9 @@ fi
 # shellcheck disable=SC2139
 alias root="sudo bash --rcfile ${OSH_HOME}/.bashrc"
 
+OSID=$(awk -F '=' '/^ID/ { print $2 }' /etc/os-release 2>/dev/null)
+OSID=${OSID:-"unknown"}
+export OSID
 
 function _omb_init_path {
     local path
