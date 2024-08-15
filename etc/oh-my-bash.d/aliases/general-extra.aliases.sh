@@ -5,11 +5,10 @@ alias battery='acpi -b'
 alias ipas='ip --color addr show'
 alias ipr='ip --color route show'
 alias ipl='ip --color link show'
+
 complete -F _complete_alias ipas
 complete -F _complete_alias ipr
 complete -F _complete_alias ipl
-
-alias gdnp='command git --no-pager diff'
 
 alias vim-notags="vim --cmd 'let g:gutentags_enabled = 0'"
 
@@ -83,6 +82,7 @@ function _omb_aliases_general_git_status_modified {
     git status --porcelain | awk '/^[^?]/ {print "\033[31m"$1"\033[0m" " " $2 }'
 }
 alias gssm='_omb_aliases_general_git_status_modified'
+alias gdnp='command git --no-pager diff'
 
 function _omb_aliases_general_ident_me {
     local version=${1:-4}
@@ -97,3 +97,9 @@ function _omb_aliases_general_ident_me {
 }
 alias ipv4='_omb_aliases_general_ident_me 4'
 alias ipv6='_omb_aliases_general_ident_me 6'
+
+function _omb_aliases_general_ps {
+    ps -ax -o pid= -o command= | grep -v ']$' | grep -v -E '[0-9]+ (ps|grep)'
+}
+alias psl='_omb_aliases_general_ps'
+alias psq='_omb_aliases_general_ps | grep'
