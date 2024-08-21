@@ -265,7 +265,6 @@ function set_bash_prompt {
         GIT_PS1_SHOWCOLORHINTS=1
 
         git=$(__git_ps1 " [%s]")
-        git="\033[33m${git}\033[39m"
     fi
 
     PROMPT_DIRTRIM=3
