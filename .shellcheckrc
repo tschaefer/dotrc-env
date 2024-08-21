@@ -1,0 +1,16 @@
+shell=bash
+
+# variable appears unused
+disable=SC2034
+
+# alias expands when defined
+disable=SC2139
+
+# can't follow non-constant source
+disable=SC1090
+
+# function is referenced but not assigned
+disable=SC2154
+
+# Not following: PATH was not specified as input
+disable=SC1091
