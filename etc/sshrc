@@ -237,8 +237,8 @@ function set_bash_prompt_host {
     fi
 
     if systemd-detect-virt --quiet --container && \
-        [[ -n ${ENV_LINUX_RELEASE} ]]; then
-        host="\[\033[34m\][${ENV_LINUX_RELEASE}:${cmd}]\[\033[39m\]"
+        [[ -n ${ENV_OSID} ]]; then
+        host="\[\033[34m\][${ENV_OSID}:${cmd}]\[\033[39m\]"
     fi
 
     echo ${host}
