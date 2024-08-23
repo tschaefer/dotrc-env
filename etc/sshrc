@@ -39,6 +39,9 @@ fi
 
 echo ${SSHHOME} >| /tmp/.sshhome.${USER}
 chmod 600 /tmp/.sshhome.${USER}
+function _env_rm_sshhome {
+    rm -f /tmp/.sshhome.${USER}
+}
 
 ENV_OSID=$(awk -F '=' '/^ID=/ { print $2 }' /etc/os-release 2>/dev/null)
 export ENV_OSID
@@ -99,9 +102,13 @@ if [[ -e /etc/bash_completion ]]; then
     source /etc/bash_completion
 fi
 
-ENV_TMP=$(mktemp --directory --tmpdir="${XDG_RUNTIME_DIR:-"/tmp"}")
-trap 'rm -rf ${ENV_TMP}' EXIT
-export ENV_TMP
+if [[ -z ${ENV_TMP} ]]; then
+    ENV_TMP=$(mktemp --directory --tmpdir="${XDG_RUNTIME_DIR:-"/tmp"}")
+    export ENV_TMP
+fi
+function _env_rm_tmp {
+    rm -rf ${ENV_TMP}
+}
 
 export HISTCONTROL=ignoreboth
 export HISTSIZE=32768
@@ -217,7 +224,7 @@ fi
 function set_bash_prompt_host {
     local cmd=$1
     local host
-    host="\033[34m[\h:${cmd}]\033[39m"
+    host="\[\033[34m\][\h:${cmd}]\[\033[39m\]"
 
     if [[ -n ${ENV_KEEP_HOSTNAME} ]]; then
         echo ${host}
@@ -231,7 +238,7 @@ function set_bash_prompt_host {
 
     if systemd-detect-virt --quiet --container && \
         [[ -n ${ENV_LINUX_RELEASE} ]]; then
-        host="\033[34m[${ENV_LINUX_RELEASE}:${cmd}]\033[39m"
+        host="\[\033[34m\][${ENV_LINUX_RELEASE}:${cmd}]\[\033[39m\]"
     fi
 
     echo ${host}
@@ -241,7 +248,7 @@ function set_bash_prompt {
     if [[ $? -eq 0 ]]; then
         local symbol=">>"
     else
-        local symbol="\033[31m>>\033[39m"
+        local symbol="\[\033[31m\]>>\[\033[39m\]"
     fi
 
     local cmd
@@ -251,10 +258,10 @@ function set_bash_prompt {
     cmd=$(ps -A -o pid,comm | awk -v ppid=$PPID '$1 == ppid { print $2 }')
     cmd=$(basename "${cmd:-$SHELL}")
     if [[ ${EUID} -eq 0 ]]; then
-        cmd="\033[31m${cmd}\033[39m"
+        cmd="\[\033[31m\]${cmd}\[\033[39m\]"
     fi
     host=$(set_bash_prompt_host ${cmd})
-    dir="\033[92m[\w]\033[39m"
+    dir="\[\033[92m\][\w]\[\033[39m\]"
 
     local git
     if [[ $(declare -F __git_ps1) ]]; then
@@ -273,5 +280,11 @@ function set_bash_prompt {
     PS2=" %> "
 }
 PROMPT_COMMAND=set_bash_prompt
+
+function _env_trap_handler {
+    _env_rm_tmp
+    _env_rm_sshhome
+}
+trap _env_trap_handler EXIT
 
 # vim:ft=sh
