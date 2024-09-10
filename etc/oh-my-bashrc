@@ -125,10 +125,10 @@ plugins=(
   htop
   locales
   machine
-  nvm
+  nvm-ng
   pager
   perlbrew
-  rbenv
+  rbenv-ng
   ssh
   sudo
   user-completion

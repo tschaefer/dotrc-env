@@ -79,9 +79,11 @@ function _omb_exec_list_components {
                 local path
                 path=$(dirname "$plugin")
                 plugin=$(basename "$plugin" | sed -E 's/.plugin.(bash|sh)//')
+                local regex
+                regex=$(echo "$plugin" | tr '-' '_')
 
                 local installed=''
-                if echo "${plugins[*]}" | grep -wq "${plugin}"; then
+                if echo "${plugins[*]}" | tr '-' '_' | grep -wq "${regex}"; then
                     installed="${_omb_term_green}✓${_omb_term_normal}"
                 fi
 
@@ -104,7 +106,9 @@ function _omb_exec_list_components {
 
             local completion
             for completion in "${available_completions[@]}"; do
-                if echo "${completions[*]}" | grep -wq "${completion}"; then
+                local regex
+                regex=$(echo "$completion" | tr '-' '_')
+                if echo "${completions[*]}" | tr '-' '_' | grep -wq "${regex}"; then
                     echo "$completion ${_omb_term_green}✓${_omb_term_normal}"
                 else
                     echo "$completion"
@@ -122,7 +126,9 @@ function _omb_exec_list_components {
 
             local alias
             for alias in "${available_aliases[@]}"; do
-                if echo "${aliases[*]}" | grep -wq "${alias}"; then
+                local regex
+                regex=$(echo "$alias" | tr '-' '_')
+                if echo "${aliases[*]}" | tr '-' '_' | grep -wq "${regex}"; then
                     echo "$alias ${_omb_term_green}✓${_omb_term_normal}"
                 else
                     echo "$alias"
