@@ -59,8 +59,8 @@ export COLORTERM=truecolor
 alias root="sudo bash --rcfile ${SSHHOME}/.sshrc"
 
 USER_HOME=$(grep "^${SUDO_USER:-$ENV_USER}:" /etc/passwd | cut -d: -f 6)
-if [[ -r ${USER_HOME}/.sshrc.local ]]; then
-    source "${USER_HOME}"/.sshrc.local
+if [[ -r ${USER_HOME}/.sshrc ]]; then
+    source "${USER_HOME}"/.sshrc
 fi
 
 function _env_init_path {
@@ -74,6 +74,8 @@ function _env_init_path {
     done
     export PATH
 }
+_env_init_path
+unset -f _env_init_path
 
 function _env_init_manpath {
     local path
@@ -92,8 +94,6 @@ function _env_init_manpath {
     done
     export MANPATH
 }
-_env_init_path
-unset -f _env_init_path
 _env_init_manpath
 unset -f _env_init_manpath
 unset USER_HOME
@@ -196,17 +196,6 @@ shopt -s histverify
 shopt -s hostcomplete
 shopt -s no_empty_cmd_completion
 set -o emacs
-
-case ${TERM} in
-    vt100)
-        [[ $(type -P -- resize) ]] && resize
-        ;;
-    xterm*)
-        [[ ${EUID} -ne 0 ]] && echo -ne "\033]0;${USER}@${HOSTNAME%%.*}\007"
-        ;;
-    *)
-        ;;
-esac
 
 if [[ $(type -P -- dircolors) ]]; then
     if [[ -r ${ENV_HOME}/dircolors ]]; then
