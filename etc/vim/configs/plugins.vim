@@ -16,6 +16,8 @@ Plugin 'tpope/vim-eunuch'
 Plugin 'scrooloose/nerdtree'
 " show nerdtree in all tabs
 Plugin 'jistr/vim-nerdtree-tabs'
+" show git status in nerdtree
+Plugin 'Xuyuanp/nerdtree-git-plugin'
 " source browsing tool
 Plugin 'vim-scripts/cscope.vim'
 " version control
@@ -46,6 +48,13 @@ Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 " Github CoPilot
 Plugin 'github/copilot.vim'
+" filetype graphql
+Plugin 'jparise/vim-graphql'
+" gist
+Plugin 'mattn/webapi-vim'
+Plugin 'mattn/vim-gist'
+" filtype coffeescript
+Plugin 'kchmck/vim-coffee-script'
 
 call vundle#end()
 

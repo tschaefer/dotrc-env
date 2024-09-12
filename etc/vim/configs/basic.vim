@@ -49,7 +49,7 @@ set listchars+=extends:»
 "set listchars+=eol:¶
 set number
 set ruler
-set showbreak=↪
+set showbreak=
 let &colorcolumn="79,".join(range(120,999),",")
 
 "" behaviour
