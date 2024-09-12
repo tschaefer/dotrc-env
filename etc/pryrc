@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-### Prompt
-
 module Prompt
   # nodoc
   class Foobar
@@ -35,7 +33,7 @@ module Prompt
     NAME = 'shy'
     DESCRIPTION = <<~DESC
       A lack of comfort.
-      host:pry /path/to/obj >>
+      host:pry /path/to/obj ➜
     DESC
 
     def initialize
