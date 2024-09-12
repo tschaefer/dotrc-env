@@ -2,7 +2,7 @@
 severity = 3
 verbose  = %F (line:%l) %m, %e [%p]\n
 include  = CodeLayout Documentation InputOutput Modules::ProhibitMultiplePackages
-exclude  = CodeLayout::RequireTidyCode RegularExpressions::RequireExtendedFormatting Moose::RequireCleanNamespace Documentation::RequirePodLinksIncludeText Subroutines::ProhibitUnusedPrivateSubroutines Subroutines::ProhibitBuiltinHomonyms Documentation::PodSpelling
+exclude  = CodeLayout::RequireTidyCode RegularExpressions::RequireExtendedFormatting Moose::RequireCleanNamespace Documentation::RequirePodLinksIncludeText Subroutines::ProhibitUnusedPrivateSubroutines Subroutines::ProhibitBuiltinHomonyms Documentation::PodSpelling Subroutines::ProhibitSubroutinePrototypes
 
 # Rules for POD
 [Documentation::RequirePodSections]
@@ -37,4 +37,3 @@ variables = $& $` $' $+ $* $. $. $/ $| $, $\ $" $; $# $% $= $- $~ $^ $: $^L $^A 
 # List of modules which explicit use strict and warnings
 [TestingAndDebugging::RequireUseStrict]
 equivalent_modules = Moose ExtUtils::MakeMaker
-
