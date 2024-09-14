@@ -76,6 +76,8 @@ update_perl() {
     echo -e "\033[33mStarting perl update ...\033[39m 🐪"
 
     if type -P -- "perlbrew" &> /dev/null; then
+        perlbrew self-upgrade
+
         for version in $(perlbrew list | tr -d ' *'); do
             if [[ $version =~ @ ]]; then
                 continue
