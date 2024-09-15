@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+
+source /usr/local/lib/sh/smoke.sh
+
+ME=${0##*/}
+
+usage() {
+    cat <<EOF
+Usage:
+    $ME [-q] URL
+
+    $ME -h | -v
+
+Options:
+    -h, Show the help.
+    -v, Show the version.
+
+    -q, Quiet mode. Don't print anything to stdout.
+
+EOF
+}
+
+version() {
+    echo "$ME version 0.0.1"
+}
+
+help() {
+    cat <<EOF
+
+Name:
+    $ME - smoke ping
+
+$(usage)
+
+Description:
+    smoke ping is a simple tool to check if a website is up or not.
+
+EOF
+}
+
+options() {
+    local opt_count=0
+    while getopts ":hvq" opt; do
+        case $opt in
+            h)
+                HELP=1
+                ;;
+            v)
+                VERSION=1
+                ;;
+            q)
+                QUIET=1
+                ;;
+            \?)
+                echo "Invalid option: -$OPTARG" >&2
+                usage >&2
+                exit 1
+                ;;
+            :)
+                echo "Option -$OPTARG requires an argument." >&2
+                usage >&2
+                exit 1;
+                ;;
+        esac
+        ((opt_count++))
+    done
+    shift $((OPTIND-1))
+
+    URL=$1
+
+    if [[ -n $HELP ]] || [[ -n $VERSION ]]; then
+        if [[ $opt_count -gt 1 ]] || [[ -n $URL ]]; then
+            usage >&2
+            exit 1
+        fi
+    fi
+}
+
+main() {
+    options ${1+"$@"}
+
+    if [[ -n $HELP ]]; then
+        help
+        exit 0
+    fi
+
+    if [[ -n $VERSION ]]; then
+        version
+        exit 0
+    fi
+
+    [[ -n $QUIET ]] && smoke_url_ok $URL > /dev/null || smoke_url_ok $URL
+    [[ $SMOKE_TESTS_FAILED -gt 0 ]] && exit 1 || exit 0
+}
+
+main ${1+"$@"}
