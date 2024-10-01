@@ -3,7 +3,7 @@ Host *
     ControlPath ~/.ssh/cache/%r@%h:%p
     ControlPersist 15m
     ForwardAgent yes
-    HashKnownHosts yes
+    HashKnownHosts no
     LogLevel VERBOSE
     ServerAliveInterval 540
     ForwardX11 no

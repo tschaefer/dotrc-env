@@ -88,6 +88,13 @@ function _omb_plugin_ssh_run {
     return $?
 }
 
+function _omb_plugin_ssh_known_hosts {
+    ssh_known_hosts=${OSH_HOME:-$HOME}/.ssh/known_hosts
+    [ -f ${ssh_known_hosts} ] || return 1
+
+    awk '{ print $1 }' ${ssh_known_hosts} | sort -u
+}
+
 alias ssh-kill='_omb_plugin_ssh_kill'
 alias ssh-list='_omb_plugin_ssh_list'
 alias ssh-run='_omb_plugin_ssh_run'
@@ -96,6 +103,7 @@ alias ssh-screen='_omb_plugin_ssh_screen'
 alias mosh-screen='_omb_plugin_mosh_screen'
 alias ssh-tmux='_omb_plugin_ssh_tmux'
 alias mosh-tmux='_omb_plugin_mosh_tmux'
+alias ssh-known-hosts='_omb_plugin_ssh_known_hosts'
 
 if [[ -f ${OSH}/completions/ssh.completion.sh ]]; then
     source ${OSH}/completions/ssh.completion.sh
