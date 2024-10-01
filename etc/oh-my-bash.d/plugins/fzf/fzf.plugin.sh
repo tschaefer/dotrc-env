@@ -20,6 +20,10 @@ function _omb_plugin_fzf {
         source "${OMB_PLUGIN_FZF_KEY_BINDINGS}"
         source "${OMB_PLUGIN_FZF_COMPLETION}"
     fi
+
+    if _omb_util_binary_exists "fd"; then
+        export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --exclude .git'
+    fi
 }
 
 _omb_plugin_fzf
