@@ -23,6 +23,7 @@ function _omb_theme_foobar_PROMPT_COMMAND {
     local cmd
     local host
     local dir
+    local emoji
 
     cmd=$(ps -A -o pid,comm | awk -v ppid=$PPID '$1 == ppid { print $2 }')
     cmd=$(basename "${cmd:-$SHELL}")
@@ -35,7 +36,13 @@ function _omb_theme_foobar_PROMPT_COMMAND {
     host="${_omb_prompt_navy}[\h:${cmd}]${_omb_prompt_normal}"
     dir="${_omb_prompt_lime}[\w]${_omb_prompt_normal}"
 
-    PS1="${host} ${dir} $(scm_prompt_info)\n ${symbol} "
+    if [[ -e ${OSH_HOME}/.emoji ]]; then
+        emoji=" $(cat ${OSH_HOME}/.emoji) "
+    else
+        emoji=" "
+    fi
+
+    PS1="${host} ${dir}${emoji}$(scm_prompt_info)\n ${symbol} "
     PS2=" %> "
 }
 
