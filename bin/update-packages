@@ -26,6 +26,8 @@ Options:
     -l:     log to file or journald
     -j:     show current (since today) log
 
+All your packages are belong to us! 👽
+
 EOF
 }
 
@@ -148,11 +150,13 @@ update_system() {
 
     case $distro in
         debian|raspbian|kali)
-            sudo apt-get update
-            sudo apt-get --option Dpkg::Options::="--force-confold" --yes dist-upgrade
-            sudo apt-get --yes autoremove --purge
-            sudo apt-get clean
-            sudo apt-get autoclean
+            export DEBIAN_FRONTEND=noninteractive
+            sudo apt-get --quiet update
+            sudo apt-get --quiet --option Dpkg::Options::="--force-confold" --yes dist-upgrade
+            sudo apt-get --quiet --yes autoremove --purge
+            sudo apt-get --quiet clean
+            sudo apt-get --quiet autoclean
+            unset DEBIAN_FRONTEND
             ;;
         gentoo)
             sudo emerge --sync
