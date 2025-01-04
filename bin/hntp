@@ -10,6 +10,7 @@ use Carp qw(croak);
 use Furl;
 use Getopt::Long;
 use Pod::Usage;
+use POSIX qw(strftime);
 use Try::Tiny;
 
 use utf8;
@@ -19,26 +20,28 @@ Readonly::Array my @month =>
 Readonly::Array my @weekday => qw(Sun Mon Tue Wed Thu Fri Sat);
 
 sub format_date {
-    my ($timestamp) = @_;
+    my ($timestamp, $localtime) = @_;
 
     # RFC 822/1123 format
     my ( $S, $M, $H, $mday, $mon, $year, $wday, $yday, undef ) =
-      gmtime $timestamp;
+      $localtime ? localtime $timestamp : gmtime $timestamp;
 
-    return sprintf "%s, %02d %s %04d %02d:%02d:%02d GMT",
+    my $timezone = $localtime ? strftime '%Z', localtime : 'GMT';
+
+    return sprintf "%s, %02d %s %04d %02d:%02d:%02d %s",
       $weekday[$wday], $mday, $month[$mon], $year + 1900,
-      $H, $M, $S;
-
-    return;
+      $H, $M, $S, $timezone;
 }
 
 sub parse_date {
-    my ($date) = @_;
+    my $date = shift;
 
     my ( $d, $m, $y, $H, $M, $S );
 
+    ## no critic (RegularExpressions::ProhibitComplexRegexes)
+
     # Sun, 06 Nov 1994 08:49:37 GMT
-    Readonly my $RFC_822_1123 => qr{
+    Readonly my $RFC_822_1123 => qr{ 
         ^[A-Z][a-z][a-z]+,\s
         ([0-9][0-9]?)[\- ]
         ([A-Z][a-z][a-z])[\- ]
@@ -60,6 +63,8 @@ sub parse_date {
         ([0-9 ]?[0-9])\s
         ([0-9][0-9]?):([0-9][0-9]?):([0-9][0-9]?)\s
         ([0-9][0-9][0-9][0-9])$}sx;
+
+    ## use critic
 
     if ( $date =~ $RFC_822_1123 ) {
         ( $d, $m, $y, $H, $M, $S ) = ( $1, $2, $3, $4, $5, $6 );
@@ -122,9 +127,9 @@ sub print_man {
 sub parse_opts {
     my $opts;
     GetOptions(
-        "help|h"      => \$opts->{'help'},
-        "man|m"       => \$opts->{'man'},
-        "formatted|f" => \$opts->{'formatted'},
+        "help|h"           => \$opts->{'help'},
+        "man|m"            => \$opts->{'man'},
+        "human-readable|r=s" => \$opts->{'human_readable'},
     ) or print_usage();
 
     my $count = 0;
@@ -135,6 +140,11 @@ sub parse_opts {
     print_usage() if ( ( $opts->{'help'} || $opts->{'man'} ) && $count > 1 );
     print_man()   if ( $opts->{'man'} );
     print_help()  if ( $opts->{'help'} );
+
+    if ( $opts->{'human_readable'} ) {
+        $opts->{'human_readable'} !~ /^(?:local|gmt)$/i
+          && print_usage();
+    }
 
     $opts->{'url'} = $ARGV[0] || print_usage();
 
@@ -147,7 +157,9 @@ sub run {
     my $date      = get_date($opts);
     my $timestamp = parse_date($date);
 
-    printf "%s\n", $opts->{'formatted'} ? format_date($timestamp) : $timestamp;
+    my $localtime = 0;
+    $localtime = 1 if ( $opts->{'human_readable'} && $opts->{'human_readable'} =~ /^local$/i );
+    printf "%s\n", $opts->{'human_readable'} ? format_date($timestamp, $localtime) : $timestamp;
 
     return 0;
 }
@@ -164,7 +176,7 @@ hntp - HTTP Time client program.
 
 =head1 SYNOPSIS
 
-hntp [--formatted] URL
+hntp [--human-readable gmt|local] URL
 
 hntp --help | --man
 
@@ -172,9 +184,13 @@ hntp --help | --man
 
 =over 8
 
-=item B<formatted>
+=item B<human-readable>
 
 Print date and time RFC 822/1123 conform.
+
+=item B<localtime>
+
+Print date and time in local time zone.
 
 =back
 

@@ -58,6 +58,12 @@ sub turn_on {
     return is_on();
 }
 
+sub switch {
+    is_on() ? turn_on() : turn_off();
+
+    return 0;
+}
+
 sub turn_off {
     my ( @cmd, $out );
 
@@ -94,6 +100,7 @@ sub parse_config {
     close $fh or croak("$!: $cfgfile");
 
     foreach (@raw) {
+        ## no critic(RegularExpressions::ProhibitUnusedCapture)
         $cfg{$1} = $2 if (/^([\w-]+)\s*=\s*([\w-]+)\s*#?/);
     }
 
@@ -118,6 +125,7 @@ sub run {
     my %ACTIONS = (
         on     => \&turn_on,
         off    => \&turn_off,
+        switch => \&switch,
         is_on  => \&is_on,
         is_off => \&is_off,
         help   => \&print_help,

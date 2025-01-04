@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 
+use English qw(-no_match_vars);
 use Furl;
 use Getopt::Long;
 use JSON::XS;
@@ -131,7 +132,7 @@ sub print_forecast {
     my $forecast = $opts->{'forecast'} - 1;
     foreach my $entry ( @{ $data->{'list'} } ) {
         my $hour = int strftime( "%H", gmtime $entry->{'dt'} );
-        next if ( $hour ne 15 );
+        next if ( $hour != 15 );
 
         my $dt = int strftime( "%Y%m%d", localtime $entry->{'dt'} );
         my ($max_temp, $min_temp) = get_forecast_temperature($dt, $data);
@@ -170,6 +171,8 @@ sub print_weather {
         $opts->{'forecast'}
           ? print_forecast( $data, $opts )
           : print_current( $data, $opts );
+    } || do {
+        print_error( $EVAL_ERROR . "\n" );
     };
 
     return;
