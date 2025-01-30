@@ -31,7 +31,7 @@ are installed.
 
 MIT License
 
-Copyright (c) 2012-2024 Tobias Schäfer
+Copyright (c) 2012-2025 Tobias Schäfer
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
