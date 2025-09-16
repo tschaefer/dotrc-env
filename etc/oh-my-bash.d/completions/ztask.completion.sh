@@ -22,7 +22,6 @@ _display() {
 
     local options='--pager --no-pager --legend --no-legend'
     local info='--help --man --version'
-    local extra='--date'
 
     case "$prev" in
         --help|--man|--version)
@@ -32,6 +31,12 @@ _display() {
 
     if [[ "$cur" == -* ]]; then
         if [[ "$prev" =~ by-* ]]; then
+            local extra='--date'
+            mapfile -t COMPREPLY < <(compgen -W "${options} ${extra} ${info}" -- "$cur")
+            return
+        fi
+        if [[ "$prev" == "weekly" ]] || [[ "$prev" == "monthly" ]]; then
+            local extra='--summarize'
             mapfile -t COMPREPLY < <(compgen -W "${options} ${extra} ${info}" -- "$cur")
             return
         fi

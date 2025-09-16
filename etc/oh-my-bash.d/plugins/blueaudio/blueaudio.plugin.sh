@@ -65,7 +65,7 @@ function _omb_plugin_blueaudio_ctl {
     esac
 }
 
-function _omp_plugin_blueaudio_completion {
+function _omb_plugin_blueaudio_completion {
     local cur prev
     _get_comp_words_by_ref -n : cur prev
 
@@ -77,7 +77,7 @@ function _omp_plugin_blueaudio_completion {
 
     mapfile -t COMPREPLY < <(compgen -W "${actions}" -- "$cur")
 }
-complete -F _omp_plugin_blueaudio_completion _omb_plugin_blueaudio_ctl
+complete -F _omb_plugin_blueaudio_completion _omb_plugin_blueaudio_ctl
 
 _omb_plugin_blueaudio_devices
 unset -f _omb_plugin_blueaudio_devices

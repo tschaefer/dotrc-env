@@ -5,7 +5,7 @@ _rnd() {
     local actions='zap-entropy-count clear-pool get-entropy-count add-to-entropy-count add-entropy get-random help man'
 
     if [[ $cword == 1 ]]; then
-        COMPREPLY=($(compgen -W "${actions}" -- "$cur"))
+        mapfile -t COMPREPLY < <(compgen -W "${actions}" -- "$cur")
         return 0
     fi
 
@@ -30,15 +30,15 @@ _rnd() {
             ;;
         get-random)
             if [[ "$prev" == --device ]]; then
-                COMPREPLY=($(compgen -W 'random urandom' -- "$cur"))
+                mapfile -t COMPREPLY < <(compgen -W 'random urandom' -- "$cur")
                 return 0;
             fi
             if [[ "$prev" == --format ]]; then
-                COMPREPLY=($(compgen -W 'binary base64' -- "$cur"))
+                mapfile -t COMPREPLY < <(compgen -W 'binary base64' -- "$cur")
                 return 0;
             fi
             if [[ "$cur" == -* ]]; then
-                COMPREPLY=($(compgen -W '--device --bytes --format' -- "$cur"))
+                mapfile -t COMPREPLY < <(compgen -W '--device --bytes --format' -- "$cur")
             fi
             return 0;
             ;;

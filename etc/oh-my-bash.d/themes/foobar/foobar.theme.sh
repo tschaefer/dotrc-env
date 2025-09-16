@@ -36,8 +36,8 @@ function _omb_theme_foobar_PROMPT_COMMAND {
     host="${_omb_prompt_navy}[\h:${cmd}]${_omb_prompt_normal}"
     dir="${_omb_prompt_lime}[\w]${_omb_prompt_normal}"
 
-    if [[ -e ${OSH_HOME}/.emoji ]]; then
-        emoji=" $(cat ${OSH_HOME}/.emoji) "
+    if [[ -e ${OSH_HOME}/.emoji.bash ]]; then
+        emoji=" $(cat ${OSH_HOME}/.emoji.bash) "
     else
         emoji=" "
     fi

@@ -12,13 +12,13 @@ _perlgib_doc() {
             return
             ;;
         --output-format)
-            COMPREPLY=($(compgen -W "${formats}" -- "$cur"))
+            mapfile -t COMPREPLY < <(compgen -W "${formats}" -- "$cur")
             return
             ;;
     esac
 
     if [[ "$cur" == -* ]]; then
-        COMPREPLY=($(compgen -W "${options}" -- "$cur"))
+        mapfile -t COMPREPLY < <(compgen -W "${options}" -- "$cur")
         return
     fi
 }
@@ -58,11 +58,11 @@ _perlgib() {
     esac
 
     if [[ "$cur" == -* ]]; then
-        COMPREPLY=($(compgen -W "${options}" -- "$cur"))
+        mapfile -t COMPREPLY < <(compgen -W "${options}" -- "$cur")
         return
     fi
 
-    COMPREPLY=($(compgen -W "${actions}" -- "$cur"))
+    mapfile -t COMPREPLY < <(compgen -W "${actions}" -- "$cur")
     return
 }
 

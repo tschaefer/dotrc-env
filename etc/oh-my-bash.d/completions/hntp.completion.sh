@@ -7,7 +7,7 @@ _hntp() {
     fi
 
     if [[ "$cur" == -* ]]; then
-        COMPREPLY=($(compgen -W '--help --man --formatted' -- "$cur"))
+        mapfile -t COMPREPLY < <(compgen -W '--help --man --formatted' -- "$cur")
         return
     fi
 

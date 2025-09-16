@@ -17,7 +17,7 @@ _linux_installer() {
     esac
 
     if [[ "$cur" == -* ]]; then
-        COMPREPLY=($(compgen -W '$options' -- "$cur"))
+        mapfile -t COMPREPLY < <(compgen -W '$options' -- "$cur")
         return
     fi
 

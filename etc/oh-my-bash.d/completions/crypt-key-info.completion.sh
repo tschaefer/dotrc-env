@@ -3,7 +3,7 @@ _crypt_key_info() {
     _get_comp_words_by_ref cur
 
     if [[ "$cur" == -* ]]; then
-        COMPREPLY=($(compgen -W '--help --man --passphrase --json' -- "$cur"))
+        mapfile -t COMPREPLY < <(compgen -W '--help --man --passphrase --json' -- "$cur")
         return 0
     else
         _filedir

@@ -1,6 +1,6 @@
 #! bash oh-my-bash.module
 
-OMB_PLUGIN_EDITOR_LIST=${OMB_PLUGIN_EDITOR_LIST:-"nano vim vi emacs"}
+OMB_PLUGIN_EDITOR_LIST=${OMB_PLUGIN_EDITOR_LIST:-"nano vim nvim vi emacs"}
 
 function _omb_plugin_editor {
     local editor
