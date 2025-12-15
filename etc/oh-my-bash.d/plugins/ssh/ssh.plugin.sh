@@ -1,21 +1,21 @@
 #! bash oh-my-bash.module
 
 function _omb_plugin_ssh_agent {
-    local SSH_AUTH_SOCK
-    SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket 2>/dev/null)
+    local _SSH_AUTH_SOCK
+    _SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket 2>/dev/null)
 
-    if [[ -n ${SSH_AUTH_SOCK} ]]; then
-        export SSH_AUTH_SOCK
+    if [[ -n ${_SSH_AUTH_SOCK} ]]; then
+        export SSH_AUTH_SOCK="${_SSH_AUTH_SOCK}"
         return
     fi
 
-    SSH_AUTH_SOCK=${XDG_RUNTIME_DIR:-/tmp}/ssh-agent-${USER}.sock
-    local SSH_AGENT_PID
-    SSH_AGENT_PID=$(pgrep -u ${USER} ssh-agent 2>/dev/null)
+    _SSH_AUTH_SOCK=${XDG_RUNTIME_DIR:-/tmp}/ssh-agent-${USER}.sock
+    local _SSH_AGENT_PID
+    _SSH_AGENT_PID=$(pgrep -u ${USER} ssh-agent 2>/dev/null)
 
-    if [[ -n ${SSH_AGENT_PID} ]] && [[ -S ${SSH_AUTH_SOCK} ]]; then
-        export SSH_AUTH_SOCK
-        export SSH_AGENT_PID
+    if [[ -n ${_SSH_AGENT_PID} ]] && [[ -S ${_SSH_AUTH_SOCK} ]]; then
+        export SSH_AUTH_SOCK="${_SSH_AUTH_SOCK}"
+        export SSH_AGENT_PID="${_SSH_AUTH_SOCK}"
     fi
 }
 _omb_plugin_ssh_agent
