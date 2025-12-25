@@ -43,3 +43,8 @@ function _omb_plugin_bat {
 
 _omb_plugin_bat
 unset -f _omb_plugin_bat
+
+function _omb_plugin_bat_help() {
+    "$@" --help 2>&1 | batcat --plain --language=help
+}
+alias help='_omb_plugin_bat_help'
