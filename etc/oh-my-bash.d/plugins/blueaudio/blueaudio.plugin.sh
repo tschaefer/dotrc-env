@@ -19,6 +19,31 @@ function _omb_plugin_blueaudio_devices {
     done
 }
 
+function _omb_plugin_blueaudio_mute_status {
+    [ $# -lt 1 ] && return 1
+
+    card=$(echo $1 | sed -r 's/:/_/g')
+    sink=$(pactl info | awk '/Default Sink/ { print $3 }')
+
+    if [[ "${sink}" != "bluez_sink.${card}.a2dp_sink" ]]; then
+        echo "muted: not available"
+        return 1
+    fi
+
+    muted=$(pactl get-sink-mute "${sink}" | awk '{ print $2 }')
+    case $muted in
+        yes)
+            echo "muted: yes"
+            ;;
+        no)
+            echo "muted: no"
+            ;;
+        *)
+            echo "muted: unknown"
+            ;;
+    esac
+}
+
 function _omb_plugin_blueaudio_ctl {
     [ $# -lt 2 ] && return 1
 
@@ -31,6 +56,10 @@ function _omb_plugin_blueaudio_ctl {
             card=$(echo $1 | sed -r 's/:/_/g')
             pactl set-card-profile "bluez_card.${card}" a2dp_sink 2>/dev/null
             ;;
+        mute)
+            card=$(echo $1 | sed -r 's/:/_/g')
+            pactl set-sink-mute "bluez_sink.${card}.a2dp_sink" toggle 2>/dev/null
+            ;;
         on)
             bluetoothctl connect "$1" >/dev/null 2>&1
             ;;
@@ -41,7 +70,7 @@ function _omb_plugin_blueaudio_ctl {
             status=$(bluetoothctl info "$1" | awk '/Connected:/ { print $2 }')
             case $status in
                 yes)
-                    echo "connected"
+                    echo "connected ($(_omb_plugin_blueaudio_mute_status "$1"))"
                     ;;
                 no)
                     echo "disconnected"
@@ -69,7 +98,7 @@ function _omb_plugin_blueaudio_completion {
     local cur prev
     _get_comp_words_by_ref -n : cur prev
 
-    local actions="comm music on off status battery"
+    local actions="comm music on off status battery mute"
 
     if echo "${actions}" | grep --word-regexp --quiet "${prev}"; then
         return
