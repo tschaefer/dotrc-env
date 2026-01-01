@@ -5,7 +5,7 @@
     gpgSign = true
 
 [core]
-    pager = delta
+    pager = batcat --plain
     editor = vim
     excludesFile = /home/tschaefer/.git/gitignore
 
@@ -61,15 +61,6 @@
 
 [merge]
     conflictStyle = diff3
-
-[interactive]
-    diffFilter = delta --color-only
-
-[delta]
-    navigate = true
-    light = false
-    line-numbers = true
-    syntax-theme = Solarized (dark)
 
 [tag]
     gpgSign = true
