@@ -31,8 +31,6 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'ervandew/supertab'
 " buffer only
 Plugin 'vim-scripts/BufOnly.vim'
-" no distraction
-Plugin 'junegunn/goyo.vim'
 " bye buffer
 Plugin 'moll/vim-bbye'
 " tag file manager
@@ -53,8 +51,15 @@ Plugin 'jparise/vim-graphql'
 " gist
 Plugin 'mattn/webapi-vim'
 Plugin 'mattn/vim-gist'
-" filtype coffeescript
-Plugin 'kchmck/vim-coffee-script'
+" Ruby / Rails projects
+Plugin 'tpope/vim-rake'
+Plugin 'tpope/vim-rails'
+" vim projects
+Plugin 'tpope/vim-projectionist'
+" open devdocs
+Plugin 'rhysd/devdocs.vim'
+" go-lang
+Plugin 'fatih/vim-go'
 
 call vundle#end()
 
@@ -76,12 +81,15 @@ let NERDTreeWinSize = 30
 let g:lightline = {
     \ 'colorscheme': 'solarized',
     \ 'active': {
-    \   'left': [ [ 'mode', 'paste' ],
+    \   'left': [ [ 'rocket', 'mode', 'paste' ],
     \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
     \ },
     \ 'component_function': {
     \   'gitbranch': 'FugitiveHead'
     \ },
+    \ 'component': {
+    \   'rocket': '🚀'
+    \ }
     \ }
 
 "" ale
@@ -90,11 +98,14 @@ let g:ale_linters = {
 \   'python': ['flake8'],
 \   'sh': ['shellcheck'],
 \   'html': [],
+\   'yaml': ['yamllint'],
+\   'ruby': ['rubocop', 'ruby', 'solargraph'],
 \ }
 let g:ale_sh_shellcheck_dialect = 'bash'
 let g:ale_sh_shellcheck_options = '--severity=warning'
 let g:ale_virtualtext_cursor = 'disabled'
 let g:ale_echo_msg_format = '[%severity%::%linter%] %s'
+let g:ale_python_flake8_options = '--max-line-length=120'
 
 "" tagbar
 let g:tagbar_width = 36
@@ -115,22 +126,25 @@ let g:tagbar_type_perl = {
     \ ],
 \ }
 
-"" supertab
-let g:SuperTabMappingForward = '<s-tab>'
-let g:SuperTabMappingBackward = '<s-nul>'
-
 "" git messenger
 let g:git_messenger_close_on_cursor_moved = 'v:false'
 
-"" ruby rspec
-map <Leader>r :call RunCurrentSpecFile()<CR>
-map <Leader>s :call RunNearestSpec()<CR>
-map <Leader>l :call RunLastSpec()<CR>
-map <Leader>a :call RunAllSpecs()<CR>
-map <Leader>f :call RunNextFailure()<CR>
-
-"" markdown preview
-let g:preview_markdown_auto_update = 1
-
 "" gutentags
 let g:gutentags_project_root = ['.git', '.hg', '.svn', '.bzr', '_darcs', '_FOSSIL_', '.fslckout', '.gtstop']
+
+"" vim-go
+let g:go_fmt_fail_silently = 1
+
+"" devdocs
+augroup plugin-devdocs
+  autocmd!
+  autocmd FileType go nmap <buffer>K <Plug>(devdocs-under-cursor)
+augroup END
+
+"" copilot
+imap <silent><script><expr> <C-C> copilot#Accept("\<CR>")
+let g:copilot_no_tab_map = v:true
+
+"" supertab
+set omnifunc=ale#completion#OmniFunc
+let g:SuperTabDefaultCompletionType = "context"
