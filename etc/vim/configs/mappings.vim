@@ -14,7 +14,6 @@ nnoremap <F1> :tabprev<cr>
 nnoremap <F2> :tabnext<cr>
 nnoremap <F3> :set hlsearch! hlsearch?<cr>
 nnoremap <F4> :set paste! nopaste?<cr>
-nnoremap <F5> :let &background = ( &background == "dark"? "light" : "dark" )<cr>
 nnoremap <F6> :NERDTreeTabsToggle<cr>
 nnoremap <F7> :TagbarToggle<cr>
 
@@ -23,9 +22,10 @@ nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
 map <leader>r :NERDTreeFind<cr>
 
+"" Terminal
 func TabTerm()
     exec "botright terminal"
-    exec "resize 20"
+    exec "resize 10"
 endfu
 nnoremap <expr> <leader>t TabTerm()
 
@@ -34,6 +34,7 @@ func TabVerTerm()
 endfu
 nnoremap <expr> <leader>v TabVerTerm()
 
+"" Close tabs
 function! TabCloseRight(bang)
     let cur=tabpagenr()
     while cur < tabpagenr('$')
