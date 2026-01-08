@@ -11,6 +11,10 @@ set viminfo=<800,'10,/50,:100,h,f0,n~/.vim/cache/viminfo
 set nobackup
 set noswapfile
 
+" undo
+set undofile
+set undodir=${HOME}/.vim/undodir
+
 "" highlighting
 syntax on
 colorscheme solarized
@@ -37,6 +41,10 @@ set wildignore+=*.spl
 set wildignore+=*.sw?
 set wildignore+=.hg,.git,.svn
 
+"" popover menu
+set completeopt=longest,menuone
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
 "" appearance
 set colorcolumn=+1
 set cursorline
@@ -51,11 +59,12 @@ set number
 set ruler
 set showbreak=
 let &colorcolumn="79,".join(range(120,999),",")
+set splitbelow
+set splitright
 
 "" behaviour
 set backspace=2
 set expandtab
-set foldmethod=marker
 set history=1000
 set keywordprg=:help
 set linebreak
@@ -82,7 +91,7 @@ set mouse=nv
 set ttymouse=sgr
 
 "" folding
-set foldmethod=syntax
+set foldmethod=indent
 set foldnestmax=10
 set nofoldenable
 set foldlevel=2
