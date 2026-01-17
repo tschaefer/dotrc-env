@@ -59,9 +59,6 @@ export COLORTERM=truecolor
 alias root="sudo bash --rcfile ${SSHHOME}/.sshrc"
 
 USER_HOME=$(grep "^${SUDO_USER:-$ENV_USER}:" /etc/passwd | cut -d: -f 6)
-if [[ -r ${USER_HOME}/.sshrc ]]; then
-    source "${USER_HOME}"/.sshrc
-fi
 
 function _env_init_path {
     local path
@@ -96,6 +93,11 @@ function _env_init_manpath {
 }
 _env_init_manpath
 unset -f _env_init_manpath
+
+if [[ -r ${USER_HOME}/.sshrc ]]; then
+    source "${USER_HOME}"/.sshrc
+fi
+
 unset USER_HOME
 
 if [[ -e /etc/bash_completion ]]; then
@@ -134,10 +136,6 @@ else
     export PAGER=more
 fi
 
-if [[ $(type -P -- manpager) ]]; then
-    export MANPAGER="manpager"
-fi
-
 if [[ $(type -P -- nano) ]]; then
     export EDITOR="nano"
     export VISUAL="nano"
@@ -158,6 +156,9 @@ if [[ $(type -P -- batcat || type -P -- bat) ]]; then
 
     alias cat="${exec} --pager=never --plain"
 
+    export MANPAGER="sh -c 'col -bx | ${exec} --language=man --plain'"
+    export MANROFFOPT="-c"
+
     unset exec
 fi
 
@@ -167,6 +168,13 @@ if [[ $(type -P -- fzf) ]]; then
     elif [[ -r "/usr/share/doc/fzf/examples/key-bindings.bash" ]]; then
         source "/usr/share/doc/fzf/examples/key-bindings.bash"
     fi
+fi
+
+if [[ $(type -P -- dpkg) ]]; then
+    # shellcheck disable=SC2142
+    alias dpls="dpkg --list | tail --lines +6 | awk '{ print \$2 }'"
+    # shellcheck disable=SC2142
+    alias dplsq="dpkg --list | tail --lines +6 | awk '{ print \$2 }' | grep"
 fi
 
 if [[ ${ENV_OS} == "Linux" ]]; then
