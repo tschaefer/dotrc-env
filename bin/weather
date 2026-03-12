@@ -87,6 +87,8 @@ sub print_current {
 
     printf "%-12s %s °C\n", 'Temperature:', $data->{'main'}->{'temp'};
 
+    printf "%-12s %s °C\n",  'Feels like: ', $data->{'main'}->{'feels_like'};
+
     printf "%-12s %s %%\n", 'Humidity:', $data->{'main'}->{'humidity'};
 
     printf "%-12s %s km/h\n", 'Wind:', $data->{'wind'}->{'speed'};
@@ -97,8 +99,6 @@ sub print_current {
 
     exit 0;
 }
-
-use Data::Printer;
 
 sub get_forecast_temperature {
     my ($dt, $data) = @_;
