@@ -26,7 +26,7 @@ function _omb_init_path {
     local path
 
     PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/games:/usr/games
-    for path in ${OSH_HOME}/.bin ${OSH_HOME}/.local/bin; do
+    for path in ${OSH_HOME}/.bin ${OSH_HOME}/.local/bin ${OSH_HOME}/.arkade/bin; do
         if [[ -d ${path} ]]; then
             PATH=${path}:${PATH}
         fi

@@ -133,6 +133,8 @@ plugins=(
   nvm-ng
   pager
   perlbrew
+  python
+  phpenv
   rbenv-ng
   smite
   ssh
