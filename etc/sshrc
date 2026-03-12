@@ -64,7 +64,7 @@ function _env_init_path {
     local path
 
     PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
-    for path in ${ENV_HOME}/bin ${USER_HOME}/.bin ${USER_HOME}/.local/bin; do
+    for path in ${ENV_HOME}/bin ${USER_HOME}/.bin ${USER_HOME}/.local/bin ${USER_HOME}/.arkade/bin; do
         if [[ -d ${path} ]]; then
             PATH=${PATH}:${path}
         fi
@@ -284,4 +284,4 @@ function _env_trap_handler {
 }
 trap _env_trap_handler EXIT
 
-# vim:ft=sh
+# vim:ft=bash
