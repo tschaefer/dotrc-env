@@ -1,6 +1,6 @@
 ## annoying stuff
 startup_message off
-vbell off
+vbell on
 
 ## status bar
 hardstatus alwayslastline
