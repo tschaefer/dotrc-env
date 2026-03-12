@@ -26,10 +26,6 @@ functions = close open
 [TestingAndDebugging::ProhibitNoWarnings]
 allow = uninitialized once
 
-# Suspicious subroutine names
-[Subroutines::ProhibitSuspiciousNames]
-suspicious = foo bar baz foobar foobaz run2 childs
-
 # Force the use of pkg English
 [Variables::ProhibitEvilVariables]
 variables = $& $` $' $+ $* $. $. $/ $| $, $\ $" $; $# $% $= $- $~ $^ $: $^L $^A $? $! $@ $$ $< $> $( $) $0 $[ $] $^D $^F $^| $^P $^W $^X
@@ -37,3 +33,5 @@ variables = $& $` $' $+ $* $. $. $/ $| $, $\ $" $; $# $% $= $- $~ $^ $: $^L $^A 
 # List of modules which explicit use strict and warnings
 [TestingAndDebugging::RequireUseStrict]
 equivalent_modules = Moose ExtUtils::MakeMaker
+
+# vim:ft=dosini
