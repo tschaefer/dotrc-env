@@ -16,6 +16,7 @@ Options:
     -h:     shows this message (help)
     -a:     update all (perl, python, ruby, rust, system) packages
     -e:     update dotrc environment
+    -g:     update go packages
     -o:     update oh-my-bash
     -p:     update perl packages
     -r:     update ruby packages
@@ -41,34 +42,36 @@ update_env() {
     echo -e "\033[33mdone.\033[39m"
 }
 
+update_go() {
+    echo -e "\033[33mStarting go update ...\033[39m 🐹"
+
+    if type -P -- "goenv" &> /dev/null; then
+        if [[ -d ${GOENV_ROOT} ]]; then
+            cd ${GOENV_ROOT} >/dev/null 2>&1 || return
+            git pull
+            cd - >/dev/null 2>&1 || return
+        fi
+    fi
+
+    echo -e "\033[33mdone.\033[39m"
+}
+
 update_python() {
     echo -e "\033[33mStarting python update ...\033[39m 🐍"
-
-    if type -P -- "pip2" &> /dev/null; then
-        version=$(python2 --version)
-        echo -e "\033[32m${version}\033[39m"
-
-        sudo python2 -m pip install --upgrade pip
-
-        pip2 install --user --upgrade "$(pip2 list --user --format=columns | \
-            awk 'FNR > 2 {print $1 }')"
-    fi
-
-    if type -P -- "pip3" &> /dev/null; then
-        version=$(python3 --version)
-        echo -e "\033[32m${version}\033[39m"
-
-        sudo python3 -m pip install --upgrade pip
-
-        pip3 install --user --upgrade "$(pip3 list --user --format=columns | \
-            awk 'FNR > 3 {print $1 }')"
-    fi
 
     if type -P -- "pipx" &> /dev/null; then
         version=$(pipx --version)
         echo -e "\033[32mpipx ${version}\033[39m"
 
         pipx upgrade-all
+    fi
+
+    if type -P -- "pyenv" &> /dev/null; then
+        if [[ -d ${PYENV_ROOT} ]]; then
+            cd ${PYENV_ROOT} >/dev/null 2>&1 || return
+            git pull
+            cd - >/dev/null 2>&1 || return
+        fi
     fi
 
     echo -e "\033[33mdone.\033[39m"
@@ -149,7 +152,7 @@ update_system() {
     echo -e "\033[32m${pretty_name}\033[39m"
 
     case $distro in
-        debian|raspbian|kali)
+        debian|ubuntu|raspbian|kali)
             export DEBIAN_FRONTEND=noninteractive
             sudo apt-get --quiet update
             sudo apt-get --quiet --option Dpkg::Options::="--force-confold" --yes dist-upgrade
@@ -214,13 +217,16 @@ show_log() {
 
 get_opts() {
     local opt_count=0
-    while getopts ":hael:oprstvyj" opt; do
+    while getopts ":haegl:oprstvyj" opt; do
         case $opt in
             a)
                 opt_a=1
                 ;;
             e)
                 opt_e=1
+                ;;
+            g)
+                opt_g=1
                 ;;
             p)
                 opt_p=1
@@ -326,6 +332,10 @@ main() {
         update_env 2>&1 | log_to_target
     fi
 
+    if [[ -n "$opt_g" ]]; then
+        update_go 2>&1 | log_to_target
+    fi
+
     if [[ -n "$opt_p" ]]; then
         update_perl 2>&1 | log_to_target
     fi
@@ -361,6 +371,7 @@ main() {
         update_python     2>&1 | log_to_target
         update_ruby       2>&1 | log_to_target
         update_rust       2>&1 | log_to_target
+        update_go         2>&1 | log_to_target
     fi
 
     exit 0
