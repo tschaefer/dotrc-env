@@ -14,29 +14,13 @@ OMB_PLUGIN_CLOUD_KUBECTL_CONFIG=${OMB_PLUGIN_CLOUD_KUBECTL_CONFIG:-"$OSH_HOME/.k
 if _omb_util_binary_exists kubectl; then
     export KUBECONFIG=$OMB_PLUGIN_CLOUD_KUBECTL_CONFIG
     source <(kubectl completion bash)
+    if _omb_util_binary_exists kubecolor; then
+        alias kubectl="kubecolor"
+    fi
 fi
 
 if _omb_util_binary_exists helm; then
     source <(helm completion bash)
-fi
-
-if _omb_util_binary_exists arkade; then
-    source <(arkade completion bash)
-
-    function _omb_plugin_arkade_get {
-        app=$1
-
-        arkade get $app
-        if [ $? -ne 0 ]; then
-            return 1
-        fi
-
-        sudo mv ${OSH_HOME}/.arkade/bin/$app /usr/local/bin/$app
-        sudo chmod 755 /usr/local/bin/$app
-        sudo chown root:staff /usr/local/bin/$app
-    }
-    alias arkade-get=_omb_plugin_arkade_get
-    alias arkade-list="arkade get | $PAGER"
 fi
 
 if _omb_util_binary_exists k3sup; then
@@ -54,6 +38,11 @@ fi
 if _omb_util_binary_exists finchctl; then
     source <(finchctl completion bash)
 fi
+
+if _omb_util_binary_exists tailscale; then
+    source <(tailscale completion bash)
+fi
+
 
 OMB_PLUGIN_CLOUD_FAAS_CLI_GATEWAY=${OMB_PLUGIN_CLOUD_FAAS_CLI_GATEWAY:-"https://f.i.coresec.zone"}
 
