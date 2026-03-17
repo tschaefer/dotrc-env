@@ -1,0 +1,23 @@
+# vim
+tags
+tags.temp
+tags.lock
+
+# python
+tox.ini
+venv/
+
+# direnv
+.envrc
+
+# local vimrc
+.local.vim
+.local.vim.asc
+
+# ruby/rspec
+spec/examples.txt
+
+# coverage
+/coverage/
+/coverage.out
+/coverage.html
