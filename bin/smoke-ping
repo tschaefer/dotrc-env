@@ -66,13 +66,19 @@ options() {
     done
     shift $((OPTIND-1))
 
-    URL=$1
-
     if [[ -n $HELP ]] || [[ -n $VERSION ]]; then
-        if [[ $opt_count -gt 1 ]] || [[ -n $URL ]]; then
-            usage >&2
+        if [[ $opt_count -gt 1 ]]; then
+            usage 2>&1
             exit 1
         fi
+        return
+    fi
+
+    URL=$1
+
+    if [[ -z $URL ]]; then
+        usage >&2
+        exit 1
     fi
 }
 
