@@ -95,7 +95,7 @@ let g:lightline = {
 "" ale
 let g:ale_linters = {
 \   'perl': ['perl', 'perlcritic', 'perltidy'],
-\   'python': ['flake8'],
+\   'python': ['ruff'],
 \   'sh': ['shellcheck'],
 \   'html': [],
 \   'yaml': ['yamllint'],
@@ -134,6 +134,11 @@ let g:gutentags_project_root = ['.git', '.hg', '.svn', '.bzr', '_darcs', '_FOSSI
 
 "" vim-go
 let g:go_fmt_fail_silently = 1
+function! GoCallersNoTests()
+    execute 'GoCallers'
+    execute 'Cfilter! _test\.go'
+endfunction
+command! GoCallersNoTests call GoCallersNoTests()
 
 "" devdocs
 augroup plugin-devdocs
