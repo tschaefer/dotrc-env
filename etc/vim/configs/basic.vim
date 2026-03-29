@@ -96,8 +96,15 @@ set foldnestmax=10
 set nofoldenable
 set foldlevel=2
 
+"" restore cursor position
+autocmd BufReadPost *
+  \ if line("'\"") > 0 && line("'\"") <= line("$") |
+  \   exe "normal! g`\"" |
+  \ endif
+
 "" extra
 let g:perl_include_pod = 0
+let g:ale_completion_enabled = 1
 
 "" features
 if has('terminal')
