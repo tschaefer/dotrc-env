@@ -7,6 +7,7 @@ bin/xxd
 etc/vim/cache/*
 etc/vim/static
 etc/vim/.netrwhist
+etc/vim/undodir/*
 ## ssh
 etc/ssh/known_hosts*
 etc/ssh/id_rsa*
