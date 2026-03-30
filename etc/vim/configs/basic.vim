@@ -1,7 +1,7 @@
 "" files
 set autoread
 set autowrite
-set cryptmethod=blowfish
+set cryptmethod=blowfish2
 set fileencoding=utf-8
 
 "" history
