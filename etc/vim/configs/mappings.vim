@@ -25,12 +25,13 @@ map <leader>r :NERDTreeFind<cr>
 "" Terminal
 func TabTerm()
     exec "botright terminal"
-    exec "resize 10"
+    exec "resize 16"
 endfu
 nnoremap <expr> <leader>t TabTerm()
 
 func TabVerTerm()
     exec "vertical botright terminal"
+    exec "vertical resize 72"
 endfu
 nnoremap <expr> <leader>v TabVerTerm()
 
