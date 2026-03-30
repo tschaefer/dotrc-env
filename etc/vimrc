@@ -5,5 +5,5 @@ filetype plugin indent on
 
 runtime! configs/basic.vim
 runtime! configs/mappings.vim
-runtime! configs/plugins.vim
 runtime! configs/local.vim
+runtime! configs/plugins.vim
