@@ -60,6 +60,8 @@ Plugin 'tpope/vim-projectionist'
 Plugin 'rhysd/devdocs.vim'
 " go-lang
 Plugin 'fatih/vim-go'
+" notes
+Plugin 'alok/notational-fzf-vim'
 
 call vundle#end()
 
@@ -95,20 +97,25 @@ let g:lightline = {
 "" ale
 let g:ale_linters = {
 \   'perl': ['perl', 'perlcritic', 'perltidy'],
-\   'python': ['ruff'],
+\   'python': ['ruff', 'pyright'],
 \   'sh': ['shellcheck'],
 \   'html': [],
 \   'yaml': ['yamllint'],
 \   'ruby': ['rubocop', 'ruby', 'solargraph'],
+\   'javascript': ['biome', 'tsserver'],
+\ }
+let g:ale_fix_on_save = 1
+let g:ale_fixers = {
+\   'javascript': ['biome'],
+\   'python': ['ruff'],
 \ }
 let g:ale_sh_shellcheck_dialect = 'bash'
 let g:ale_sh_shellcheck_options = '--severity=warning'
 let g:ale_virtualtext_cursor = 'disabled'
 let g:ale_echo_msg_format = '[%severity%::%linter%] %s'
-let g:ale_python_flake8_options = '--max-line-length=120'
 
 "" tagbar
-let g:tagbar_width = 36
+let g:tagbar_width = 30
 let g:tagbar_show_tag_linenumbers = 1
 let g:tagbar_type_perl = {
     \ 'ctagstype'   : 'Perl',
@@ -130,7 +137,16 @@ let g:tagbar_type_perl = {
 let g:git_messenger_close_on_cursor_moved = 'v:false'
 
 "" gutentags
-let g:gutentags_project_root = ['.git', '.hg', '.svn', '.bzr', '_darcs', '_FOSSIL_', '.fslckout', '.gtstop']
+let g:gutentags_project_root = [
+    \ '.git',
+    \ '.hg',
+    \ '.svn',
+    \ '.bzr',
+    \ '_darcs',
+    \ '_FOSSIL_',
+    \ '.fslckout',
+    \ '.gtstop'
+\ ]
 
 "" vim-go
 let g:go_fmt_fail_silently = 1
@@ -147,9 +163,14 @@ augroup plugin-devdocs
 augroup END
 
 "" copilot
-imap <silent><script><expr> <C-C> copilot#Accept("\<CR>")
 let g:copilot_no_tab_map = v:true
+imap <silent><script><expr> <C-C> copilot#Accept("\<CR>")
 
 "" supertab
 set omnifunc=ale#completion#OmniFunc
 let g:SuperTabDefaultCompletionType = "context"
+
+" notes
+let g:nv_search_paths = ['~/.notes']
+let g:nv_default_extension = '.md'
+let g:nv_include_hidden = 0
