@@ -76,6 +76,7 @@ set ttimeoutlen=10
 set shortmess-=S
 let mapleader="\<Space>"
 set noshowmode
+set noequalalways
 
 "" syntax
 set autoindent
