@@ -49,10 +49,18 @@ function _omb_init_manpath {
     export MANPATH
 }
 
+function _omb_init_term_cursor {
+    if [[ ${TERM} == "linux" ]]; then
+        setterm --cursor on
+    fi
+}
+
 _omb_init_path
 _omb_init_manpath
+_omb_init_term_cursor
 
 unset -f _omb_init_path
 unset -f _omb_init_manpath
+unset -f _omb_init_term_cursor
 
 source ${OSH_HOME}/.oh-my-bashrc
