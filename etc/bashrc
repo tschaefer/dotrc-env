@@ -64,3 +64,7 @@ unset -f _omb_init_manpath
 unset -f _omb_init_term_cursor
 
 source ${OSH_HOME}/.oh-my-bashrc
+
+if [[ -f ${OSH_HOME}/.nix-profile/etc/profile.d/nix.sh ]]; then
+    source ${OSH_HOME}/.nix-profile/etc/profile.d/nix.sh
+fi
