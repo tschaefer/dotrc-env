@@ -39,10 +39,14 @@ function _omb_init_manpath {
     local path
 
     MANPATH=""
-    MANPATH=$(manpath)
+    MANPATH=$(manpath 2>/dev/null)
     for path in ${OSH_HOME}/.local/man ${OSH_HOME}/.local/share/man; do
         if [[ -d ${path} ]]; then
-            MANPATH=${path}:${MANPATH}
+            if [[ -n ${MANPATH} ]]; then
+                MANPATH=${path}:${MANPATH}
+            else
+                MANPATH=${path}
+            fi
         fi
     done
 
