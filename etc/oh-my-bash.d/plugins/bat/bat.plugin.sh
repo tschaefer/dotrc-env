@@ -1,10 +1,6 @@
 #! bash oh-my-bash.module
 
 function _omb_plugin_bat_alias {
-    if [[ $# -lt 4 ]]; then
-        return 1
-    fi
-
     local executable=$1
     local plain=$2
     local language=$3
