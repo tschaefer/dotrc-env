@@ -28,7 +28,9 @@ function _omb_theme_foobar_PROMPT_COMMAND {
     cmd=$(ps -A -o pid,comm | awk -v ppid=$PPID '$1 == ppid { print $2 }')
     cmd=$(basename "${cmd:-$SHELL}")
     if [[ -n $IN_NIX_SHELL ]]; then
-        cmd="nix"
+        cmd="${_omb_prompt_green}nix${_omb_prompt_normal}"
+    elif [[ -n $FLOX_ENV ]]; then
+        cmd="${_omb_prompt_green}flox${_omb_prompt_normal}"
     fi
     if _omb_prompt_get_virtualenv; then
         cmd="${cmd}+"
