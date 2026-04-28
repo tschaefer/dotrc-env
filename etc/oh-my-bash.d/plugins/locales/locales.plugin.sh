@@ -7,8 +7,11 @@ OMB_PLUGIN_LOCALES_TIMEZONE=${OMB_PLUGIN_LOCALES_TIMEZONE:-"Europe/Berlin"}
 function timezones {
     if _omb_util_binary_exists "timedatectl"; then
         timedatectl list-timezones --no-pager
-    else
+    elif [[ -f /usr/share/zoneinfo/zone.tab ]]; then
         awk '!/#/ { print $3 }' /usr/share/zoneinfo/zone.tab | sort
+    else
+        echo "No timezones found" >&2
+        return 1
     fi
 }
 
