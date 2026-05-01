@@ -9,9 +9,6 @@ function timezones {
         timedatectl list-timezones --no-pager
     elif [[ -f /usr/share/zoneinfo/zone.tab ]]; then
         awk '!/#/ { print $3 }' /usr/share/zoneinfo/zone.tab | sort
-    else
-        echo "No timezones found" >&2
-        return 1
     fi
 }
 
