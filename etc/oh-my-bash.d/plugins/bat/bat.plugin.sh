@@ -12,6 +12,13 @@ function _omb_plugin_bat_alias {
     fi
 }
 
+function _omb_plugin_bat_help() {
+    local executable=$1
+    shift
+
+    "$@" --help 2>&1 | ${executable} --plain --language=help
+}
+
 function _omb_plugin_bat {
     local executable
     local available="false"
@@ -25,6 +32,7 @@ function _omb_plugin_bat {
 
     if [[ ${available} == "false" ]]; then
         unset -f _omb_plugin_bat_alias
+        unset -f _omb_plugin_bat_help
         return
     fi
 
@@ -35,12 +43,10 @@ function _omb_plugin_bat {
     alias bp="${executable} --plain"
     alias blp="_omb_plugin_bat_alias ${executable} true"
     alias cat="${executable} --paging=never --plain"
+    alias help="_omb_plugin_bat_help ${executable}"
 }
 
 _omb_plugin_bat
 unset -f _omb_plugin_bat
 
-function _omb_plugin_bat_help() {
-    "$@" --help 2>&1 | batcat --plain --language=help
-}
-alias help='_omb_plugin_bat_help'
+
