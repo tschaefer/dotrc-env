@@ -18,8 +18,6 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
 " show git status in nerdtree
 Plugin 'Xuyuanp/nerdtree-git-plugin'
-" source browsing tool
-Plugin 'vim-scripts/cscope.vim'
 " version control
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-rhubarb'
@@ -174,3 +172,4 @@ let g:SuperTabDefaultCompletionType = "context"
 let g:nv_search_paths = ['~/.notes']
 let g:nv_default_extension = '.md'
 let g:nv_include_hidden = 0
+let g:nv_create_note_window = 'split'
