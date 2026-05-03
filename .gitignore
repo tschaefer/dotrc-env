@@ -1,5 +1,7 @@
 ## dotrc-env
 .lock
+## bin
+bin/*
 ## vim
 etc/vim/bundle/*
 bin/vim
