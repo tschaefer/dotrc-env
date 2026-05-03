@@ -32,6 +32,11 @@ etc/gnupg/crls.d
 etc/gnupg/tofu.db
 etc/gnupg/reader_1.status
 etc/gnupg/.#lk0x*
+etc/gnupg/.gpg-card_history
+etc/gnupg/.gpg-connect_history
+etc/gnupg/keys/
+etc/gnupg/openpgp-revocs.d/
+etc/gnupg/trustlist.txt
 ## newsboat
 etc/newsboat/cache.db*
 etc/newsboat/history.cmdline
@@ -39,5 +44,7 @@ etc/newsboat/history.search
 etc/newsboat/queue
 ## bash
 etc/oh-my-bash.d/plugins/machine/machine.d/*
+## git
+etc/git/gitconfig.local
 ## misc
 *.bak
