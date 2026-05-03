@@ -1,13 +1,6 @@
-[user]
-    signingKey = 88A6489BD0B2C61A!
-
-[commit]
-    gpgSign = true
-
 [core]
-    pager = batcat --plain
+    pager = bat --plain
     editor = vim
-    excludesFile = /home/tschaefer/.git/gitignore
 
 [color]
     ui = true
@@ -15,19 +8,6 @@
     diff = auto
     interactive = auto
     status = auto
-
-[alias]
-    ci = commit
-    co = checkout
-    flog = log --stat
-    slog = log --pretty=oneline --abbrev-commit
-    sflog = log --pretty=oneline --abbrev-commit --stat
-    sstatus = status --short
-    pdiff = !git --no-pager diff
-    adog = log --all --decorate --oneline --graph
-    sdiff = diff --stat
-    mstatus = !git sstatus | grep -v '??' | grep -v 'A '
-    bush = !git push
 
 [apply]
     whitespace = strip
@@ -62,10 +42,7 @@
 [merge]
     conflictStyle = diff3
 
-[tag]
-    gpgSign = true
-
-[github]
-    user = tschaefer
+[include]
+    path = ~/.git/gitconfig.local
 
 # vim:ft=dosini
