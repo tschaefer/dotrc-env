@@ -105,7 +105,7 @@ let g:ale_linters = {
 let g:ale_fix_on_save = 1
 let g:ale_fixers = {
 \   'javascript': ['biome'],
-\   'python': ['ruff'],
+\   'python': ['ruff_format'],
 \ }
 let g:ale_sh_shellcheck_dialect = 'bash'
 let g:ale_sh_shellcheck_options = '--severity=warning'
