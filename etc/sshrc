@@ -206,8 +206,8 @@ shopt -s no_empty_cmd_completion
 set -o emacs
 
 if [[ $(type -P -- dircolors) ]]; then
-    if [[ -r ${ENV_HOME}/dircolors ]]; then
-        eval "$(dircolors -b "${ENV_HOME}"/dircolors)"
+    if [[ -r ${ENV_HOME}/.dircolors ]]; then
+        eval "$(dircolors -b "${ENV_HOME}"/.dircolors)"
     else
         eval "$(dircolors -b)"
     fi
