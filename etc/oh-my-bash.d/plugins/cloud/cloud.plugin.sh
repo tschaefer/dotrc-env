@@ -52,6 +52,10 @@ if _omb_util_binary_exists tailscale; then
     source <(tailscale completion bash)
 fi
 
+if _omb_util_binary_exists arkade; then
+    source <(arkade completion bash)
+fi
+
 OMB_PLUGIN_CLOUD_FAAS_CLI_GATEWAY=${OMB_PLUGIN_CLOUD_FAAS_CLI_GATEWAY:-"https://f.i.coresec.zone"}
 
 if _omb_util_binary_exists "faas-cli"; then
