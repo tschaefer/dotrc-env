@@ -45,6 +45,13 @@ function _omb_plugin_ssh_list {
         awk -F '/' '{ print $NF }' | sed 's/ \[mux\]//'
 }
 
+function _omb_plugin_ssh_loose {
+    ssh \
+        -o "UserKnownHostsFile=/dev/null" \
+        -o "StrictHostKeyChecking=no" \
+        "$@"
+}
+
 function _omb_plugin_ssh_screen {
     ssh "$@" -t screen -Rd
 }
@@ -98,6 +105,7 @@ function _omb_plugin_ssh_known_hosts {
 alias ssh-kill='_omb_plugin_ssh_kill'
 alias ssh-list='_omb_plugin_ssh_list'
 alias ssh-run='_omb_plugin_ssh_run'
+alias ssh-loose='_omb_plugin_ssh_loose'
 alias ssh-config='_omb_plugin_ssh_config'
 alias ssh-screen='_omb_plugin_ssh_screen'
 alias mosh-screen='_omb_plugin_mosh_screen'
