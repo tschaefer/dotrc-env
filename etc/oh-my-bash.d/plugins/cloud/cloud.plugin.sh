@@ -16,6 +16,15 @@ if _omb_util_binary_exists kubectl; then
     source <(kubectl completion bash)
     if _omb_util_binary_exists kubecolor; then
         alias kubectl="kubecolor"
+
+        kubecolor() {
+            if [[ $1 != "diff" ]]; then
+                command kubecolor "$@"
+                return $?
+            fi
+
+            command kubecolor "$@" | batcat --plain --language=diff
+        }
     fi
 fi
 
@@ -42,7 +51,6 @@ fi
 if _omb_util_binary_exists tailscale; then
     source <(tailscale completion bash)
 fi
-
 
 OMB_PLUGIN_CLOUD_FAAS_CLI_GATEWAY=${OMB_PLUGIN_CLOUD_FAAS_CLI_GATEWAY:-"https://f.i.coresec.zone"}
 
