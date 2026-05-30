@@ -10,6 +10,7 @@ use Pod::Usage;
 use utf8;
 
 my $cfgfile;
+my $dryrun;
 my %cfg;
 
 sub is_on {
@@ -53,6 +54,12 @@ sub turn_on {
             $cfg{int},         '--auto',
         );
     }
+
+    if ( $dryrun ) {
+        printf("%s\n", (join " ", @cmd));
+        return 1;
+    }
+
     IPC::Run::run( \@cmd, '>/dev/null', '2>&1' );
 
     return is_on();
@@ -117,7 +124,7 @@ sub run {
 
     $cfgfile = "$ENV{HOME}/.config/monitor/monitorrc";
 
-    GetOptions( "config|c=s" => \$cfgfile, )
+    GetOptions( "config|c=s" => \$cfgfile, "dry-run" => \$dryrun )
       or print_usage();
 
     parse_config($cfgfile);
