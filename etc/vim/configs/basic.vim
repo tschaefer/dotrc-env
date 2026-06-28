@@ -105,9 +105,3 @@ autocmd BufReadPost *
 
 "" extra
 let g:perl_include_pod = 0
-let g:ale_completion_enabled = 1
-
-"" features
-if has('terminal')
-    packadd termdebug
-endif

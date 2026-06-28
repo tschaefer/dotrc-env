@@ -42,13 +42,6 @@ Plugin 'csexton/trailertrash.vim'
 " fuzzy search
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
-" Github CoPilot
-Plugin 'github/copilot.vim'
-" filetype graphql
-Plugin 'jparise/vim-graphql'
-" gist
-Plugin 'mattn/webapi-vim'
-Plugin 'mattn/vim-gist'
 " Ruby / Rails projects
 Plugin 'tpope/vim-rake'
 Plugin 'tpope/vim-rails'
@@ -58,8 +51,8 @@ Plugin 'tpope/vim-projectionist'
 Plugin 'rhysd/devdocs.vim'
 " go-lang
 Plugin 'fatih/vim-go'
-" notes
-Plugin 'alok/notational-fzf-vim'
+" windsurf
+Plugin 'Exafunction/windsurf.vim'
 
 call vundle#end()
 
@@ -81,14 +74,14 @@ let NERDTreeWinSize = 30
 let g:lightline = {
     \ 'colorscheme': 'solarized',
     \ 'active': {
-    \   'left': [ [ 'rocket', 'mode', 'paste' ],
+    \   'left': [ [ 'emoji', 'mode', 'paste' ],
     \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
     \ },
     \ 'component_function': {
     \   'gitbranch': 'FugitiveHead'
     \ },
     \ 'component': {
-    \   'rocket': '🚀'
+    \   'emoji': '🛸'
     \ }
     \ }
 
@@ -160,16 +153,12 @@ augroup plugin-devdocs
   autocmd FileType go nmap <buffer>K <Plug>(devdocs-under-cursor)
 augroup END
 
-"" copilot
-let g:copilot_no_tab_map = v:true
-imap <silent><script><expr> <C-C> copilot#Accept("\<CR>")
-
 "" supertab
 set omnifunc=ale#completion#OmniFunc
 let g:SuperTabDefaultCompletionType = "context"
 
-" notes
-let g:nv_search_paths = ['~/.notes']
-let g:nv_default_extension = '.md'
-let g:nv_include_hidden = 0
-let g:nv_create_note_window = 'split'
+"" windsurf
+let g:codeium_disable_bindings = 1
+imap <script><silent><nowait><expr> <C-c> codeium#Accept()
+imap <script><silent><nowait><expr> <C-h> codeium#AcceptNextWord()
+imap <script><silent><nowait><expr> <C-j> codeium#AcceptNextLine()

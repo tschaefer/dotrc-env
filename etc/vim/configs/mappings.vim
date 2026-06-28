@@ -1,4 +1,4 @@
-"" typos
+"" Typos
 command! -bang E e<bang>
 command! -bang Q q<bang>
 command! -bang W w<bang>
@@ -9,13 +9,11 @@ command! -bang WA wa<bang>
 command! -bang Wq wq<bang>
 command! -bang WQ wq<bang>
 
-"" F keys
-nnoremap <F1> :tabprev<cr>
-nnoremap <F2> :tabnext<cr>
-nnoremap <F3> :set hlsearch! hlsearch?<cr>
-nnoremap <F4> :set paste! nopaste?<cr>
-nnoremap <F6> :NERDTreeTabsToggle<cr>
-nnoremap <F7> :TagbarToggle<cr>
+"" General
+nnoremap <silent> <leader>n :NERDTreeToggle<cr>
+nnoremap <silent> <leader>o :TagbarToggle<cr>
+nnoremap <silent> <leader>s :set hlsearch! hlsearch?<cr>
+nnoremap <silent> <leader>p :set paste! nopaste?<cr>
 
 "" Plugins
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
@@ -23,31 +21,14 @@ nmap <silent> <C-j> <Plug>(ale_next_wrap)
 map <leader>r :NERDTreeFind<cr>
 
 "" Terminal
-func TabTerm()
+function! TabTerm()
     exec "botright terminal"
     exec "resize 16"
-endfu
+endfunction
 nnoremap <expr> <leader>t TabTerm()
 
-func TabVerTerm()
+function! TabVerTerm()
     exec "vertical botright terminal"
-    exec "vertical resize 72"
-endfu
+    exec "vertical resize 78"
+endfunction
 nnoremap <expr> <leader>v TabVerTerm()
-
-"" Close tabs
-function! TabCloseRight(bang)
-    let cur=tabpagenr()
-    while cur < tabpagenr('$')
-        exe 'tabclose' . a:bang . ' ' . (cur + 1)
-    endwhile
-endfunction
-
-function! TabCloseLeft(bang)
-    while tabpagenr() > 1
-        exe 'tabclose' . a:bang . ' 1'
-    endwhile
-endfunction
-
-command! -bang Tabcloseright call TabCloseRight('<bang>')
-command! -bang Tabcloseleft call TabCloseLeft('<bang>')
