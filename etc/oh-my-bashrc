@@ -142,6 +142,7 @@ plugins=(
   sudo
   user-completion
   user-tmp
+  zellij
   zoxide
 )
 
