@@ -51,8 +51,6 @@ Plugin 'tpope/vim-projectionist'
 Plugin 'rhysd/devdocs.vim'
 " go-lang
 Plugin 'fatih/vim-go'
-" windsurf
-Plugin 'Exafunction/windsurf.vim'
 
 call vundle#end()
 
@@ -156,9 +154,3 @@ augroup END
 "" supertab
 set omnifunc=ale#completion#OmniFunc
 let g:SuperTabDefaultCompletionType = "context"
-
-"" windsurf
-let g:codeium_disable_bindings = 1
-imap <script><silent><nowait><expr> <C-c> codeium#Accept()
-imap <script><silent><nowait><expr> <C-h> codeium#AcceptNextWord()
-imap <script><silent><nowait><expr> <C-j> codeium#AcceptNextLine()
