@@ -84,7 +84,15 @@ function _omb_plugin_ssh_run {
         return 1
     fi
 
-    ssh -t "${host}" "
+
+    cmd="ssh"
+    if [[ ${host} =~ ":" ]]; then
+        port=${host#*:}
+        host=${host%:*}
+        cmd="ssh -p ${port}"
+    fi
+
+    $cmd -t "${host}" "
         export RUN_LIB="'$(mktemp -d -p /tmp ssh-run.XXXXXX)'"
         "'trap "rm -rf ${RUN_LIB}" EXIT'"
         echo $'"$(cat ${exec} | xxd -ps)"' | xxd -ps -r > "'${RUN_LIB}/run'"
